@@ -55,7 +55,7 @@
     ]
   },
   "lint-staged": {
-    "*.{scss,css,json,md,html}": "npm run format:fix",
+    "*.{scss,css,json,md,html,conf}": "npm run format:fix",
     "*.{ts,tsx}": [
       "npm run lint:fix",
       "npm run format:fix",
