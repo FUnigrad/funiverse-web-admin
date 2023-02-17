@@ -52,7 +52,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = () => {
             },
           }}
         >
-          <Box display="block">
+          <Box display="block" sx={{ padding: 3 }}>
             <Outlet />
           </Box>
         </Box>
