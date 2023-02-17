@@ -45,6 +45,12 @@ const Status500 = Loader(lazy(() => import('src/content/pages/Status/Status500')
 const StatusComingSoon = Loader(lazy(() => import('src/content/pages/Status/ComingSoon')));
 const StatusMaintenance = Loader(lazy(() => import('src/content/pages/Status/Maintenance')));
 
+// FUniverse
+const GroupPage = Loader(lazy(() => import('src/pages/Group')));
+const UserPage = Loader(lazy(() => import('src/pages/User')));
+const CurriculumPage = Loader(lazy(() => import('src/pages/Curriculum')));
+const SyllabusPage = Loader(lazy(() => import('src/pages/Syllabus')));
+const SubjectPage = Loader(lazy(() => import('src/pages/Subject')));
 const routes: RouteObject[] = [
   {
     path: '',
@@ -52,12 +58,12 @@ const routes: RouteObject[] = [
     children: [
       {
         path: '/',
-        element: <Transactions />,
+        element: <Navigate to="/groups" replace />,
       },
-      {
-        path: 'overview',
-        element: <Navigate to="/" replace />,
-      },
+      // {
+      //   path: 'overview',
+      //   element: <Navigate to="/" replace />,
+      // },
       {
         path: 'status',
         children: [
@@ -86,6 +92,56 @@ const routes: RouteObject[] = [
       {
         path: '*',
         element: <Status404 />,
+      },
+    ],
+  },
+  {
+    path: 'groups',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <GroupPage />,
+      },
+    ],
+  },
+  {
+    path: 'users',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <UserPage />,
+      },
+    ],
+  },
+  {
+    path: 'subjects',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <SubjectPage />,
+      },
+    ],
+  },
+  {
+    path: 'syllabuses',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <SyllabusPage />,
+      },
+    ],
+  },
+  {
+    path: 'curriculums',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <CurriculumPage />,
       },
     ],
   },

@@ -45,7 +45,7 @@ const colors = {
   },
   layout: {
     general: {
-      bodyBg: '#f2f5f9',
+      bodyBg: '#333',
     },
     sidebar: {
       background: themeColors.white,
@@ -290,7 +290,7 @@ export const PureLightTheme = createTheme({
     },
     background: {
       paper: colors.alpha.white[100],
-      default: colors.layout.general.bodyBg,
+      default: '#fafbfc',
     },
     action: {
       active: colors.alpha.black[100],
@@ -330,13 +330,46 @@ export const PureLightTheme = createTheme({
         },
       },
     },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          // minHeight: 320,
+        },
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          textTransform: 'capitalize',
+          color: 'rgba(34, 51, 84, 0.7) !important',
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          textTransform: 'capitalize',
+        },
+      },
+    },
     MuiFormHelperText: {
       styleOverrides: {
         root: {
           textTransform: 'none',
-          marginLeft: 8,
-          marginRight: 8,
-          fontWeight: 'bold',
+        },
+      },
+    },
+    MuiFormControl: {
+      styleOverrides: {
+        root: {
+          height: 70,
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          margin: '10px 0 !important',
         },
       },
     },
@@ -703,12 +736,12 @@ export const PureLightTheme = createTheme({
     },
     MuiPaper: {
       styleOverrides: {
-        root: {
-          padding: 0,
-        },
-        elevation0: {
-          boxShadow: 'none',
-        },
+        // root: {
+        //   padding: 0,
+        // },
+        // elevation0: {
+        //   boxShadow: 'none',
+        // },
         elevation: {
           boxShadow: colors.shadows.card,
         },
@@ -921,6 +954,7 @@ export const PureLightTheme = createTheme({
     MuiTablePagination: {
       styleOverrides: {
         toolbar: {
+          marginTop: '6px',
           '& .MuiIconButton-root': {
             padding: 8,
           },
@@ -934,16 +968,16 @@ export const PureLightTheme = createTheme({
     },
     MuiToolbar: {
       styleOverrides: {
-        root: {
-          minHeight: '0 !important',
-          padding: '0 !important',
-        },
+        // root: {
+        //   minHeight: '0 !important',
+        //   padding: '0 !important',
+        // },
       },
     },
     MuiTableRow: {
       styleOverrides: {
         head: {
-          background: colors.alpha.black[5],
+          background: '#fff',
         },
         root: {
           transition: 'background-color .2s',
@@ -959,6 +993,7 @@ export const PureLightTheme = createTheme({
         root: {
           borderBottomColor: colors.alpha.black[10],
           fontSize: 14,
+          backgroundColor: '#fff',
         },
         head: {
           textTransform: 'uppercase',
