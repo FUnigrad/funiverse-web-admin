@@ -5,7 +5,7 @@ import { MRT_Row } from 'material-react-table';
 import { useContext, useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 // import Select from 'react-select';
-import { Group, GroupType } from 'src/@types';
+import { Group, GroupType, UserRole } from 'src/@types';
 import { QueryKey, groupApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
@@ -14,20 +14,25 @@ import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
 import { useQuery, useMutation } from '@tanstack/react-query';
+
+const roleOptions = [
+  { value: UserRole.Student, label: 'Student' },
+  { value: UserRole.Teacher, label: 'Teacher' },
+  { value: UserRole.SystemAdmin, label: 'System Admin' },
+  { value: UserRole.DepartmentAdmin, label: 'Department Admin' },
+  { value: UserRole.WorkspaceAdmin, label: 'Workspace Admin' },
+] as const;
 const UserSchema = z.object({
   name: z.string().min(1),
   code: z.string().min(1),
-  combo: z.boolean().optional(),
+  role: z.string().min(1),
+  schoolYear: z.string().min(1),
+  personalMail: z.string().min(1),
+  eduMail: z.string().min(1),
+  avatar: z.string().min(1),
+  phoneNumber: z.string().min(1),
+  curriculum: z.object({ value: z.number(), label: z.string() }).or(z.number()),
   active: z.boolean(),
-  subjects: z.lazy(() => {
-    if (!this) return z.array(z.number()).optional();
-    // @ts-ignore
-    if (this.combo) {
-      return z.array(z.number()).min(1);
-    } else {
-      return z.array(z.number()).optional();
-    }
-  }),
 });
 
 // https://github.com/react-hook-form/react-hook-form/issues/9287
@@ -51,18 +56,20 @@ function UserForm({ defaultValues }: UserFormProps) {
     mode: 'all',
     resolver: zodResolver(UserSchema),
     defaultValues: {
+      active: true,
+      role: UserRole.Student,
       ...defaultValues,
     },
   });
 
-  const watchCombo = watch('combo');
-  console.log('🚀 ~ watchCombo', watchCombo);
-  useEffect(() => {
-    clearErrors();
-    return () => {
-      clearErrors();
-    };
-  }, [clearErrors, watchCombo]);
+  // const watchCombo = watch('combo');
+  // console.log('🚀 ~ watchCombo', watchCombo);
+  // useEffect(() => {
+  //   clearErrors();
+  //   return () => {
+  //     clearErrors();
+  //   };
+  // }, [clearErrors, watchCombo]);
 
   function onSubmit(data) {
     console.log('data: ', defaultValues?.id, data);
@@ -81,7 +88,7 @@ function UserForm({ defaultValues }: UserFormProps) {
         noValidate
         sx={{
           '& .MuiTextField-root': { m: 1, width: '100%' },
-          height: 400,
+          height: 500,
         }}
       >
         <TextField
@@ -91,43 +98,68 @@ function UserForm({ defaultValues }: UserFormProps) {
           helperText={errors.name?.message}
           {...register('name')}
         />
+        <Select
+          control={control}
+          fieldName="role"
+          options={roleOptions}
+          required
+          error={Boolean(errors.role) && errors.role.message === 'Required'}
+        />
         <TextField
           label="Code"
           required
-          error={Boolean(errors.name)}
-          helperText={errors.name?.message}
+          error={Boolean(errors.code)}
+          helperText={errors.code?.message}
           {...register('code')}
         />
-        <Controller
-          name="combo"
+        <TextField
+          label="School Year"
+          required
+          error={Boolean(errors.schoolYear)}
+          helperText={errors.schoolYear?.message}
+          {...register('schoolYear')}
+        />
+        <TextField
+          label="Personal E-mail"
+          required
+          error={Boolean(errors.personalMail)}
+          helperText={errors.personalMail?.message}
+          {...register('personalMail')}
+        />
+        <TextField
+          label="Education E-mail"
+          required
+          error={Boolean(errors.eduMail)}
+          helperText={errors.eduMail?.message}
+          {...register('eduMail')}
+        />
+        <TextField
+          label="Avatar"
+          // required
+          error={Boolean(errors.avatar)}
+          helperText={errors.avatar?.message}
+          {...register('avatar')}
+        />
+        <TextField
+          label="Phone Number"
+          // required
+          error={Boolean(errors.phoneNumber)}
+          helperText={errors.phoneNumber?.message}
+          {...register('phoneNumber')}
+        />
+        <AsyncSelect
+          fieldName="curriculum"
           control={control}
-          render={({ field }) => (
-            <FormControlLabel
-              value="combo"
-              control={<Checkbox {...field} />}
-              label="Combo"
-              labelPlacement="end"
-            />
-          )}
-        ></Controller>
-        {watchCombo && (
-          <AsyncSelect
-            fieldName="subjects"
-            control={control}
-            required
-            isMulti
-            promiseOptions={groupApis.getFakedSearch}
-            error={Boolean(errors.subjects)}
-          />
-        )}
-        <Box />
+          required
+          promiseOptions={groupApis.getFakedSearch}
+          error={Boolean(errors.curriculum)}
+        />
         <Controller
           name="active"
           control={control}
-          render={({ field }) => (
+          render={({ field: { value, ...field } }) => (
             <FormControlLabel
-              value="active"
-              control={<Checkbox {...field} />}
+              control={<Checkbox checked={Boolean(value)} {...field} />}
               label="Active"
               labelPlacement="end"
             />

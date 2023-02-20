@@ -1,5 +1,4 @@
-import { User } from 'src/@types';
-import { Curriculum } from 'src/@types';
+import { Curriculum, User, UserRole } from 'src/@types';
 
 const generateCurriculum = (): Curriculum => {
   return {
@@ -22,7 +21,7 @@ const generateUser = (): User => {
     id: Math.floor(Math.random() * 100),
     name: `User ${Math.floor(Math.random() * 100)}`,
     code: `USR-${Math.floor(Math.random() * 1000)}`,
-    role: 'user',
+    role: UserRole.Student,
     schoolYear: '2022',
     personalMail: `user${Math.floor(Math.random() * 100)}@example.com`,
     eduMail: `edu${Math.floor(Math.random() * 100)}@example.com`,

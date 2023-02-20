@@ -31,10 +31,18 @@ const generateOptions = <TData>({
   valuePath,
   labelPath,
 }: {
-  data: TData[];
+  data: TData[] | TData;
   valuePath: keyof TData;
   labelPath: keyof TData;
 }) => {
-  return data.map((op) => ({ value: op[valuePath], label: op[labelPath] }));
+  if (!data) return null;
+  if (Array.isArray(data))
+    return data.map((op) => ({ value: op[valuePath], label: op[labelPath] }));
+  return { value: data[valuePath], label: data[labelPath] };
 };
-export { pluralize, fakePromise, generateOptions };
+
+const getSelectValue = (option: { label: string; value: number | string } | number | string) => {
+  if (typeof option === 'object') return option.value;
+  return option;
+};
+export { pluralize, fakePromise, generateOptions, getSelectValue };
