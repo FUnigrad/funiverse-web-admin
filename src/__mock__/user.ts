@@ -1,27 +1,38 @@
 import { User } from 'src/@types';
+import { Curriculum } from 'src/@types';
 
-function generateFakeData(): User[] {
-  const userData: User[] = [];
+const generateCurriculum = (): Curriculum => {
+  return {
+    id: Math.floor(Math.random() * 100),
+    name: null,
+    code: `CUR-${Math.floor(Math.random() * 1000)}`,
+    schoolYear: null,
+    description: null,
+    major: null,
+    specialization: null,
+    startedTerm: null,
+    noSemester: Math.floor(Math.random() * 10) + 1,
+    currentSemester: Math.floor(Math.random() * 10) + 1,
+    active: Math.random() < 0.5,
+  };
+};
 
-  for (let i = 0; i < 3; i++) {
-    const user: User = {
-      id: i + 1,
-      avatar: `https://example.com/avatar/${i}`,
-      code: `code_${i}`,
-      eduMail: `edu_${i}@example.com`,
-      isActive: i % 2 === 0,
-      name: `User ${i + 1}`,
-      personalMail: `personal_${i}@example.com`,
-      phoneNumber: `555-555-${i.toString().padStart(4, '0')}`,
-      role: i % 3,
-      schoolYear: `202${i}`,
-      curriculumId: i + 100,
-    };
+const generateUser = (): User => {
+  return {
+    id: Math.floor(Math.random() * 100),
+    name: `User ${Math.floor(Math.random() * 100)}`,
+    code: `USR-${Math.floor(Math.random() * 1000)}`,
+    role: 'user',
+    schoolYear: '2022',
+    personalMail: `user${Math.floor(Math.random() * 100)}@example.com`,
+    eduMail: `edu${Math.floor(Math.random() * 100)}@example.com`,
+    avatar: 'https://example.com/avatar.png',
+    phoneNumber: `+1 555-555-${Math.floor(Math.random() * 10000)
+      .toString()
+      .padStart(4, '0')}`,
+    curriculum: generateCurriculum(),
+    active: Math.random() < 0.5,
+  };
+};
 
-    userData.push(user);
-  }
-
-  return userData;
-}
-
-export const userData = generateFakeData();
+export const userData: User[] = Array.from({ length: 3 }, generateUser);

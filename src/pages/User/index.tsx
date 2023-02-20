@@ -46,7 +46,7 @@ function UserPage() {
       // },
       {
         header: 'Active',
-        accessorKey: 'isActive',
+        accessorKey: 'active',
         Cell: ({ cell }) => (
           <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
         ),

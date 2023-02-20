@@ -1,3 +1,4 @@
+import { Curriculum } from "./curriculum";
 import { Syllabus } from "./syllabus";
 
 type Nullabel<T, K extends keyof T> = Omit<T, K> & { [P in K]: null };
@@ -30,20 +31,6 @@ export interface Group {
   syllabus:        Syllabus;
   teacher:         Teacher;
   private:         boolean;
-  active:          boolean;
-}
-
-export interface Curriculum {
-  id:              number;
-  name:            null;
-  code:            string;
-  schoolYear:      null;
-  description:     null;
-  major:           null;
-  specialization:  null;
-  startedTerm:     null;
-  noSemester:      number;
-  currentSemester: number;
   active:          boolean;
 }
 

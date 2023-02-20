@@ -7,8 +7,16 @@ interface AsyncSelectProps {
   promiseOptions: (inputValue: string) => Promise<any[]>;
   error: boolean;
   required: boolean;
+  isMulti?: boolean;
 }
-function AsyncSelect({ control, fieldName, promiseOptions, error, required }: AsyncSelectProps) {
+function AsyncSelect({
+  control,
+  fieldName,
+  promiseOptions,
+  error,
+  required,
+  isMulti = false,
+}: AsyncSelectProps) {
   const defaultConfig = {
     // isSearchable: false,
     isClearable: false,
@@ -50,10 +58,13 @@ function AsyncSelect({ control, fieldName, promiseOptions, error, required }: As
             defaultValue={value}
             placeholder={`Search ${fieldName} ...`}
             maxMenuHeight={130}
+            isMulti={isMulti}
             // @ts-ignore - Conflict btw react-hook-form and react-select
             loadOptions={promiseOptions}
             onChange={(option: any) => {
-              onChange(option.value);
+              console.log('🚀 ~ option:', option);
+              if (isMulti) onChange(option.map((o) => o.value));
+              else onChange(option.value);
             }}
             styles={{
               control: (baseStyles) => ({
