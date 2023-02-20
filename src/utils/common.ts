@@ -25,4 +25,16 @@ const fakePromise = <TData>(data: TData): Promise<TData> =>
       return res(data);
     }, 1000);
   });
-export { pluralize, fakePromise };
+
+const generateOptions = <TData>({
+  data,
+  valuePath,
+  labelPath,
+}: {
+  data: TData[];
+  valuePath: keyof TData;
+  labelPath: keyof TData;
+}) => {
+  return data.map((op) => ({ value: op[valuePath], label: op[labelPath] }));
+};
+export { pluralize, fakePromise, generateOptions };
