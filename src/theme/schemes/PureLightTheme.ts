@@ -362,14 +362,15 @@ export const PureLightTheme = createTheme({
     MuiFormControl: {
       styleOverrides: {
         root: {
-          height: 70,
+          minHeight: 90,
+          paddingBottom: '0 !important',
         },
       },
     },
     MuiTextField: {
       styleOverrides: {
         root: {
-          margin: '10px 0 !important',
+          margin: '0 !important',
         },
       },
     },

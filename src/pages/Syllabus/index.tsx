@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, TextField, Typography, Checkbox, Link as MuiLink } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { MRT_ColumnDef } from 'material-react-table';
 import { MRT_Row } from 'material-react-table';
 import { useContext, useEffect, useMemo } from 'react';
@@ -17,10 +17,21 @@ import { z } from 'zod';
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 function SyllabusPage() {
+  const { dispatch } = useContext(ModalContext);
+
+  const navigate = useNavigate();
   const columns = useMemo<MRT_ColumnDef<Syllabus>[]>(
     () => [
       {
-        header: 'Name',
+        header: 'Subject Code',
+        accessorKey: 'subject.code',
+      },
+      {
+        header: 'Subject Name',
+        accessorKey: 'subject.name',
+      },
+      {
+        header: 'Syllabus Name',
         accessorKey: 'name',
         Cell: ({ cell, row }) => (
           <MuiLink component={Link} to={`${row.id}`}>
@@ -29,16 +40,8 @@ function SyllabusPage() {
         ),
       },
       {
-        header: 'Description',
-        accessorKey: 'description',
-      },
-      {
         header: 'No credit',
         accessorKey: 'noCredit',
-      },
-      {
-        header: 'Min Avg',
-        accessorKey: 'minAvgMarkToPass',
       },
       {
         header: 'Active',
@@ -51,11 +54,28 @@ function SyllabusPage() {
     ],
     [],
   );
-  function onCreateEntity() {}
-  function onEditEntity() {}
-  function onDeleteEntity() {}
+  function onCreateEntity() {
+    navigate('create');
+  }
+  function onEditEntity(row: MRT_Row<Syllabus>) {
+    navigate(`${row.id}/edit`);
+  }
+  function onDeleteEntity(row: MRT_Row<Syllabus>) {
+    dispatch({
+      type: 'open_confirm',
+      onConfirm: () => {},
+      payload: {
+        title: 'Delete this item',
+        content: () => (
+          <Typography variant="body1">
+            Are you sure you want to delete {row.original.name}?
+          </Typography>
+        ),
+      },
+    });
+  }
   const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: [QueryKey.Syllabus],
+    queryKey: [QueryKey.Syllabuses],
     queryFn: syllabusApis.getSyllabuses,
     refetchOnWindowFocus: false,
   });
@@ -65,7 +85,7 @@ function SyllabusPage() {
       <Table
         columns={columns}
         data={data}
-        // onEditEntity={onEditEntity}
+        onEditEntity={onEditEntity}
         onDeleteEntity={onDeleteEntity}
         state={{
           isLoading,

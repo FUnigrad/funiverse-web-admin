@@ -8,7 +8,7 @@
   "files.eol": "\n",
   "editor.tabSize": 2,
   "editor.renderWhitespace": "all",
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "jest.autoRun": "off",
   "editor.codeActionsOnSave": {
     "source.organizeImports": false

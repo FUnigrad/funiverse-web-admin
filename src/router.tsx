@@ -50,6 +50,8 @@ const GroupPage = Loader(lazy(() => import('src/pages/Group')));
 const UserPage = Loader(lazy(() => import('src/pages/User')));
 const CurriculumPage = Loader(lazy(() => import('src/pages/Curriculum')));
 const SyllabusPage = Loader(lazy(() => import('src/pages/Syllabus')));
+const SyllabusFormPage = Loader(lazy(() => import('src/pages/Syllabus/SyllabusForm')));
+const SyllabusDetailPage = Loader(lazy(() => import('src/pages/Syllabus/SyllabusDetail')));
 const SubjectPage = Loader(lazy(() => import('src/pages/Subject')));
 const routes: RouteObject[] = [
   {
@@ -132,6 +134,18 @@ const routes: RouteObject[] = [
       {
         path: '',
         element: <SyllabusPage />,
+      },
+      {
+        path: ':slug',
+        element: <SyllabusDetailPage />,
+      },
+      {
+        path: 'create',
+        element: <SyllabusFormPage test={1} />,
+      },
+      {
+        path: ':slug/edit',
+        element: <SyllabusFormPage />,
       },
     ],
   },
