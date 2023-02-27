@@ -3,8 +3,9 @@ export * from './subjectApis';
 export * from './syllabusApis';
 export * from './userApis';
 export const QueryKey = {
-  Group: 'group',
+  Groups: 'groups',
+  Syllabuses: 'syllabuses',
   Syllabus: 'syllabus',
-  Subject: 'subject',
-  User: 'user',
+  Subjects: 'subjects',
+  Users: 'users',
 };

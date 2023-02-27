@@ -51,35 +51,39 @@ function AsyncSelect({
       <Controller
         name={fieldName}
         control={control}
-        render={({ field: { onChange, value, name, ref, ...field } }) => (
-          <ReactAsyncSelect
-            required={required}
-            cacheOptions
-            defaultValue={value}
-            placeholder={`Search ${fieldName} ...`}
-            maxMenuHeight={130}
-            isMulti={isMulti}
-            // @ts-ignore - Conflict btw react-hook-form and react-select
-            loadOptions={promiseOptions}
-            onChange={(option: any) => {
-              console.log('🚀 ~ option:', option);
-              if (isMulti) onChange(option.map((o) => o.value));
-              else onChange(option.value);
-            }}
-            styles={{
-              control: (baseStyles) => ({
-                ...baseStyles,
-                ...errorSelectStyle,
-              }),
-              placeholder: (baseStyles) => ({
-                ...baseStyles,
-                ...errorSelectStyle,
-              }),
-            }}
-            {...defaultConfig}
-            {...field}
-          />
-        )}
+        render={({ field: { onChange, value, name, ref, ...field } }) => {
+          console.log('🚀 ~ value:', value);
+
+          return (
+            <ReactAsyncSelect
+              required={required}
+              cacheOptions
+              defaultValue={value}
+              placeholder={`Search ${fieldName} ...`}
+              maxMenuHeight={130}
+              isMulti={isMulti}
+              // @ts-ignore - Conflict btw react-hook-form and react-select
+              loadOptions={promiseOptions}
+              onChange={(option: any) => {
+                console.log('🚀 ~ option:', option);
+                if (isMulti) onChange(option.map((o) => o.value));
+                else onChange(option.value);
+              }}
+              styles={{
+                control: (baseStyles) => ({
+                  ...baseStyles,
+                  ...errorSelectStyle,
+                }),
+                placeholder: (baseStyles) => ({
+                  ...baseStyles,
+                  ...errorSelectStyle,
+                }),
+              }}
+              {...defaultConfig}
+              {...field}
+            />
+          );
+        }}
       />
       <FormHelperText sx={{ m: '3px 14px 0' }} error={error}>
         {error && `${fieldName} is required`}
