@@ -14,8 +14,8 @@ import { MRT_Row } from 'material-react-table';
 import { useContext, useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 // import Select from 'react-select';
-import { Group, GroupType, Syllabus } from 'src/@types';
-import { QueryKey, groupApis, syllabusApis } from 'src/apis';
+import { Group, GroupType, Curriculum } from 'src/@types';
+import { QueryKey, groupApis, curriculumApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
 import Select from 'src/components/Select';
@@ -25,11 +25,11 @@ import { z } from 'zod';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { getSelectValue, getPreviousPathSlash } from 'src/utils';
 import { useNavigate, useLocation, useParams } from 'react-router';
-interface SyllabusFormPageProps {
-  defaultValues?: SyllabusFormInputs;
+interface CurriculumFormPageProps {
+  defaultValues?: CurriculumFormInputs;
 }
 // {
-//   "name": "Syllabus 1",
+//   "name": "Curriculum 1",
 //   "subject": {
 //     "id": 6
 //   },
@@ -40,11 +40,11 @@ interface SyllabusFormPageProps {
 //   "minAvgMarkToPass": 4,
 //   "active": true
 // }
-export type SyllabusBody = Omit<SyllabusFormInputs, 'subject'> & {
+export type CurriculumBody = Omit<CurriculumFormInputs, 'subject'> & {
   id?: number;
   subject: { id: number };
 };
-const SyllabusSchema = z.object({
+const CurriculumSchema = z.object({
   name: z.string().min(1),
   subject: z
     .number()
@@ -57,19 +57,19 @@ const SyllabusSchema = z.object({
   minAvgMarkToPass: z.coerce.number().positive(),
   active: z.boolean(),
 });
-type SyllabusFormInputs = z.infer<typeof SyllabusSchema>;
-function SyllabusFormPage() {
+type CurriculumFormInputs = z.infer<typeof CurriculumSchema>;
+function CurriculumFormPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { slug } = useParams();
 
-  const mutation = useMutation<Syllabus, unknown, SyllabusBody, unknown>({
-    mutationFn: (body) =>
-      body.id ? syllabusApis.updateSyllabus(body) : syllabusApis.createSyllabus(body),
-    onSuccess: () => {
-      navigate(-1);
-    },
-  });
+  // const mutation = useMutation<Curriculum, unknown, CurriculumBody, unknown>({
+  //   mutationFn: (body) =>
+  //     body.id ? curriculumApis.updateCurriculum(body) : curriculumApis.createCurriculum(body),
+  //   onSuccess: () => {
+  //     navigate(-1);
+  //   },
+  // });
 
   const {
     register,
@@ -80,47 +80,49 @@ function SyllabusFormPage() {
     clearErrors,
     reset,
     formState: { errors },
-  } = useForm<SyllabusFormInputs>({
+  } = useForm<CurriculumFormInputs>({
     mode: 'all',
-    resolver: zodResolver(SyllabusSchema),
+    resolver: zodResolver(CurriculumSchema),
     defaultValues: {
       active: true,
       // ...defaultValues,
     },
   });
   const { data, isLoading, isError } = useQuery({
-    queryKey: [QueryKey.Syllabuses, slug],
-    queryFn: () => syllabusApis.getSyllabus(slug),
+    queryKey: [QueryKey.Curriculums, slug],
+    queryFn: () => curriculumApis.getCurriculum(slug),
     refetchOnWindowFocus: false,
     retry: 0,
     enabled: Boolean(slug),
     cacheTime: 0,
     onSuccess: (newData) => {
-      const defaultValues: SyllabusFormInputs = newData
-        ? {
-            ...newData,
-            subject: {
-              label: newData.subject.name,
-              value: newData.subject.id,
-            },
-          }
-        : {};
-      reset(defaultValues);
+      // const defaultValues: CurriculumFormInputs = newData
+      //   ? {
+      //       ...newData,
+      //       subject: {
+      //         label: newData.subject.name,
+      //         value: newData.subject.id,
+      //       },
+      //     }
+      //   : {};
+      // reset(defaultValues);
     },
   });
   function handleClose() {
     // navigate(getPreviousPathSlash(location.pathname));
     navigate(-1);
   }
-  function onSubmit(data: SyllabusFormInputs) {
+  function onSubmit(data: CurriculumFormInputs) {
     const { subject, ...rest } = data;
-    const body: SyllabusBody = {
+    const body: CurriculumBody = {
       ...rest,
       //TODO: Enhance type subject here
       subject: { id: getSelectValue(subject as any) as number },
     };
+    console.log('🚀 ~ body:', body);
+
     if (slug) body.id = +slug;
-    mutation.mutate(body);
+    // mutation.mutate(body);
   }
 
   if (isLoading && slug)
@@ -219,4 +221,4 @@ function SyllabusFormPage() {
   );
 }
 
-export default SyllabusFormPage;
+export default CurriculumFormPage;

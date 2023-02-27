@@ -94,8 +94,8 @@ function SubjectForm({ defaultValues }: SubjectFormProps) {
         <TextField
           label="Code"
           required
-          error={Boolean(errors.name)}
-          helperText={errors.name?.message}
+          error={Boolean(errors.code)}
+          helperText={errors.code?.message}
           {...register('code')}
         />
         <Controller

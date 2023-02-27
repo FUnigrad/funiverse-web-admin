@@ -2,7 +2,7 @@ name: CI to Docker Hub
 # event happen
 on:
   push:
-    branches: [main]
+    branches: [dev]
 # JOBs
 jobs:
   build:

@@ -10,7 +10,8 @@ const axiosClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  baseURL: 'http://dev.funiverse.world/api',
+  baseURL: 'http://funiverse.world:30000',
+  // baseURL: 'http://dev.funiverse.world/api',
   proxy: {
     host: 'http://localhost',
     port: 3001,

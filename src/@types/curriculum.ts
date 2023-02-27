@@ -1,13 +1,24 @@
+export interface Major {
+  id: number;
+  code: string;
+  name: string;
+}
+export interface Specialization {
+  id: number;
+  code: string;
+  name: string;
+  major: Major;
+}
 export interface Curriculum {
-  id:              number;
-  name:            null;
-  code:            string;
-  schoolYear:      null;
-  description:     null;
-  major:           null;
-  specialization:  null;
-  startedTerm:     null;
-  noSemester:      number;
+  id: number;
+  name: string;
+  code: string;
+  schoolYear: string;
+  description: string;
+  major: Major;
+  specialization: Specialization;
+  startedTerm: null;
+  noSemester: number;
   currentSemester: number;
-  active:          boolean;
+  active: boolean;
 }

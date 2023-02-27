@@ -27,7 +27,7 @@ function SyllabusDetailPage() {
   const { slug } = useParams();
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: [QueryKey.Syllabus, slug],
+    queryKey: [QueryKey.Syllabuses, slug],
     queryFn: () => syllabusApis.getSyllabus(slug),
     refetchOnWindowFocus: false,
     select: (data) => transfromSyllabusDetail(data),

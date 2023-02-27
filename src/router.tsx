@@ -49,10 +49,14 @@ const StatusMaintenance = Loader(lazy(() => import('src/content/pages/Status/Mai
 const GroupPage = Loader(lazy(() => import('src/pages/Group')));
 const UserPage = Loader(lazy(() => import('src/pages/User')));
 const CurriculumPage = Loader(lazy(() => import('src/pages/Curriculum')));
+const CurriculumFormPage = Loader(lazy(() => import('src/pages/Curriculum/CurriculumForm')));
+const CurriculumDetailPage = Loader(lazy(() => import('src/pages/Curriculum/CurriculumDetail')));
 const SyllabusPage = Loader(lazy(() => import('src/pages/Syllabus')));
 const SyllabusFormPage = Loader(lazy(() => import('src/pages/Syllabus/SyllabusForm')));
 const SyllabusDetailPage = Loader(lazy(() => import('src/pages/Syllabus/SyllabusDetail')));
 const SubjectPage = Loader(lazy(() => import('src/pages/Subject')));
+const MajorPage = Loader(lazy(() => import('src/pages/Major')));
+const SpecializationPage = Loader(lazy(() => import('src/pages/Specialization')));
 const routes: RouteObject[] = [
   {
     path: '',
@@ -128,6 +132,26 @@ const routes: RouteObject[] = [
     ],
   },
   {
+    path: 'majors',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <MajorPage />,
+      },
+    ],
+  },
+  {
+    path: 'specializations',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <SpecializationPage />,
+      },
+    ],
+  },
+  {
     path: 'syllabuses',
     element: <SidebarLayout />,
     children: [
@@ -141,7 +165,7 @@ const routes: RouteObject[] = [
       },
       {
         path: 'create',
-        element: <SyllabusFormPage test={1} />,
+        element: <SyllabusFormPage />,
       },
       {
         path: ':slug/edit',
@@ -156,6 +180,18 @@ const routes: RouteObject[] = [
       {
         path: '',
         element: <CurriculumPage />,
+      },
+      {
+        path: ':slug',
+        element: <CurriculumDetailPage />,
+      },
+      {
+        path: 'create',
+        element: <CurriculumFormPage />,
+      },
+      {
+        path: ':slug/edit',
+        element: <CurriculumFormPage />,
       },
     ],
   },

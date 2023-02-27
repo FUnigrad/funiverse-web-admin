@@ -3,7 +3,15 @@ import { useContext } from 'react';
 import { ListSubheader, alpha, Box, List, styled, Button, ListItem } from '@mui/material';
 import { NavLink as RouterLink } from 'react-router-dom';
 import { SidebarContext } from 'src/contexts/SidebarContext';
-
+import {
+  GroupsOutlined,
+  ManageAccountsOutlined,
+  FolderOutlined,
+  FolderCopyOutlined,
+  MovingOutlined,
+  MuseumOutlined,
+  AutoStoriesOutlined,
+} from '@mui/icons-material';
 import DesignServicesTwoToneIcon from '@mui/icons-material/DesignServicesTwoTone';
 import BrightnessLowTwoToneIcon from '@mui/icons-material/BrightnessLowTwoTone';
 import MmsTwoToneIcon from '@mui/icons-material/MmsTwoTone';
@@ -202,7 +210,7 @@ function SidebarMenu() {
                   component={RouterLink}
                   onClick={closeSidebar}
                   to="/groups"
-                  startIcon={<BrightnessLowTwoToneIcon />}
+                  startIcon={<GroupsOutlined />}
                 >
                   Groups
                 </Button>
@@ -213,7 +221,7 @@ function SidebarMenu() {
                   component={RouterLink}
                   onClick={closeSidebar}
                   to="/users"
-                  startIcon={<BrightnessLowTwoToneIcon />}
+                  startIcon={<ManageAccountsOutlined />}
                 >
                   Users
                 </Button>
@@ -224,7 +232,7 @@ function SidebarMenu() {
                   component={RouterLink}
                   onClick={closeSidebar}
                   to="/subjects"
-                  startIcon={<BrightnessLowTwoToneIcon />}
+                  startIcon={<FolderOutlined />}
                 >
                   Subjects
                 </Button>
@@ -235,7 +243,7 @@ function SidebarMenu() {
                   component={RouterLink}
                   onClick={closeSidebar}
                   to="/syllabuses"
-                  startIcon={<BrightnessLowTwoToneIcon />}
+                  startIcon={<FolderCopyOutlined />}
                 >
                   Syllabuses
                 </Button>
@@ -246,9 +254,31 @@ function SidebarMenu() {
                   component={RouterLink}
                   onClick={closeSidebar}
                   to="/curriculums"
-                  startIcon={<BrightnessLowTwoToneIcon />}
+                  startIcon={<MovingOutlined />}
                 >
                   Curriculums
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/majors"
+                  startIcon={<MuseumOutlined />}
+                >
+                  Majors
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/specializations"
+                  startIcon={<AutoStoriesOutlined />}
+                >
+                  Specializations
                 </Button>
               </ListItem>
 

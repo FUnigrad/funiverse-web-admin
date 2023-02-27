@@ -334,6 +334,7 @@ export const PureLightTheme = createTheme({
       styleOverrides: {
         root: {
           // minHeight: 320,
+          paddingTop: '20px !important',
         },
       },
     },
