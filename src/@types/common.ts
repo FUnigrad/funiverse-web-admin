@@ -1,5 +1,6 @@
 import { Dispatch } from 'react';
 import { Control } from 'react-hook-form';
+export type SelectOption = { label: string; value: number | string };
 
 export type Callback = (...args: any[]) => void;
 export type ModalAction =

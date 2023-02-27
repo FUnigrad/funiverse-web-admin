@@ -108,7 +108,7 @@ function SubjectPage() {
     });
   }
   const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: [QueryKey.Subject],
+    queryKey: [QueryKey.Subjects],
     queryFn: subjectApis.getSubjects,
     refetchOnWindowFocus: false,
   });

@@ -120,7 +120,7 @@ function UserPage() {
     });
   }
   const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: [QueryKey.User],
+    queryKey: [QueryKey.Users],
     queryFn: userApis.getUsers,
     refetchOnWindowFocus: false,
   });
