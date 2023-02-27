@@ -49,7 +49,7 @@ function GroupPage() {
   );
 
   const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: [QueryKey.Group],
+    queryKey: [QueryKey.Groups],
     queryFn: groupApis.getGroups,
     refetchOnWindowFocus: false,
   });

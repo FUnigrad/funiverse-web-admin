@@ -1,3 +1,4 @@
+import { SelectOption } from 'src/@types';
 function pluralize(noun: string): string {
   // const exceptions = {
   //   syllabus: 'syllabi',
@@ -41,8 +42,12 @@ const generateOptions = <TData>({
   return { value: data[valuePath], label: data[labelPath] };
 };
 
-const getSelectValue = (option: { label: string; value: number | string } | number | string) => {
+const getSelectValue = <T extends SelectOption | string | number>(option: T): string | number => {
   if (typeof option === 'object') return option.value;
   return option;
 };
-export { pluralize, fakePromise, generateOptions, getSelectValue };
+
+const getPreviousPathSlash = (path: string) => {
+  return path.substring(0, path.lastIndexOf('/'));
+};
+export { pluralize, fakePromise, generateOptions, getSelectValue, getPreviousPathSlash };

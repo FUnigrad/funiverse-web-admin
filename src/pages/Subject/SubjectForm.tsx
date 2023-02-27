@@ -56,7 +56,7 @@ function SubjectForm({ defaultValues }: SubjectFormProps) {
   });
 
   const watchCombo = watch('combo');
-  console.log('🚀 ~ watchCombo', watchCombo);
+  // console.log('🚀 ~ watchCombo', watchCombo);
   useEffect(() => {
     clearErrors();
     return () => {
@@ -69,7 +69,7 @@ function SubjectForm({ defaultValues }: SubjectFormProps) {
   }
 
   // console.log('🚀 ~ defaultValues', defaultValues);
-  console.log('🚀 ~ errors', errors);
+  // console.log('🚀 ~ errors', errors);
 
   return (
     <>
