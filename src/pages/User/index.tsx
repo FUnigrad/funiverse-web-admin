@@ -110,10 +110,10 @@ function UserPage() {
       type: 'open_confirm',
       onConfirm: () => {},
       payload: {
-        title: 'Delete this item',
+        // title: 'Delete this item',
         content: () => (
           <Typography variant="body1">
-            Are you sure you want to delete {row.original.name}?
+            Are you sure you want to deactivate {row.original.name}?
           </Typography>
         ),
       },

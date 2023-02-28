@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import qs from 'query-string';
 // declare global {
 //   module 'axios' {
 //     export interface AxiosResponse<T = any> extends Promise<T> {}
@@ -11,6 +11,7 @@ const axiosClient = axios.create({
     'Content-Type': 'application/json',
   },
   baseURL: 'http://funiverse.world:30000',
+  paramsSerializer: { serialize: (params) => qs.stringify(params) },
   // baseURL: 'http://dev.funiverse.world/api',
   proxy: {
     host: 'http://localhost',
@@ -26,6 +27,13 @@ const axiosClient = axios.create({
   //   // }
   // },
 });
+axiosClient.interceptors.request.use(
+  async (config) => {
+    // config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  (error) => {},
+);
 axiosClient.interceptors.response.use((response) => {
   return response?.data;
 });

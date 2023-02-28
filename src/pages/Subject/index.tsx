@@ -7,21 +7,35 @@ import { useContext, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 // import Select from 'react-select';
 import { Group, GroupType, Subject } from 'src/@types';
-import { QueryKey, groupApis, syllabusApis } from 'src/apis';
+import { QueryKey, groupApis, syllabusApis, subjectApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
 import Select from 'src/components/Select';
 import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { subjectApis } from 'src/apis';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SubjectForm, { SubjectFormInputs } from './SubjectForm';
 import { generateOptions } from 'src/utils';
 
 function SubjectPage() {
   const { dispatch } = useContext(ModalContext);
 
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, isError, isFetching } = useQuery({
+    queryKey: [QueryKey.Subjects],
+    queryFn: subjectApis.getSubjects,
+    refetchOnWindowFocus: false,
+  });
+
+  const mutation = useMutation({
+    mutationFn: (id) => subjectApis.deleteSubject(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Subjects] });
+      dispatch({ type: 'close' });
+    },
+  });
   const columns = useMemo<MRT_ColumnDef<Subject>[]>(
     () => [
       {
@@ -61,8 +75,7 @@ function SubjectPage() {
     dispatch({
       type: 'open',
       payload: {
-        title: 'Create Group',
-        // content: () => <SubjectForm defaultValues={{ ...(defaultValues as any) }} />,
+        title: 'Create Subject',
         content: () => <SubjectForm />,
       },
       onCreateOrSave: () => {},
@@ -84,9 +97,8 @@ function SubjectPage() {
     dispatch({
       type: 'open',
       payload: {
-        title: 'Edit Group',
+        title: 'Edit Subject',
         content: () => <SubjectForm defaultValues={{ ...(defaultValues as any) }} />,
-        // content: () => <SubjectForm defaultValues />,
       },
       onCreateOrSave: () => {},
     });
@@ -96,22 +108,20 @@ function SubjectPage() {
 
     dispatch({
       type: 'open_confirm',
-      onConfirm: () => {},
+      onConfirm: () => {
+        mutation.mutate(row.id as any);
+      },
       payload: {
-        title: 'Delete this item',
+        // title: 'Delete this item',
         content: () => (
           <Typography variant="body1">
-            Are you sure you want to delete {row.original.name}?
+            Are you sure you want to deactivate {row.original.name}?
           </Typography>
         ),
       },
     });
   }
-  const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: [QueryKey.Subjects],
-    queryFn: subjectApis.getSubjects,
-    refetchOnWindowFocus: false,
-  });
+
   return (
     <Box>
       <ListPageHeader entity="subject" onCreateEntity={onCreateEntity} />

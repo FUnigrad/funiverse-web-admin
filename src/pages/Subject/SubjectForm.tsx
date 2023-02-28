@@ -5,40 +5,65 @@ import { MRT_Row } from 'material-react-table';
 import { useContext, useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 // import Select from 'react-select';
-import { Group, GroupType } from 'src/@types';
-import { QueryKey, groupApis } from 'src/apis';
+import { Subject, GroupType } from 'src/@types';
+import { QueryKey, subjectApis, groupApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
 import Select from 'src/components/Select';
 import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
-import { useQuery, useMutation } from '@tanstack/react-query';
-const SubjectSchema = z.object({
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+// const SubjectSchema = z.object({
+//   name: z.string().min(1),
+//   code: z.string().min(1),
+//   combo: z.boolean().optional(),
+//   active: z.boolean(),
+
+// }).refine((obj, ctx) => {
+//   if(obj.combo) return
+// });
+const base = z.object({
   name: z.string().min(1),
   code: z.string().min(1),
-  combo: z.boolean().optional(),
+  // combo: z.boolean().optional(),
   active: z.boolean(),
-  subjects: z.lazy(() => {
-    if (!this) return z.array(z.number()).optional();
-    // @ts-ignore
-    if (this.combo) {
-      return z.array(z.number()).min(1);
-    } else {
-      return z.array(z.number()).optional();
-    }
-  }),
 });
+
+const SubjectSchema = z.discriminatedUnion('combo', [
+  z
+    .object({
+      combo: z.literal(false),
+      subjects: z.array(z.number()).nullable(),
+    })
+    .merge(base),
+  z
+    .object({
+      combo: z.literal(true),
+      subjects: z.array(z.number()).min(1),
+    })
+    .merge(base),
+]);
 
 // https://github.com/react-hook-form/react-hook-form/issues/9287
 // type SubjectFormInputs2 = z.infer<typeof GroupSchema>; //will not work
 export type SubjectFormInputs = z.infer<typeof SubjectSchema>;
 interface SubjectFormProps {
-  defaultValues?: SubjectFormInputs & { id: number };
+  defaultValues?: SubjectFormBody;
 }
+export type SubjectFormBody = SubjectFormInputs & { id: number };
 function SubjectForm({ defaultValues }: SubjectFormProps) {
-  const { dispatch, onConfirm, onCreateOrSave } = useContext(ModalContext);
+  const queryClient = useQueryClient();
 
+  const { dispatch, onConfirm, onCreateOrSave } = useContext(ModalContext);
+  const mutation = useMutation<Subject, unknown, typeof defaultValues, unknown>({
+    mutationFn: (body) =>
+      body.id ? subjectApis.updateSubject(body) : subjectApis.createSubject(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Subjects] });
+      dispatch({ type: 'close' });
+    },
+  });
   const {
     register,
     handleSubmit,
@@ -51,6 +76,9 @@ function SubjectForm({ defaultValues }: SubjectFormProps) {
     mode: 'all',
     resolver: zodResolver(SubjectSchema),
     defaultValues: {
+      active: true,
+      subjects: null,
+      combo: false,
       ...defaultValues,
     },
   });
@@ -66,10 +94,15 @@ function SubjectForm({ defaultValues }: SubjectFormProps) {
 
   function onSubmit(data) {
     console.log('data: ', defaultValues?.id, data);
+    const body: SubjectFormBody = {
+      ...data,
+    };
+    if (defaultValues?.id) body.id = defaultValues?.id;
+    mutation.mutate(body);
   }
 
   // console.log('🚀 ~ defaultValues', defaultValues);
-  // console.log('🚀 ~ errors', errors);
+  console.log('🚀 ~ errors', errors);
 
   return (
     <>

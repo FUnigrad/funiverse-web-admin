@@ -25,6 +25,7 @@ function SyllabusPage() {
       dispatch({ type: 'close' });
     },
   });
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const columns = useMemo<MRT_ColumnDef<Syllabus>[]>(
     () => [
@@ -66,7 +67,6 @@ function SyllabusPage() {
   function onEditEntity(row: MRT_Row<Syllabus>) {
     navigate(`${row.id}/edit`);
   }
-  const queryClient = useQueryClient();
 
   function onDeleteEntity(row: MRT_Row<Syllabus>) {
     dispatch({
@@ -75,10 +75,10 @@ function SyllabusPage() {
         mutation.mutate(row.original.id);
       },
       payload: {
-        title: 'Delete this item',
+        // title: 'Delete this item',
         content: () => (
           <Typography variant="body1">
-            Are you sure you want to delete {row.original.name}?
+            Are you sure you want to deactivate {row.original.name}?
           </Typography>
         ),
       },

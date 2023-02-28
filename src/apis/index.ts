@@ -5,6 +5,7 @@ export * from './syllabusApis';
 export * from './userApis';
 export * from './majorApis';
 export * from './specializationApis';
+export * from './searchApis';
 export const QueryKey = {
   Groups: 'groups',
   Syllabuses: 'syllabuses',

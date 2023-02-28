@@ -1,6 +1,7 @@
 import { groupData } from 'src/__mock__';
 import axiosClient from './axiosClient';
 import { fakePromise } from 'src/utils';
+import { Group } from 'src/@types';
 const searchData = [
   {
     value: 1,
@@ -24,6 +25,10 @@ const fakeSearchPromise = (inputValue: string): Promise<any[]> =>
 
 export const groupApis = {
   // fetchGroups: () => axiosClient.get('/group'),
-  getGroups: () => fakePromise(groupData),
+  // getGroups: () => fakePromise(groupData),
+  getGroups: () => axiosClient.get<Group[]>('/group'),
+  updateGroup: (newGroup) => axiosClient.put(`/group`, newGroup),
+  createGroup: (newGroup) => axiosClient.post('/group', newGroup),
+  deleteGroup: (id) => axiosClient.delete(`/group/${id}`),
   getFakedSearch: fakeSearchPromise,
 };

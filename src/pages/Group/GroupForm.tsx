@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, TextField, Typography, FormControlLabel, Checkbox } from '@mui/material';
 import type { MRT_ColumnDef } from 'material-react-table';
 import { MRT_Row } from 'material-react-table';
 import { useContext, useEffect, useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 // import Select from 'react-select';
 import { Group, GroupType } from 'src/@types';
 import { QueryKey, groupApis } from 'src/apis';
@@ -13,7 +13,9 @@ import Select from 'src/components/Select';
 import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate, useLocation, useParams } from 'react-router';
+
 const typeOptions = [
   { value: GroupType.Class, label: 'Class' },
   { value: GroupType.Course, label: 'Course' },
@@ -45,18 +47,32 @@ const departmentSchema = z.object({
 // https://github.com/react-hook-form/react-hook-form/issues/9287
 // type GroupFormInputs2 = z.infer<typeof GroupSchema>; //will not work
 export type GroupFormInputs = z.infer<typeof classSchema> &
-  z.infer<typeof courseSchema> & { type: typeof options[number] };
-const GroupSchema = z.union([
-  z.object({ type: z.literal(GroupType.Class) }).and(classSchema),
-  z.object({ type: z.literal(GroupType.Course) }).and(courseSchema),
-  z.object({ type: z.literal(GroupType.Department) }).and(departmentSchema),
-]);
+  z.infer<typeof courseSchema> & { type: typeof options[number]; active: boolean };
+const GroupSchema = z
+  .object({ active: z.boolean() })
+  .and(
+    z.union([
+      z.object({ type: z.literal(GroupType.Class) }).and(classSchema),
+      z.object({ type: z.literal(GroupType.Course) }).and(courseSchema),
+      z.object({ type: z.literal(GroupType.Department) }).and(departmentSchema),
+    ]),
+  );
 interface GroupFormProps {
-  defaultValues?: GroupFormInputs & { id: number };
+  defaultValues?: GroupFormBody;
 }
+export type GroupFormBody = GroupFormInputs & { id?: number };
 function GroupForm({ defaultValues }: GroupFormProps) {
   const { dispatch, onConfirm, onCreateOrSave } = useContext(ModalContext);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
+  const mutation = useMutation<Group, unknown, typeof defaultValues, unknown>({
+    mutationFn: (body) => (body.id ? groupApis.updateGroup(body) : groupApis.createGroup(body)),
+    onSuccess: () => {
+      dispatch({ type: 'close' });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Groups] });
+    },
+  });
   const {
     register,
     handleSubmit,
@@ -69,6 +85,7 @@ function GroupForm({ defaultValues }: GroupFormProps) {
     mode: 'all',
     resolver: zodResolver(GroupSchema),
     defaultValues: {
+      active: true,
       ...defaultValues,
     },
   });
@@ -80,10 +97,15 @@ function GroupForm({ defaultValues }: GroupFormProps) {
     return () => {
       clearErrors();
     };
-  }, [clearErrors, watchType]);
+  }, [clearErrors]);
 
-  function onSubmit(data) {
+  function onSubmit(data: GroupFormInputs) {
     console.log('data: ', defaultValues?.id, data);
+    const body: GroupFormBody = {
+      ...data,
+    };
+    if (defaultValues?.id) body.id = defaultValues.id;
+    mutation.mutate(body);
   }
 
   // console.log('🚀 ~ defaultValues', defaultValues);
@@ -154,6 +176,17 @@ function GroupForm({ defaultValues }: GroupFormProps) {
             />
           </>
         )}
+        <Controller
+          name="active"
+          control={control}
+          render={({ field: { value, ...field } }) => (
+            <FormControlLabel
+              control={<Checkbox checked={Boolean(value)} {...field} />}
+              label="Active"
+              labelPlacement="end"
+            />
+          )}
+        ></Controller>
       </Box>
     </>
   );

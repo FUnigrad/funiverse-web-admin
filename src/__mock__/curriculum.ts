@@ -10,6 +10,7 @@ export const curriculumData: Curriculum[] = [
       id: 1,
       code: 'IT',
       name: 'Information Technology',
+      active: true,
     },
     specialization: {
       id: 1,
@@ -19,7 +20,9 @@ export const curriculumData: Curriculum[] = [
         id: 1,
         code: 'IT',
         name: 'Information Technology',
+        active: true,
       },
+      active: true,
     },
     startedTerm: null,
     noSemester: 9,

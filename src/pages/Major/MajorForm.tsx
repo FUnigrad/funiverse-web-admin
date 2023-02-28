@@ -5,18 +5,19 @@ import { MRT_Row } from 'material-react-table';
 import { useContext, useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 // import Select from 'react-select';
-import { Group, GroupType } from 'src/@types';
-import { QueryKey, groupApis } from 'src/apis';
+import { Major, GroupType } from 'src/@types';
+import { QueryKey, majorApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
 import Select from 'src/components/Select';
 import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 const MajorSchema = z.object({
   name: z.string().min(1),
   code: z.string().min(1),
+  active: z.boolean(),
 });
 
 // https://github.com/react-hook-form/react-hook-form/issues/9287
@@ -27,7 +28,15 @@ interface MajorFormProps {
 }
 function MajorForm({ defaultValues }: MajorFormProps) {
   const { dispatch, onConfirm, onCreateOrSave } = useContext(ModalContext);
+  const queryClient = useQueryClient();
 
+  const mutation = useMutation<Major, unknown, typeof defaultValues, unknown>({
+    mutationFn: (body) => (body.id ? majorApis.updateMajor(body) : majorApis.createMajor(body)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Majors] });
+      dispatch({ type: 'close' });
+    },
+  });
   const {
     register,
     handleSubmit,
@@ -40,6 +49,7 @@ function MajorForm({ defaultValues }: MajorFormProps) {
     mode: 'all',
     resolver: zodResolver(MajorSchema),
     defaultValues: {
+      active: true,
       ...defaultValues,
     },
   });
@@ -53,6 +63,9 @@ function MajorForm({ defaultValues }: MajorFormProps) {
 
   function onSubmit(data) {
     console.log('data: ', defaultValues?.id, data);
+    const body = { ...data };
+    if (defaultValues?.id) body.id = defaultValues.id;
+    mutation.mutate(body);
   }
   return (
     <Box
@@ -63,7 +76,7 @@ function MajorForm({ defaultValues }: MajorFormProps) {
       noValidate
       sx={{
         '& .MuiTextField-root': { m: 1, width: '100%' },
-        height: 200,
+        height: 250,
       }}
     >
       <TextField
@@ -80,6 +93,17 @@ function MajorForm({ defaultValues }: MajorFormProps) {
         helperText={errors.code?.message}
         {...register('code')}
       />
+      <Controller
+        name="active"
+        control={control}
+        render={({ field: { value, ...field } }) => (
+          <FormControlLabel
+            control={<Checkbox checked={Boolean(value)} {...field} />}
+            label="Active"
+            labelPlacement="end"
+          />
+        )}
+      ></Controller>
     </Box>
   );
 }

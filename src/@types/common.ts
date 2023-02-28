@@ -22,7 +22,7 @@ export type ModalAction =
       type: 'open_confirm';
       payload: {
         content: React.FC;
-        title: string;
+        title?: string;
       };
       onConfirm: Callback;
     };

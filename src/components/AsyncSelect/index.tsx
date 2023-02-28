@@ -1,6 +1,7 @@
 import { FormControl, FormHelperText, FormLabel } from '@mui/material';
 import { Control, Controller } from 'react-hook-form';
 import ReactAsyncSelect from 'react-select/async';
+import { useEffect, useRef } from 'react';
 interface AsyncSelectProps {
   control: Control<any, any>;
   fieldName: string;
@@ -8,6 +9,7 @@ interface AsyncSelectProps {
   error: boolean;
   required: boolean;
   isMulti?: boolean;
+  debounce?: boolean;
 }
 function AsyncSelect({
   control,
@@ -16,7 +18,9 @@ function AsyncSelect({
   error,
   required,
   isMulti = false,
+  debounce = true,
 }: AsyncSelectProps) {
+  const debounceRef = useRef(null);
   const defaultConfig = {
     // isSearchable: false,
     isClearable: false,
@@ -29,6 +33,19 @@ function AsyncSelect({
         color: 'red',
       }
     : {};
+  useEffect(() => {
+    return () => debounceRef.current && clearTimeout(debounceRef.current);
+  }, []);
+  function handleLoadOptions(input) {
+    if (!debounce) return promiseOptions(input);
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    return new Promise((resolve) => {
+      debounceRef.current = setTimeout(() => {
+        resolve(promiseOptions(input));
+      }, 300);
+    });
+  }
   return (
     <FormControl sx={{ width: '100%', m: '10px 0', position: 'relative' }}>
       <FormLabel
@@ -61,7 +78,7 @@ function AsyncSelect({
               maxMenuHeight={130}
               isMulti={isMulti}
               // @ts-ignore - Conflict btw react-hook-form and react-select
-              loadOptions={promiseOptions}
+              loadOptions={handleLoadOptions}
               onChange={(option: any) => {
                 console.log('🚀 ~ option:', option);
                 if (isMulti) onChange(option.map((o) => o.value));

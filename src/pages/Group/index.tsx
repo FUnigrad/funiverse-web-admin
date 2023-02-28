@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, TextField, Typography, Checkbox } from '@mui/material';
 import type { MRT_ColumnDef } from 'material-react-table';
 import { MRT_Row } from 'material-react-table';
 import { useContext, useEffect, useMemo } from 'react';
@@ -13,7 +13,7 @@ import Select from 'src/components/Select';
 import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import GroupForm, { GroupFormInputs } from './GroupForm';
 // class || department || course
 // class: name, curriculum
@@ -22,6 +22,7 @@ import GroupForm, { GroupFormInputs } from './GroupForm';
 
 function GroupPage() {
   const { dispatch } = useContext(ModalContext);
+  const queryClient = useQueryClient();
   const columns = useMemo<MRT_ColumnDef<Group>[]>(
     () => [
       {
@@ -44,6 +45,14 @@ function GroupPage() {
         header: 'Teacher',
         accessorKey: 'teacher.name',
       },
+      {
+        header: 'Active',
+        accessorKey: 'active',
+        enableSorting: false,
+        Cell: ({ cell }) => (
+          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+        ),
+      },
     ],
     [],
   );
@@ -52,6 +61,14 @@ function GroupPage() {
     queryKey: [QueryKey.Groups],
     queryFn: groupApis.getGroups,
     refetchOnWindowFocus: false,
+  });
+
+  const mutation = useMutation({
+    mutationFn: (id) => groupApis.deleteGroup(id),
+    onSuccess: () => {
+      dispatch({ type: 'close' });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Groups] });
+    },
   });
 
   function onCreateEntity() {
@@ -72,6 +89,7 @@ function GroupPage() {
     let defaultValues: Partial<GroupFormInputs & { id: number }> = {
       id: +row.id,
       type: original.type as any,
+      active: original.active,
     };
     switch (original.type) {
       case GroupType.Class:
@@ -112,12 +130,14 @@ function GroupPage() {
 
     dispatch({
       type: 'open_confirm',
-      onConfirm: () => {},
+      onConfirm: () => {
+        mutation.mutate(row.id as any);
+      },
       payload: {
-        title: 'Delete this item',
+        // title: 'Delete this item',
         content: () => (
           <Typography variant="body1">
-            Are you sure you want to delete {row.original.name}?
+            Are you sure you want to deactivate {row.original.name}?
           </Typography>
         ),
       },

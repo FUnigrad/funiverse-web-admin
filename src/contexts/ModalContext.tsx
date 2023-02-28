@@ -47,7 +47,7 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
   >(reducer, {
     open: false,
     content: null,
-    title: 'Your Popup',
+    title: 'Deactivate this item',
     onConfirm: null,
     onCreateOrSave: null,
   });
@@ -102,8 +102,13 @@ function Modal() {
       ) : (
         <DialogActions sx={{ justifyContent: 'center' }}>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" form="entityForm" variant="contained" onClick={onCreateOrSave}>
-            Save
+          <Button
+            type="submit"
+            form="entityForm"
+            variant="contained"
+            // onClick={onCreateOrSave}
+          >
+            Deactivate
           </Button>
         </DialogActions>
       )}

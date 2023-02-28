@@ -68,9 +68,9 @@ function ListEntityPage({ columns, data, schema, formConfig, entity }: ListEntit
       type: 'open_confirm',
       onConfirm: () => {},
       payload: {
-        title: 'Delete this item',
+        // title: 'Delete this item',
         content: () => (
-          <Typography variant="body1">Are you sure you want to delete this item?</Typography>
+          <Typography variant="body1">Are you sure you want to deactivate this item?</Typography>
         ),
       },
     });
