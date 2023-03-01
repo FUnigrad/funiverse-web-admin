@@ -5,16 +5,16 @@ import { MRT_Row } from 'material-react-table';
 import { useContext, useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 // import Select from 'react-select';
-import { Group, GroupType, UserRole } from 'src/@types';
-import { QueryKey, groupApis } from 'src/apis';
+import { User, GroupType, UserRole } from 'src/@types';
+import { QueryKey, searchApis, userApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
 import Select from 'src/components/Select';
 import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
-import { useQuery, useMutation } from '@tanstack/react-query';
-
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getSelectValue } from 'src/utils';
 const roleOptions = [
   { value: UserRole.Student, label: 'Student' },
   { value: UserRole.Teacher, label: 'Teacher' },
@@ -27,9 +27,9 @@ const UserSchema = z.object({
   code: z.string().min(1),
   role: z.string().min(1),
   schoolYear: z.string().min(1),
-  personalMail: z.string().min(1),
-  eduMail: z.string().min(1),
-  avatar: z.string().min(1),
+  personalMail: z.string().email(),
+  eduMail: z.string().email(),
+  // avatar: z.string().min(1),
   phoneNumber: z.string().min(1),
   curriculum: z.object({ value: z.number(), label: z.string() }).or(z.number()),
   active: z.boolean(),
@@ -38,12 +38,21 @@ const UserSchema = z.object({
 // https://github.com/react-hook-form/react-hook-form/issues/9287
 // type UserFormInputs2 = z.infer<typeof GroupSchema>; //will not work
 export type UserFormInputs = z.infer<typeof UserSchema>;
+type UserFormBody = UserFormInputs & { id: number };
 interface UserFormProps {
-  defaultValues?: UserFormInputs & { id: number };
+  defaultValues?: UserFormBody;
 }
 function UserForm({ defaultValues }: UserFormProps) {
-  const { dispatch, onConfirm, onCreateOrSave } = useContext(ModalContext);
+  const { dispatch } = useContext(ModalContext);
+  const queryClient = useQueryClient();
 
+  const mutation = useMutation<User, unknown, typeof defaultValues, unknown>({
+    mutationFn: (body) => (body.id ? userApis.updateUser(body) : userApis.createUser(body)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Users] });
+      dispatch({ type: 'close' });
+    },
+  });
   const {
     register,
     handleSubmit,
@@ -62,22 +71,28 @@ function UserForm({ defaultValues }: UserFormProps) {
     },
   });
 
-  // const watchCombo = watch('combo');
-  // console.log('🚀 ~ watchCombo', watchCombo);
-  // useEffect(() => {
-  //   clearErrors();
-  //   return () => {
-  //     clearErrors();
-  //   };
-  // }, [clearErrors, watchCombo]);
-
   function onSubmit(data) {
     console.log('data: ', defaultValues?.id, data);
+    const body: UserFormBody = {
+      ...data,
+      role: getSelectValue(data.role),
+      curriculum: {
+        id: getSelectValue(data.curriculum),
+      },
+    };
+    if (defaultValues?.id) body.id = defaultValues?.id;
+    mutation.mutate(body);
   }
 
   // console.log('🚀 ~ defaultValues', defaultValues);
   console.log('🚀 ~ errors', errors);
-
+  function promiseOptions(input) {
+    return searchApis.search({
+      entity: 'curriculum',
+      field: 'name',
+      value: input,
+    });
+  }
   return (
     <>
       <Box
@@ -133,13 +148,13 @@ function UserForm({ defaultValues }: UserFormProps) {
           helperText={errors.eduMail?.message}
           {...register('eduMail')}
         />
-        <TextField
+        {/* <TextField
           label="Avatar"
           // required
           error={Boolean(errors.avatar)}
           helperText={errors.avatar?.message}
           {...register('avatar')}
-        />
+        /> */}
         <TextField
           label="Phone Number"
           // required
@@ -151,7 +166,7 @@ function UserForm({ defaultValues }: UserFormProps) {
           fieldName="curriculum"
           control={control}
           required
-          promiseOptions={groupApis.getFakedSearch}
+          promiseOptions={promiseOptions}
           error={Boolean(errors.curriculum)}
         />
         <Controller

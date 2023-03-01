@@ -14,9 +14,24 @@ interface HeaderRowTableProps {
 }
 function HeaderRowTable({ data }: HeaderRowTableProps) {
   return (
-    <Paper>
+    <Paper sx={{ overflow: 'hidden' }}>
       <Table>
-        <TableBody>
+        <TableBody
+          sx={{
+            '& tr::first-of-type th': {
+              borderTopLeftRadius: '10px',
+            },
+            '& td::first-of-type': {
+              borderBottomLeftRadius: '10px',
+            },
+            '& td:last-child': {
+              borderBottomRightRadius: '10px',
+            },
+            '& tr:last-child th': {
+              borderBottomLeftRadius: '10px',
+            },
+          }}
+        >
           {data &&
             Object.keys(data).map((k) => {
               const { label, value } = data[k];

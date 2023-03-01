@@ -96,14 +96,14 @@ function GroupPage() {
         defaultValues = {
           ...defaultValues,
           name: original.name,
-          curriculum: { label: original.curriculum.code, value: original.curriculum.id },
+          curriculum: { label: original.curriculum.name, value: original.curriculum.id },
         };
         break;
       case GroupType.Course:
         defaultValues = {
           ...defaultValues,
-          syllabus: { value: original.syllabus.id, label: 'TODO: Add syllabus code' },
-          class: { value: 1, label: 'TODO: ....' },
+          syllabus: { value: original.syllabus.id, label: original.syllabus.name },
+          class: { value: 1, label: 'NO SEND' }, //WARN: This value will not be in body payload
           teacher: { value: original.teacher.id, label: original.teacher.name },
         };
         break;

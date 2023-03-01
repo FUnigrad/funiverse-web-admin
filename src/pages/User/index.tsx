@@ -14,22 +14,40 @@ import Select from 'src/components/Select';
 import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import UserForm from './UserForm';
 import { generateOptions } from 'src/utils';
 
 function UserPage() {
   const { dispatch } = useContext(ModalContext);
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, isError, isFetching } = useQuery({
+    queryKey: [QueryKey.Users],
+    queryFn: userApis.getUsers,
+    refetchOnWindowFocus: false,
+  });
+  const mutation = useMutation({
+    mutationFn: (id) => userApis.deleteUser(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Users] });
+      dispatch({ type: 'close' });
+    },
+  });
   const columns = useMemo<MRT_ColumnDef<User>[]>(
     () => [
+      // {
+      //   header: 'Name',
+      //   accessorKey: 'name',
+      //   Cell: ({ cell, row }) => (
+      //     <MuiLink component={Link} to={`${row.id}`}>
+      //       {cell.getValue<string>()}
+      //     </MuiLink>
+      //   ),
+      // },
       {
         header: 'Name',
         accessorKey: 'name',
-        Cell: ({ cell, row }) => (
-          <MuiLink component={Link} to={`${row.id}`}>
-            {cell.getValue<string>()}
-          </MuiLink>
-        ),
       },
       {
         header: 'E-mail',
@@ -79,6 +97,7 @@ function UserPage() {
       }),
     );
     const defaultValues = {
+      id: original.id,
       name: original.name,
       code: original.code,
       role: original.role,
@@ -108,7 +127,9 @@ function UserPage() {
 
     dispatch({
       type: 'open_confirm',
-      onConfirm: () => {},
+      onConfirm: () => {
+        mutation.mutate(row.id as any);
+      },
       payload: {
         // title: 'Delete this item',
         content: () => (
@@ -119,11 +140,7 @@ function UserPage() {
       },
     });
   }
-  const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: [QueryKey.Users],
-    queryFn: userApis.getUsers,
-    refetchOnWindowFocus: false,
-  });
+
   return (
     <Box>
       <ListPageHeader entity="user" onCreateEntity={onCreateEntity} />

@@ -41,8 +41,8 @@ const generateOptions = <TData>({
     return data.map((op) => ({ value: op[valuePath], label: op[labelPath] }));
   return { value: data[valuePath], label: data[labelPath] };
 };
-
-const getSelectValue = <T extends SelectOption | string | number>(option: T): string | number => {
+//TODO: enhance getSelectValue type
+const getSelectValue = (option: any): any => {
   if (typeof option === 'object') return option.value;
   return option;
 };
@@ -50,4 +50,5 @@ const getSelectValue = <T extends SelectOption | string | number>(option: T): st
 const getPreviousPathSlash = (path: string) => {
   return path.substring(0, path.lastIndexOf('/'));
 };
+
 export { pluralize, fakePromise, generateOptions, getSelectValue, getPreviousPathSlash };

@@ -10,8 +10,17 @@ interface TableProps {
   data: any[];
   state: MaterialReactTableProps['state'];
   getRowId: MaterialReactTableProps['getRowId'];
+  initialState?: MaterialReactTableProps['initialState'];
 }
-function Table({ columns, onEditEntity, onDeleteEntity, data, state, getRowId }: TableProps) {
+function Table({
+  columns,
+  onEditEntity,
+  onDeleteEntity,
+  data,
+  state,
+  getRowId,
+  initialState = {},
+}: TableProps) {
   const tableProps: Partial<MaterialReactTableProps> = {};
   const applyRowActions = Boolean(onEditEntity) || Boolean(onDeleteEntity);
   if (applyRowActions)

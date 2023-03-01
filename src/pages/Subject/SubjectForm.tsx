@@ -55,7 +55,7 @@ export type SubjectFormBody = SubjectFormInputs & { id: number };
 function SubjectForm({ defaultValues }: SubjectFormProps) {
   const queryClient = useQueryClient();
 
-  const { dispatch, onConfirm, onCreateOrSave } = useContext(ModalContext);
+  const { dispatch } = useContext(ModalContext);
   const mutation = useMutation<Subject, unknown, typeof defaultValues, unknown>({
     mutationFn: (body) =>
       body.id ? subjectApis.updateSubject(body) : subjectApis.createSubject(body),

@@ -1,7 +1,7 @@
 import React from 'react';
 import StatusComingSoon from 'src/content/pages/Status/ComingSoon';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, TextField, Typography, Link as MuiLink } from '@mui/material';
+import { Box, TextField, Typography, Link as MuiLink, Checkbox } from '@mui/material';
 import type { MRT_ColumnDef } from 'material-react-table';
 import { MRT_Row } from 'material-react-table';
 import { useContext, useEffect, useMemo } from 'react';
@@ -15,15 +15,24 @@ import Select from 'src/components/Select';
 import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, Link } from 'react-router-dom';
+import CurriculumFormPage from './CurriculumForm';
 function CurriculumPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { dispatch } = useContext(ModalContext);
   const { data, isLoading, isError, isFetching } = useQuery({
     queryKey: [QueryKey.Syllabuses],
     queryFn: curriculumApis.getCurriculums,
+  });
+  const mutation = useMutation({
+    mutationFn: (id) => curriculumApis.deleteCurriculum(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Curriculums] });
+      dispatch({ type: 'close' });
+    },
   });
   const columns = useMemo<MRT_ColumnDef<Curriculum>[]>(
     () => [
@@ -48,24 +57,42 @@ function CurriculumPage() {
         header: 'School Year',
         accessorKey: 'schoolYear',
       },
+      {
+        header: 'Active',
+        accessorKey: 'active',
+        enableSorting: false,
+        Cell: ({ cell }) => (
+          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+        ),
+      },
     ],
     [],
   );
   function onCreateEntity() {
-    navigate('create');
+    dispatch({
+      type: 'open',
+      payload: {
+        title: 'Create Curriculum',
+        content: () => <CurriculumFormPage />,
+      },
+      onCreateOrSave: () => {},
+    });
+    // navigate('create');
   }
 
-  function onEditEntity(row: MRT_Row<Curriculum>) {
-    if (!row) return;
-    navigate(`${row.id}/edit`);
-  }
+  // function onEditEntity(row: MRT_Row<Curriculum>) {
+  //   if (!row) return;
+  //   navigate(`${row.id}/edit`);
+  // }
 
   function onDeleteEntity(row: MRT_Row<Curriculum>) {
     if (!row) return;
 
     dispatch({
       type: 'open_confirm',
-      onConfirm: () => {},
+      onConfirm: () => {
+        mutation.mutate(row.id as any);
+      },
       payload: {
         // title: 'Delete this item',
         content: () => (
@@ -82,7 +109,7 @@ function CurriculumPage() {
       <Table
         columns={columns}
         data={data}
-        onEditEntity={onEditEntity}
+        // onEditEntity={onEditEntity}
         onDeleteEntity={onDeleteEntity}
         state={{
           isLoading,

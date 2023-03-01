@@ -42,4 +42,10 @@ export interface SelectProps {
   options: any;
   error: boolean;
   required: boolean;
+  isDisabled?: boolean;
+}
+export const Semester = {
+  Spring: 'Spring',
+  Summer: 'Summer',
+  Fall: 'Fall',
 }

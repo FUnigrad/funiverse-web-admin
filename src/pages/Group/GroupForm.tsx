@@ -6,7 +6,7 @@ import { useContext, useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 // import Select from 'react-select';
 import { Group, GroupType } from 'src/@types';
-import { QueryKey, groupApis } from 'src/apis';
+import { QueryKey, groupApis, searchApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
 import Select from 'src/components/Select';
@@ -15,7 +15,7 @@ import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useLocation, useParams } from 'react-router';
-
+import { getSelectValue } from 'src/utils';
 const typeOptions = [
   { value: GroupType.Class, label: 'Class' },
   { value: GroupType.Course, label: 'Course' },
@@ -55,12 +55,14 @@ const GroupSchema = z
       z.object({ type: z.literal(GroupType.Class) }).and(classSchema),
       z.object({ type: z.literal(GroupType.Course) }).and(courseSchema),
       z.object({ type: z.literal(GroupType.Department) }).and(departmentSchema),
+      z.object({ type: z.literal(GroupType.Normal) }).and(departmentSchema),
     ]),
   );
 interface GroupFormProps {
   defaultValues?: GroupFormBody;
 }
-export type GroupFormBody = GroupFormInputs & { id?: number };
+// export type GroupFormBody = GroupFormInputs & { id?: number };
+export type GroupFormBody = any;
 function GroupForm({ defaultValues }: GroupFormProps) {
   const { dispatch, onConfirm, onCreateOrSave } = useContext(ModalContext);
   const navigate = useNavigate();
@@ -88,6 +90,7 @@ function GroupForm({ defaultValues }: GroupFormProps) {
       active: true,
       ...defaultValues,
     },
+    // shouldUnregister: true,
   });
 
   const watchType = watch('type');
@@ -97,19 +100,65 @@ function GroupForm({ defaultValues }: GroupFormProps) {
     return () => {
       clearErrors();
     };
-  }, [clearErrors]);
+  }, [clearErrors, watchType]);
 
   function onSubmit(data: GroupFormInputs) {
     console.log('data: ', defaultValues?.id, data);
     const body: GroupFormBody = {
       ...data,
     };
+    if (defaultValues?.id) {
+      data.class = null;
+    }
+    if (data.curriculum)
+      body.curriculum = {
+        id: getSelectValue((data as any).curriculum),
+      };
+    if (data.syllabus)
+      body.syllabus = {
+        id: getSelectValue((data as any).syllabus),
+      };
+    if (data.class)
+      body.class = {
+        id: getSelectValue((data as any).class),
+      };
+    if (data.teacher)
+      body.teacher = {
+        id: getSelectValue((data as any).teacher),
+      };
     if (defaultValues?.id) body.id = defaultValues.id;
+
     mutation.mutate(body);
   }
 
+  // useEffect(() => {
+  //   console.log(defaultValues?.id);
+  //   if(watchType === GroupType.Course && defaultValues?.id) {
+  //     unregister('class');
+  //   }
+  // }, [unregister, defaultValues?.id, watchType]);
+
+  function promiseOptionFactory({
+    entity,
+    field = 'name',
+    parentValue,
+    operator = 'like',
+  }: {
+    entity: string;
+    field?: string | string[];
+    parentValue?: string;
+    operator?: string | string[];
+  }) {
+    return (input) =>
+      searchApis.search({
+        entity,
+        field,
+        value: [parentValue].concat(input),
+        operator,
+      });
+  }
   // console.log('🚀 ~ defaultValues', defaultValues);
-  // console.log('🚀 ~ errors', errors);
+  console.log('🚀 ~ errors', errors);
 
   return (
     <>
@@ -130,9 +179,10 @@ function GroupForm({ defaultValues }: GroupFormProps) {
           options={typeOptions}
           required
           error={Boolean(errors.type) && errors.type.message === 'Required'}
+          isDisabled={Boolean(defaultValues?.type)}
           // defaultValue={defaultValues.type ?? ''}
         />
-        {watchType !== GroupType.Course && (
+        {watchType && watchType !== GroupType.Course && (
           <TextField
             label="Name"
             required
@@ -146,7 +196,7 @@ function GroupForm({ defaultValues }: GroupFormProps) {
             fieldName="curriculum"
             control={control}
             required
-            promiseOptions={groupApis.getFakedSearch}
+            promiseOptions={promiseOptionFactory({ entity: 'curriculum' })}
             error={Boolean(errors.curriculum)}
           />
         )}
@@ -157,21 +207,33 @@ function GroupForm({ defaultValues }: GroupFormProps) {
               fieldName="syllabus"
               control={control}
               required
-              promiseOptions={groupApis.getFakedSearch}
+              promiseOptions={promiseOptionFactory({ entity: 'syllabus' })}
               error={Boolean(errors.syllabus)}
             />
-            <AsyncSelect
-              fieldName="class"
-              control={control}
-              required
-              promiseOptions={groupApis.getFakedSearch}
-              error={Boolean(errors.class)}
-            />
+            {!defaultValues?.id && (
+              <AsyncSelect
+                fieldName="class"
+                control={control}
+                required
+                promiseOptions={promiseOptionFactory({
+                  entity: 'group',
+                  field: ['type', 'name'],
+                  parentValue: 'CLASS',
+                  operator: ['eq', 'like'],
+                })}
+                error={Boolean(errors.class)}
+              />
+            )}
             <AsyncSelect
               fieldName="teacher"
               control={control}
               required
-              promiseOptions={groupApis.getFakedSearch}
+              promiseOptions={promiseOptionFactory({
+                entity: 'user',
+                field: ['role', 'name'],
+                parentValue: 'TEACHER',
+                operator: ['eq', 'like'],
+              })}
               error={Boolean(errors.teacher)}
             />
           </>

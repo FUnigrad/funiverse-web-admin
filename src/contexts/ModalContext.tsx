@@ -96,7 +96,7 @@ function Modal() {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={onConfirm} variant="contained" color="error">
-            Delete
+            Deactivate
           </Button>
         </DialogActions>
       ) : (
@@ -108,7 +108,7 @@ function Modal() {
             variant="contained"
             // onClick={onCreateOrSave}
           >
-            Deactivate
+            Save
           </Button>
         </DialogActions>
       )}

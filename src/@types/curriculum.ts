@@ -19,8 +19,20 @@ export interface Curriculum {
   description: string;
   major: Major;
   specialization: Specialization;
-  startedTerm: null;
+  startedTerm: {
+    season: string;
+    year: string;
+  };
   noSemester: number;
   currentSemester: number;
   active: boolean;
+}
+
+export interface CurriculumSyllabus {
+  syllabus: {
+    id: number;
+    name: string;
+    code: null;
+  };
+  semester: number;
 }

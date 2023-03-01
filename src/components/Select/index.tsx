@@ -3,7 +3,7 @@ import { Controller } from 'react-hook-form';
 import ReactSelect from 'react-select';
 import { SelectProps } from 'src/@types';
 
-function Select({ control, fieldName, options, error, required }: SelectProps) {
+function Select({ control, fieldName, options, error, required, isDisabled = false }: SelectProps) {
   const defaultConfig = {
     isSearchable: false,
     isClearable: false,
@@ -30,6 +30,8 @@ function Select({ control, fieldName, options, error, required }: SelectProps) {
           paddingRight: '4px',
           boxSizing: 'border-box',
           color: error ? 'red' : 'inherit',
+          backgroundColor: isDisabled ? 'hsl(0, 0%, 95%)' : '#fff',
+          userSelect: 'none',
         }}
         required
       >
@@ -46,6 +48,7 @@ function Select({ control, fieldName, options, error, required }: SelectProps) {
               placeholder={`Select ${fieldName} ...`}
               defaultValue={options.find((o) => o.value === value)}
               maxMenuHeight={130}
+              isDisabled={isDisabled}
               // @ts-ignore - Conflict btw react-hook-form and react-select
               options={options}
               getOptionValue={(option: any) => option.value}

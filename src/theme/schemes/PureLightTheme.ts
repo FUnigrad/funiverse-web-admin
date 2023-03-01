@@ -970,10 +970,13 @@ export const PureLightTheme = createTheme({
     },
     MuiToolbar: {
       styleOverrides: {
-        // root: {
-        //   minHeight: '0 !important',
-        //   padding: '0 !important',
-        // },
+        root: {
+          // minHeight: '0 !important',
+          // padding: '0 !important',
+          // '& .MuiCollapse-root': {
+          //   backgroundColor: 'transparent'
+          // },
+        },
       },
     },
     MuiTableRow: {
