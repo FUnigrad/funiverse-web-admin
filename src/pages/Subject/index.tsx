@@ -1,5 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, TextField, Typography, Checkbox, Link as MuiLink } from '@mui/material';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+import MuiLink from '@mui/material/Link';
 import { Link } from 'react-router-dom';
 import type { MRT_ColumnDef } from 'material-react-table';
 import { MRT_Row } from 'material-react-table';

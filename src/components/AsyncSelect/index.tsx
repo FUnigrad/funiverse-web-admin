@@ -1,7 +1,9 @@
-import { FormControl, FormHelperText, FormLabel } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormLabel from '@mui/material/FormLabel';
+import { useEffect, useRef } from 'react';
 import { Control, Controller } from 'react-hook-form';
 import ReactAsyncSelect from 'react-select/async';
-import { useEffect, useRef } from 'react';
 interface AsyncSelectProps {
   control: Control<any, any>;
   fieldName: string;

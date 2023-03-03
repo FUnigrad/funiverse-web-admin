@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Theme } from '@mui/material';
+import { Theme } from '@mui/material/styles';
 import { PureLightTheme } from './schemes/PureLightTheme';
 
 export function themeCreator(theme: string): Theme {

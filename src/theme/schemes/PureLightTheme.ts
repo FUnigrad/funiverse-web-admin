@@ -1,4 +1,5 @@
-import { alpha, createTheme, lighten, darken } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+import { alpha, lighten, darken } from '@mui/system/colorManipulator';
 import '@mui/lab/themeAugmentation';
 
 const themeColors = {

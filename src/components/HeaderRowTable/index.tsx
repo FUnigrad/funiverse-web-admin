@@ -2,7 +2,12 @@ import React from 'react';
 import { useParams } from 'react-router';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { QueryKey, groupApis, syllabusApis } from 'src/apis';
-import { TableBody, TableRow, TableCell, Paper, Table } from '@mui/material';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+
 import { Syllabus } from 'src/@types';
 interface HeaderRowTableProps {
   data: {

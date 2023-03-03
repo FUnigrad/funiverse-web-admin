@@ -1,5 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, TextField, Typography, Checkbox, Link as MuiLink } from '@mui/material';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+import MuiLink from '@mui/material/Link';
 import { Link, useNavigate } from 'react-router-dom';
 import type { MRT_ColumnDef } from 'material-react-table';
 import { MRT_Row } from 'material-react-table';
@@ -15,7 +19,7 @@ import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-
+import SyllabusFormPage from './SyllabusForm';
 function SyllabusPage() {
   const { dispatch } = useContext(ModalContext);
   const mutation = useMutation({
@@ -62,11 +66,19 @@ function SyllabusPage() {
     [],
   );
   function onCreateEntity() {
-    navigate('create');
+    // navigate('create');
+    dispatch({
+      type: 'open',
+      payload: {
+        title: 'Create Syllabus',
+        content: () => <SyllabusFormPage />,
+      },
+      onCreateOrSave: () => {},
+    });
   }
-  function onEditEntity(row: MRT_Row<Syllabus>) {
-    navigate(`${row.id}/edit`);
-  }
+  // function onEditEntity(row: MRT_Row<Syllabus>) {
+  //   navigate(`${row.id}/edit`);
+  // }
 
   function onDeleteEntity(row: MRT_Row<Syllabus>) {
     dispatch({
@@ -95,7 +107,7 @@ function SyllabusPage() {
       <Table
         columns={columns}
         data={data}
-        onEditEntity={onEditEntity}
+        // onEditEntity={onEditEntity}
         onDeleteEntity={onDeleteEntity}
         state={{
           isLoading,

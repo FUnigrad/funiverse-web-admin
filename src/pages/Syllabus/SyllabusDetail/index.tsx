@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useParams } from 'react-router';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { QueryKey, groupApis, syllabusApis } from 'src/apis';
-import { TableBody, TableRow, TableCell, Paper, Table, Box, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import Button from '@mui/material/Button';
 import { Syllabus } from 'src/@types';
 import HeaderRowTable from 'src/components/HeaderRowTable';
 import { AxiosResponse } from 'axios';
+import SyllabusFormPage from '../SyllabusForm';
+import { ModalContext } from 'src/contexts/ModalContext';
+
 function transfromSyllabusDetail(data: Syllabus) {
   return {
     name: { label: 'Syllabus Name', value: data.name },
@@ -25,15 +32,38 @@ function transfromSyllabusDetail(data: Syllabus) {
 
 function SyllabusDetailPage() {
   const { slug } = useParams();
+  const { dispatch } = useContext(ModalContext);
 
-  const { data, isLoading, isError } = useQuery({
+  const {
+    data: syllabusDetailData,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: [QueryKey.Syllabuses, slug],
     queryFn: () => syllabusApis.getSyllabus(slug),
     refetchOnWindowFocus: false,
-    select: (data) => transfromSyllabusDetail(data),
+    // select: (data) => transfromSyllabusDetail(data),
     retry: 0,
     enabled: Boolean(slug),
   });
+
+  function onEditSyllabus() {
+    const defaultValues = {
+      ...syllabusDetailData,
+      subject: {
+        label: syllabusDetailData.subject.name,
+        value: syllabusDetailData.subject.id,
+      },
+    };
+    dispatch({
+      type: 'open',
+      payload: {
+        title: 'Edit Syllabus in Curriculum',
+        content: () => <SyllabusFormPage syllabusId={slug} defaultValues={defaultValues as any} />,
+      },
+      onCreateOrSave: () => {},
+    });
+  }
 
   if (isLoading) return <div>loading ...</div>;
   if (isError) {
@@ -42,10 +72,15 @@ function SyllabusDetailPage() {
   }
   return (
     <Box>
-      <Typography variant="h3" component="h3" gutterBottom sx={{ textTransform: 'capitalize' }}>
-        Syllabus Detail
-      </Typography>
-      <HeaderRowTable data={data} />
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+        <Typography variant="h3" component="h3" gutterBottom sx={{ textTransform: 'capitalize' }}>
+          Syllabus Detail
+        </Typography>
+        <Button startIcon={<EditOutlined />} variant="contained" onClick={onEditSyllabus}>
+          Edit
+        </Button>
+      </Box>
+      <HeaderRowTable data={transfromSyllabusDetail(syllabusDetailData)} />
     </Box>
   );
 }

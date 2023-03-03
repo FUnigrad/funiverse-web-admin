@@ -4,7 +4,7 @@ import router from 'src/router';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
-import { CssBaseline } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from './theme/ThemeProvider';
 import Modal, { ModalProvider } from './contexts/ModalContext';
 // const queryClient = new QueryClient();

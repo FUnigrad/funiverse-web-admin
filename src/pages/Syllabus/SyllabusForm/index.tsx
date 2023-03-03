@@ -1,45 +1,23 @@
-import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Box,
-  TextField,
-  Typography,
-  FormControlLabel,
-  Checkbox,
-  Button,
-  CircularProgress,
-} from '@mui/material';
-import type { MRT_ColumnDef } from 'material-react-table';
-import { MRT_Row } from 'material-react-table';
-import { useContext, useEffect, useMemo } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from '@mui/material/TextField';
+import { useContext } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 // import Select from 'react-select';
-import { Group, GroupType, Syllabus } from 'src/@types';
-import { QueryKey, groupApis, syllabusApis } from 'src/apis';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLocation, useNavigate } from 'react-router';
+import { Syllabus } from 'src/@types';
+import { searchApis, syllabusApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
-import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
-import Select from 'src/components/Select';
-import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
+import { getSelectValue } from 'src/utils';
 import { z } from 'zod';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { getSelectValue, getPreviousPathSlash } from 'src/utils';
-import { useNavigate, useLocation, useParams } from 'react-router';
 interface SyllabusFormPageProps {
   defaultValues?: SyllabusFormInputs;
 }
-// {
-//   "name": "Syllabus 1",
-//   "subject": {
-//     "id": 6
-//   },
-//   "noCredit": 3,
-//   "noSlot": 30,
-//   "duration": 90,
-//   "description": "djsakldjsakl;dasjkdl;as",
-//   "minAvgMarkToPass": 4,
-//   "active": true
-// }
+
 export type SyllabusBody = Omit<SyllabusFormInputs, 'subject'> & {
   id?: number;
   subject: { id: number };
@@ -58,18 +36,17 @@ const SyllabusSchema = z.object({
   active: z.boolean(),
 });
 type SyllabusFormInputs = z.infer<typeof SyllabusSchema>;
-function SyllabusFormPage() {
+function SyllabusFormPage({
+  syllabusId,
+  defaultValues,
+}: {
+  syllabusId?: any;
+  defaultValues?: any;
+}) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { slug } = useParams();
-
-  const mutation = useMutation<Syllabus, unknown, SyllabusBody, unknown>({
-    mutationFn: (body) =>
-      body.id ? syllabusApis.updateSyllabus(body) : syllabusApis.createSyllabus(body),
-    onSuccess: () => {
-      navigate(-1);
-    },
-  });
+  const { dispatch } = useContext(ModalContext);
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -85,33 +62,38 @@ function SyllabusFormPage() {
     resolver: zodResolver(SyllabusSchema),
     defaultValues: {
       active: true,
-      // ...defaultValues,
+      ...defaultValues,
     },
   });
-  const { data, isLoading, isError } = useQuery({
-    queryKey: [QueryKey.Syllabuses, slug],
-    queryFn: () => syllabusApis.getSyllabus(slug),
-    refetchOnWindowFocus: false,
-    retry: 0,
-    enabled: Boolean(slug),
-    cacheTime: 0,
-    onSuccess: (newData) => {
-      const defaultValues: SyllabusFormInputs = newData
-        ? {
-            ...newData,
-            subject: {
-              label: newData.subject.name,
-              value: newData.subject.id,
-            },
-          }
-        : {};
-      reset(defaultValues);
+  // const { data, isLoading, isError } = useQuery({
+  //   queryKey: [QueryKey.Syllabuses, syllabusId],
+  //   queryFn: () => syllabusApis.getSyllabus(syllabusId),
+  //   refetchOnWindowFocus: false,
+  //   retry: 0,
+  //   enabled: Boolean(syllabusId),
+  //   cacheTime: 0,
+  //   onSuccess: (newData) => {
+  //     const defaultValues: SyllabusFormInputs = newData
+  //     ? {
+  //       ...newData,
+  //       subject: {
+  //         label: newData.subject.name,
+  //         value: newData.subject.id,
+  //       },
+  //     }
+  //     : {};
+  //     console.log("🚀 ~ defaultValues:", defaultValues)
+  //     reset(defaultValues);
+  //   },
+  // });
+  const mutation = useMutation<Syllabus, unknown, SyllabusBody, unknown>({
+    mutationFn: (body) =>
+      body.id ? syllabusApis.updateSyllabus(body) : syllabusApis.createSyllabus(body),
+    onSuccess: (response) => {
+      dispatch({ type: 'close' });
+      if (!defaultValues?.id) navigate(`${response.id}`);
     },
   });
-  function handleClose() {
-    // navigate(getPreviousPathSlash(location.pathname));
-    navigate(-1);
-  }
   function onSubmit(data: SyllabusFormInputs) {
     const { subject, ...rest } = data;
     const body: SyllabusBody = {
@@ -119,16 +101,9 @@ function SyllabusFormPage() {
       //TODO: Enhance type subject here
       subject: { id: getSelectValue(subject as any) as number },
     };
-    if (slug) body.id = +slug;
+    if (syllabusId) body.id = +syllabusId;
     mutation.mutate(body);
   }
-
-  if (isLoading && slug)
-    return (
-      <Box sx={{ display: 'flex' }}>
-        <CircularProgress />
-      </Box>
-    );
 
   return (
     <Box
@@ -154,7 +129,9 @@ function SyllabusFormPage() {
         control={control}
         required
         // isMulti
-        promiseOptions={groupApis.getFakedSearch}
+        promiseOptions={(input) =>
+          searchApis.search({ entity: 'subject', field: 'name', value: input })
+        }
         error={Boolean(errors.subject)}
       />
       <TextField
@@ -209,12 +186,12 @@ function SyllabusFormPage() {
           />
         )}
       ></Controller>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0 16px' }}>
+      {/* <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0 16px' }}>
         <Button onClick={handleClose}>Cancel</Button>
         <Button type="submit" variant="contained">
           Save
         </Button>
-      </Box>
+      </Box> */}
     </Box>
   );
 }

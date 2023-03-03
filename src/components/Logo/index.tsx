@@ -1,5 +1,7 @@
-import { Box, styled, Tooltip } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
+import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
 
 const LogoWrapper = styled(Link)(
   ({ theme }) => `

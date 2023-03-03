@@ -1,30 +1,20 @@
-import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Box,
-  TextField,
-  Typography,
-  FormControlLabel,
-  Checkbox,
-  Button,
-  CircularProgress,
-} from '@mui/material';
-import type { MRT_ColumnDef } from 'material-react-table';
-import { MRT_Row } from 'material-react-table';
-import { useContext, useEffect, useMemo } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-// import Select from 'react-select';
-import { Group, GroupType, Curriculum, CurriculumSyllabus } from 'src/@types';
-import { QueryKey, groupApis, curriculumApis, searchApis } from 'src/apis';
+import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import CircularProgress from '@mui/material/CircularProgress';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from '@mui/material/TextField';
+import { useContext } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useLocation, useNavigate } from 'react-router';
+import { Curriculum, CurriculumSyllabus } from 'src/@types';
+import { QueryKey, curriculumApis, searchApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
-import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
 import Select from 'src/components/Select';
-import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
+import { getSelectValue } from 'src/utils';
 import { z } from 'zod';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getSelectValue, getPreviousPathSlash } from 'src/utils';
-import { useNavigate, useLocation, useParams } from 'react-router';
 
 interface CurriculumFormPageProps {
   defaultValues?: CurriculumFormInputs;
