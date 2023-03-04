@@ -20,12 +20,15 @@ import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SyllabusFormPage from './SyllabusForm';
+import { toast } from 'react-toastify';
+
 function SyllabusPage() {
   const { dispatch } = useContext(ModalContext);
   const mutation = useMutation({
     mutationFn: (id: number) => syllabusApis.deleteSyllabus(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Syllabuses] });
+      toast.success(`Deactivate Syllabus successfully!`);
       dispatch({ type: 'close' });
     },
   });
@@ -49,6 +52,7 @@ function SyllabusPage() {
             {cell.getValue<string>()}
           </MuiLink>
         ),
+        enableHiding: false,
       },
       {
         header: 'No credit',

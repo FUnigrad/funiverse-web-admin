@@ -21,6 +21,8 @@ import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { generateOptions } from 'src/utils';
 import SpecializationForm from './SpecializationForm';
+import { toast } from 'react-toastify';
+
 function SpecializationPage() {
   const { dispatch } = useContext(ModalContext);
   const queryClient = useQueryClient();
@@ -29,6 +31,7 @@ function SpecializationPage() {
     mutationFn: (id) => specializationApis.deleteSpecialization(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Specializations] });
+      toast.success(`Deactivate Specialization successfully!`);
       dispatch({ type: 'close' });
     },
   });
@@ -41,6 +44,7 @@ function SpecializationPage() {
       {
         header: 'Name',
         accessorKey: 'name',
+        enableHiding: false,
       },
       {
         header: 'Active',

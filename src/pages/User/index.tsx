@@ -21,6 +21,7 @@ import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import UserForm from './UserForm';
 import { generateOptions } from 'src/utils';
+import { toast } from 'react-toastify';
 
 function UserPage() {
   const { dispatch } = useContext(ModalContext);
@@ -35,6 +36,7 @@ function UserPage() {
     mutationFn: (id) => userApis.deleteUser(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Users] });
+      toast.success(`Deactivate User successfully!`);
       dispatch({ type: 'close' });
     },
   });
@@ -52,6 +54,7 @@ function UserPage() {
       {
         header: 'Name',
         accessorKey: 'name',
+        enableHiding: false,
       },
       {
         header: 'E-mail',

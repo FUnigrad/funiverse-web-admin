@@ -18,6 +18,7 @@ import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 // const SubjectSchema = z.object({
 //   name: z.string().min(1),
 //   code: z.string().min(1),
@@ -65,6 +66,7 @@ function SubjectForm({ defaultValues }: SubjectFormProps) {
       body.id ? subjectApis.updateSubject(body) : subjectApis.createSubject(body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Subjects] });
+      toast.success(`${defaultValues?.id ? 'Update' : 'Create'} subject successfully!`);
       dispatch({ type: 'close' });
     },
   });

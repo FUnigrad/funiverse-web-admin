@@ -7,6 +7,8 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from './theme/ThemeProvider';
 import Modal, { ModalProvider } from './contexts/ModalContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // const queryClient = new QueryClient();
 function App() {
   const content = useRoutes(router);
@@ -18,6 +20,7 @@ function App() {
           <CssBaseline />
           {content}
           <Modal />
+          <ToastContainer autoClose={3500} newestOnTop />
         </LocalizationProvider>
       </ModalProvider>
     </ThemeProvider>

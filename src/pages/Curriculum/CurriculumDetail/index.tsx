@@ -57,6 +57,7 @@ function CurriculumDetailPage() {
             {cell.getValue<string>()}
           </MuiLink>
         ),
+        enableHiding: false,
       },
       {
         header: 'Semester',

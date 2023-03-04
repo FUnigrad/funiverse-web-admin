@@ -20,6 +20,8 @@ import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useLocation, useParams } from 'react-router';
 import { getSelectValue } from 'src/utils';
+import { toast } from 'react-toastify';
+
 const typeOptions = [
   { value: GroupType.Class, label: 'Class' },
   { value: GroupType.Course, label: 'Course' },
@@ -75,6 +77,7 @@ function GroupForm({ defaultValues }: GroupFormProps) {
   const mutation = useMutation<Group, unknown, typeof defaultValues, unknown>({
     mutationFn: (body) => (body.id ? groupApis.updateGroup(body) : groupApis.createGroup(body)),
     onSuccess: () => {
+      toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Group successfully!`);
       dispatch({ type: 'close' });
       queryClient.invalidateQueries({ queryKey: [QueryKey.Groups] });
     },

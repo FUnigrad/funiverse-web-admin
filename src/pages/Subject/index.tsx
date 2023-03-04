@@ -21,6 +21,7 @@ import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SubjectForm, { SubjectFormInputs } from './SubjectForm';
 import { generateOptions } from 'src/utils';
+import { toast } from 'react-toastify';
 
 function SubjectPage() {
   const { dispatch } = useContext(ModalContext);
@@ -37,6 +38,7 @@ function SubjectPage() {
     mutationFn: (id) => subjectApis.deleteSubject(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Subjects] });
+      toast.success(`Deactivate Subject successfully!`);
       dispatch({ type: 'close' });
     },
   });
@@ -50,6 +52,7 @@ function SubjectPage() {
             {cell.getValue<string>()}
           </MuiLink>
         ),
+        enableHiding: false,
       },
       {
         header: 'Code',

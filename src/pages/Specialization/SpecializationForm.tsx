@@ -19,6 +19,8 @@ import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
 import { getSelectValue } from 'src/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+
 const SpecializationSchema = z.object({
   name: z.string().min(1),
   code: z.string().min(1),
@@ -46,6 +48,7 @@ function SpecializationForm({ defaultValues }: SpecializationFormProps) {
         : specializationApis.createSpecialization(body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Specializations] });
+      toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Specialization successfully!`);
       dispatch({ type: 'close' });
     },
   });

@@ -22,6 +22,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { majorApis } from 'src/apis';
 import { generateOptions } from 'src/utils';
 import MajorForm from './MajorForm';
+import { toast } from 'react-toastify';
+
 function MajorPage() {
   const { dispatch } = useContext(ModalContext);
   const queryClient = useQueryClient();
@@ -30,6 +32,7 @@ function MajorPage() {
     mutationFn: (id) => majorApis.deleteMajor(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Majors] });
+      toast.success(`Deactivate Major successfully!`);
       dispatch({ type: 'close' });
     },
   });
@@ -42,6 +45,7 @@ function MajorPage() {
       {
         header: 'Name',
         accessorKey: 'name',
+        enableHiding: false,
       },
       {
         header: 'Active',

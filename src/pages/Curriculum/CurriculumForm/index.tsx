@@ -15,6 +15,7 @@ import Select from 'src/components/Select';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { getSelectValue } from 'src/utils';
 import { z } from 'zod';
+import { toast } from 'react-toastify';
 
 interface CurriculumFormPageProps {
   defaultValues?: CurriculumFormInputs;
@@ -92,6 +93,7 @@ function CurriculumFormPage({
     onSuccess: (data) => {
       // navigate(-1);
       dispatch({ type: 'close' });
+      toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Curriculum successfully!`);
       if (!defaultValues?.id) navigate(`${data.id}`);
     },
   });
@@ -282,10 +284,13 @@ function CurriculumSyllabusForm({
         ? curriculumApis.updateCurriculumSyllabus(curriculumId, body)
         : curriculumApis.createCurriculumSyllabus(curriculumId, body),
     onSuccess: (data) => {
-      dispatch({ type: 'close' });
+      toast.success(
+        `${defaultValues?.id ? 'Update' : 'Add'} Syllabus into Curriculum successfully!`,
+      );
       queryClient.invalidateQueries({
         queryKey: [QueryKey.Curriculums, curriculumId, QueryKey.Syllabuses],
       });
+      dispatch({ type: 'close' });
     },
   });
   const {

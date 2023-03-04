@@ -34,6 +34,7 @@ export interface ModalContextValue {
   title: string;
   onConfirm: Callback;
   onCreateOrSave: Callback;
+  submitLoading: boolean;
 }
 
 export interface SelectProps {

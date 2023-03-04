@@ -14,6 +14,8 @@ import AsyncSelect from 'src/components/AsyncSelect';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { getSelectValue } from 'src/utils';
 import { z } from 'zod';
+import { toast } from 'react-toastify';
+
 interface SyllabusFormPageProps {
   defaultValues?: SyllabusFormInputs;
 }
@@ -91,6 +93,7 @@ function SyllabusFormPage({
       body.id ? syllabusApis.updateSyllabus(body) : syllabusApis.createSyllabus(body),
     onSuccess: (response) => {
       dispatch({ type: 'close' });
+      toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Syllabus successfully!`);
       if (!defaultValues?.id) navigate(`${response.id}`);
     },
   });

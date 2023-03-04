@@ -35,6 +35,9 @@ axiosClient.interceptors.request.use(
   (error) => {},
 );
 axiosClient.interceptors.response.use((response) => {
+  if (response.headers.location) {
+    // return axiosClient.get(response.headers.location);
+  }
   return response?.data;
 });
 

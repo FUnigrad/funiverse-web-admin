@@ -12,6 +12,8 @@ import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
 import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import CurriculumFormPage from './CurriculumForm';
+import { toast } from 'react-toastify';
+
 function CurriculumPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -25,6 +27,7 @@ function CurriculumPage() {
     mutationFn: (id) => curriculumApis.deleteCurriculum(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Curriculums] });
+      toast.success(`Deactivate Curriculum successfully!`);
       dispatch({ type: 'close' });
     },
   });
@@ -42,6 +45,7 @@ function CurriculumPage() {
             {cell.getValue<string>()}
           </MuiLink>
         ),
+        enableHiding: false,
       },
       {
         header: 'Description',

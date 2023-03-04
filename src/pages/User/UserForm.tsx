@@ -19,6 +19,8 @@ import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSelectValue } from 'src/utils';
+import { toast } from 'react-toastify';
+
 const roleOptions = [
   { value: UserRole.Student, label: 'Student' },
   { value: UserRole.Teacher, label: 'Teacher' },
@@ -54,6 +56,7 @@ function UserForm({ defaultValues }: UserFormProps) {
     mutationFn: (body) => (body.id ? userApis.updateUser(body) : userApis.createUser(body)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Users] });
+      toast.success(`${defaultValues?.id ? 'Update' : 'Create'} User successfully!`);
       dispatch({ type: 'close' });
     },
   });

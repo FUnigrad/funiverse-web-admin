@@ -15,6 +15,8 @@ import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import GroupForm, { GroupFormInputs } from './GroupForm';
+import { toast } from 'react-toastify';
+
 // class || department || course
 // class: name, curriculum
 // department: name
@@ -28,6 +30,7 @@ function GroupPage() {
       {
         header: 'Name',
         accessorKey: 'name',
+        enableHiding: false,
       },
       {
         header: 'Type',
@@ -66,8 +69,9 @@ function GroupPage() {
   const mutation = useMutation({
     mutationFn: (id) => groupApis.deleteGroup(id),
     onSuccess: () => {
-      dispatch({ type: 'close' });
       queryClient.invalidateQueries({ queryKey: [QueryKey.Groups] });
+      toast.success(`Deactivate Group successfully!`);
+      dispatch({ type: 'close' });
     },
   });
 

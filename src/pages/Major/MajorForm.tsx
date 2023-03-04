@@ -18,6 +18,8 @@ import Table from 'src/components/Table';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+
 const MajorSchema = z.object({
   name: z.string().min(1),
   code: z.string().min(1),
@@ -37,6 +39,7 @@ function MajorForm({ defaultValues }: MajorFormProps) {
   const mutation = useMutation<Major, unknown, typeof defaultValues, unknown>({
     mutationFn: (body) => (body.id ? majorApis.updateMajor(body) : majorApis.createMajor(body)),
     onSuccess: () => {
+      toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Major successfully!`);
       queryClient.invalidateQueries({ queryKey: [QueryKey.Majors] });
       dispatch({ type: 'close' });
     },
