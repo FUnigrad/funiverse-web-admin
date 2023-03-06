@@ -1,12 +1,12 @@
 import { SelectOption } from 'src/@types';
 function pluralize(noun: string): string {
-  // const exceptions = {
-  //   syllabus: 'syllabi',
-  // };
+  const exceptions = {
+    syllabus: 'syllabi',
+  };
 
-  // if (exceptions[noun.toLowerCase()]) {
-  //   return exceptions[noun.toLowerCase()];
-  // }
+  if (exceptions[noun.toLowerCase()]) {
+    return exceptions[noun.toLowerCase()];
+  }
 
   const lastLetter = noun[noun.length - 1];
 
