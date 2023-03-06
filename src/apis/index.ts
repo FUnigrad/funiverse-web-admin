@@ -8,7 +8,7 @@ export * from './specializationApis';
 export * from './searchApis';
 export const QueryKey = {
   Groups: 'groups',
-  Syllabuses: 'syllabuses',
+  Syllabi: 'syllabi',
   Syllabus: 'syllabus',
   Subjects: 'subjects',
   Users: 'users',

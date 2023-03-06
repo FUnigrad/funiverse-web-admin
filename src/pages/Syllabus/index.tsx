@@ -27,7 +27,7 @@ function SyllabusPage() {
   const mutation = useMutation({
     mutationFn: (id: number) => syllabusApis.deleteSyllabus(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.Syllabuses] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Syllabi] });
       toast.success(`Deactivate Syllabus successfully!`);
       dispatch({ type: 'close' });
     },
@@ -101,7 +101,7 @@ function SyllabusPage() {
     });
   }
   const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: [QueryKey.Syllabuses],
+    queryKey: [QueryKey.Syllabi],
     queryFn: syllabusApis.getSyllabuses,
     refetchOnWindowFocus: false,
   });

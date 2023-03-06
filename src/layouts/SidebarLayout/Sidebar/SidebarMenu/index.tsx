@@ -242,10 +242,10 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/syllabuses"
+                  to="/syllabi"
                   startIcon={<FolderCopyOutlined />}
                 >
-                  Syllabuses
+                  Syllabi
                 </Button>
               </ListItem>
               <ListItem component="div">

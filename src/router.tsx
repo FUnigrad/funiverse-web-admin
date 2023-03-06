@@ -152,7 +152,7 @@ const routes: RouteObject[] = [
     ],
   },
   {
-    path: 'syllabuses',
+    path: 'syllabi',
     element: <SidebarLayout />,
     children: [
       {

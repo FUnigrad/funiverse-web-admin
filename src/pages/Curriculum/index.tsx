@@ -20,7 +20,7 @@ function CurriculumPage() {
 
   const { dispatch } = useContext(ModalContext);
   const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: [QueryKey.Syllabuses],
+    queryKey: [QueryKey.Syllabi],
     queryFn: curriculumApis.getCurriculums,
   });
   const mutation = useMutation({

@@ -288,7 +288,7 @@ function CurriculumSyllabusForm({
         `${defaultValues?.id ? 'Update' : 'Add'} Syllabus into Curriculum successfully!`,
       );
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.Curriculums, curriculumId, QueryKey.Syllabuses],
+        queryKey: [QueryKey.Curriculums, curriculumId, QueryKey.Syllabi],
       });
       dispatch({ type: 'close' });
     },

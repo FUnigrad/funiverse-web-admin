@@ -16,7 +16,7 @@ function reducer(state: Omit<ModalContextValue, 'dispatch'>, action: ModalAction
         open: true,
         title: action.payload.title,
         content: action.payload.content,
-        saveTitle: action.payload.saveTitle,
+        saveTitle: action.payload.saveTitle ?? 'Save',
         onConfirm: null,
         onCreateOrSave: action.onCreateOrSave,
       };
@@ -128,9 +128,7 @@ function Modal() {
             variant="contained"
             loading={submitLoading}
             // loadingPosition="start"
-            onClick={() => {
-              onCreateOrSave();
-            }}
+            onClick={onCreateOrSave}
           >
             {saveTitle}
           </LoadingButton>

@@ -68,7 +68,7 @@ function SyllabusFormPage({
     },
   });
   // const { data, isLoading, isError } = useQuery({
-  //   queryKey: [QueryKey.Syllabuses, syllabusId],
+  //   queryKey: [QueryKey.Syllabi, syllabusId],
   //   queryFn: () => syllabusApis.getSyllabus(syllabusId),
   //   refetchOnWindowFocus: false,
   //   retry: 0,

@@ -53,7 +53,7 @@ function CurriculumDetailPage() {
         header: 'Name',
         accessorKey: 'syllabus.name',
         Cell: ({ cell, row }) => (
-          <MuiLink component={Link} to={`/syllabuses/${row.id}`}>
+          <MuiLink component={Link} to={`/syllabi/${row.id}`}>
             {cell.getValue<string>()}
           </MuiLink>
         ),
@@ -87,7 +87,7 @@ function CurriculumDetailPage() {
   });
 
   const curriculumSyllabusQuery = useQuery({
-    queryKey: [QueryKey.Curriculums, slug, QueryKey.Syllabuses],
+    queryKey: [QueryKey.Curriculums, slug, QueryKey.Syllabi],
     queryFn: () => curriculumApis.getCurriculumSyllabuses(slug),
     refetchOnWindowFocus: false,
   });
@@ -173,7 +173,7 @@ function CurriculumDetailPage() {
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', m: '24px 0' }}
       >
         <Typography variant="h3" component="h3" gutterBottom sx={{ textTransform: 'capitalize' }}>
-          Syllabuses
+          Syllabi
         </Typography>
         <Button startIcon={<Add />} variant="contained" onClick={onAddCurriculumSyllabus}>
           Add syllabus
