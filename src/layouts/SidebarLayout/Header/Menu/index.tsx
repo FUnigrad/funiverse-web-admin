@@ -4,10 +4,16 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { useRef, useState } from 'react';
+import { useRef, useState, useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
+import Button from '@mui/material/Button';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { QueryKey } from 'src/apis';
+import { termApis } from 'src/apis/termApis';
+import { ModalContext } from 'src/contexts/ModalContext';
+import Typography from '@mui/material/Typography';
 
 const ListWrapper = styled(Box)(
   ({ theme }) => `
@@ -63,6 +69,7 @@ const ListWrapper = styled(Box)(
 function HeaderMenu() {
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
+  const { dispatch } = useContext(ModalContext);
 
   const handleOpen = (): void => {
     setOpen(true);
@@ -71,10 +78,68 @@ function HeaderMenu() {
   const handleClose = (): void => {
     setOpen(false);
   };
-
+  const { data: currentData } = useQuery({
+    queryKey: [QueryKey.Terms, 'current'],
+    queryFn: () => termApis.getTerm('current'),
+  });
+  const { data: nextData } = useQuery({
+    queryKey: [QueryKey.Terms, 'next'],
+    queryFn: () => termApis.getTerm('next'),
+  });
+  const mutation = useMutation({
+    mutationFn: termApis.startNewSemester,
+  });
+  //TODO: Urgent
+  function handleStartNewSemester() {
+    dispatch({
+      type: 'open',
+      payload: {
+        content: () => (
+          <Typography variant="h6" color="initial">
+            Current semester is:{' '}
+            <b>
+              {currentData?.season} {currentData?.year}
+            </b>
+            . Do you want to start{' '}
+            <b>
+              {nextData?.season} {nextData?.year}
+            </b>{' '}
+            ?
+          </Typography>
+        ),
+        title: 'Start new semester',
+        saveTitle: 'Start',
+      },
+      onCreateOrSave: () => {
+        dispatch({ type: 'close' });
+        setTimeout(() => {
+          dispatch({
+            type: 'open',
+            payload: {
+              content: () => (
+                <Typography variant="h6" color="initial">
+                  Doing this action means that you will ... .//TODO: Warning message here
+                </Typography>
+              ),
+              title: 'Confirm start new semester',
+              saveTitle: 'Confirm',
+            },
+            onCreateOrSave: () => {
+              console.log('onCreateOrSave');
+              //TODO: Update start API
+              // mutation.mutate();
+            },
+          });
+        }, 0);
+      },
+    });
+  }
   return (
     <>
-      <ListWrapper
+      <Button variant="outlined" color="primary" onClick={handleStartNewSemester}>
+        {currentData?.season} {currentData?.year}
+      </Button>
+      {/* <ListWrapper
         sx={{
           display: {
             xs: 'none',
@@ -118,8 +183,8 @@ function HeaderMenu() {
             />
           </ListItem>
         </List>
-      </ListWrapper>
-      <Menu anchorEl={ref.current} onClose={handleClose} open={isOpen}>
+      </ListWrapper> */}
+      {/* <Menu anchorEl={ref.current} onClose={handleClose} open={isOpen}>
         <MenuItem sx={{ px: 3 }} component={NavLink} to="/overview">
           Overview
         </MenuItem>
@@ -132,7 +197,7 @@ function HeaderMenu() {
         <MenuItem sx={{ px: 3 }} component={NavLink} to="/components/modals">
           Modals
         </MenuItem>
-      </Menu>
+      </Menu> */}
     </>
   );
 }

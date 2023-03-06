@@ -53,7 +53,7 @@ function CurriculumDetailPage() {
         header: 'Name',
         accessorKey: 'syllabus.name',
         Cell: ({ cell, row }) => (
-          <MuiLink component={Link} to={`${row.id}`}>
+          <MuiLink component={Link} to={`/syllabuses/${row.id}`}>
             {cell.getValue<string>()}
           </MuiLink>
         ),
@@ -189,7 +189,9 @@ function CurriculumDetailPage() {
           showAlertBanner: curriculumSyllabusQuery.isError,
           showProgressBars: curriculumSyllabusQuery.isFetching,
         }}
-        getRowId={(originalRow: MRT_Row<CurriculumSyllabus>) => originalRow.id}
+        getRowId={(originalRow: MRT_Row<CurriculumSyllabus>) =>
+          (originalRow as any).syllabus?.id ?? originalRow.id
+        }
       />
     </Box>
   );

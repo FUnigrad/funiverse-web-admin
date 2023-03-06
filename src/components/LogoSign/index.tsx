@@ -107,11 +107,11 @@ function Logo() {
           color="success"
           badgeContent="2.0"
         >
-          {/* <LogoSignWrapper>
+          <LogoSignWrapper>
             <LogoSign>
               <LogoSignInner />
             </LogoSign>
-          </LogoSignWrapper> */}
+          </LogoSignWrapper>
           Funiverse
         </Badge>
       </LogoWrapper>

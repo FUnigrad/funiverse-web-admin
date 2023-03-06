@@ -15,4 +15,5 @@ export const QueryKey = {
   Curriculums: 'curriculums',
   Majors: 'majors',
   Specializations: 'Specializations',
+  Terms: 'Terms',
 };

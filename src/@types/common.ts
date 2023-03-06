@@ -9,6 +9,7 @@ export type ModalAction =
       payload: {
         content: React.FC;
         title: string;
+        saveTitle?: string;
       };
       onCreateOrSave: Callback;
     }
@@ -23,6 +24,7 @@ export type ModalAction =
       payload: {
         content: React.FC;
         title?: string;
+        confirmTitle?: string;
       };
       onConfirm: Callback;
     };
@@ -32,6 +34,8 @@ export interface ModalContextValue {
   open: boolean;
   content: React.FC;
   title: string;
+  confirmTitle?: string;
+  saveTitle?: string;
   onConfirm: Callback;
   onCreateOrSave: Callback;
   submitLoading: boolean;

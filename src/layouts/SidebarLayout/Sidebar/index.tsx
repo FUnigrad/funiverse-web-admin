@@ -61,12 +61,12 @@ function Sidebar() {
                 width: 52,
               }}
             >
-              <Logo />
+              {/* <Logo /> */}
             </Box>
           </Box>
           <Divider
             sx={{
-              mt: theme.spacing(3),
+              mt: '80px',
               mx: theme.spacing(2),
               background: theme.colors.alpha.trueWhite[10],
             }}
@@ -118,12 +118,12 @@ function Sidebar() {
                   width: 52,
                 }}
               >
-                <Logo />
+                {/* <Logo /> */}
               </Box>
             </Box>
             <Divider
               sx={{
-                mt: theme.spacing(3),
+                mt: '80px',
                 mx: theme.spacing(2),
                 background: theme.colors.alpha.trueWhite[10],
               }}
