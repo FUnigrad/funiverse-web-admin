@@ -60,9 +60,9 @@ const UserBoxDescription = styled(Typography)(
 
 function HeaderUserbox() {
   const user = {
-    name: 'Catherine Pike',
+    name: 'Workspace Admin',
     avatar: '/static/images/avatars/1.jpg',
-    jobtitle: 'Project Manager',
+    jobtitle: 'Administration',
   };
 
   const ref = useRef<any>(null);
@@ -111,7 +111,7 @@ function HeaderUserbox() {
           </UserBoxText>
         </MenuUserBox>
         <Divider sx={{ mb: 0 }} />
-        <List sx={{ p: 1 }} component="nav">
+        {/* <List sx={{ p: 1 }} component="nav">
           <ListItem button to="/management/profile/details" component={NavLink}>
             <AccountBoxTwoToneIcon fontSize="small" />
             <ListItemText primary="My Profile" />
@@ -124,7 +124,7 @@ function HeaderUserbox() {
             <AccountTreeTwoToneIcon fontSize="small" />
             <ListItemText primary="Account Settings" />
           </ListItem>
-        </List>
+        </List> */}
         <Divider />
         <Box sx={{ m: 1 }}>
           <Button color="primary" fullWidth>

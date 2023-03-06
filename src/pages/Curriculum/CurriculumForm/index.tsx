@@ -21,9 +21,9 @@ interface CurriculumFormPageProps {
   defaultValues?: CurriculumFormInputs;
 }
 const seasonOptions = [
-  { value: 'Spring', label: 'Spring' },
-  { value: 'Summer', label: 'Summer' },
-  { value: 'Fall', label: 'Fall' },
+  { value: 'SPRING', label: 'Spring' },
+  { value: 'SUMMER', label: 'Summer' },
+  { value: 'FALL', label: 'Fall' },
 ] as const;
 // {
 //   "schoolYear": "K15",
