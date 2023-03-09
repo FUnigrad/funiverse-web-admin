@@ -101,13 +101,16 @@ function CurriculumPage() {
       },
     });
   }
+  function onAddUserToEntity(row: MRT_Row<Curriculum>) {
+    navigate(`${row.id}/users`);
+  }
   return (
     <Box>
       <ListPageHeader entity="curriculum" onCreateEntity={onCreateEntity} />
       <Table
         columns={columns}
         data={data}
-        // onEditEntity={onEditEntity}
+        onAddUserToEntity={onAddUserToEntity}
         onDeleteEntity={onDeleteEntity}
         state={{
           isLoading,

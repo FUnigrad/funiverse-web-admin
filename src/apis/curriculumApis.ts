@@ -18,4 +18,5 @@ export const curriculumApis = {
     axiosClient.post(`/curriculum/${currId}/syllabus`, newCurriculumSyllabus),
   deleteCurriculumSyllabus: (currId, curriculumSyllabusId) =>
     axiosClient.delete(`/curriculum/${currId}/syllabus/${curriculumSyllabusId}`),
+  getCurriculumUsers: (id) => axiosClient.get(`/curriculum/${id}/students`),
 };

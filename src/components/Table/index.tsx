@@ -1,12 +1,14 @@
-import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
+import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import GroupAddOutlined from '@mui/icons-material/GroupAddOutlined';
 import { Box, IconButton } from '@mui/material';
 import type { MRT_ColumnDef } from 'material-react-table';
-import MaterialReactTable, { MRT_Row } from 'material-react-table';
-import { MaterialReactTableProps } from 'material-react-table';
+import MaterialReactTable, { MRT_Row, MaterialReactTableProps } from 'material-react-table';
 interface TableProps {
   columns: MRT_ColumnDef<any>[];
   onEditEntity?: (row: MRT_Row<any>) => void;
   onDeleteEntity?: (row: MRT_Row<any>) => void;
+  onAddUserToEntity?: (row: MRT_Row<any>) => void;
   data: any[];
   state: MaterialReactTableProps['state'];
   getRowId: MaterialReactTableProps['getRowId'];
@@ -16,6 +18,7 @@ function Table({
   columns,
   onEditEntity,
   onDeleteEntity,
+  onAddUserToEntity,
   data,
   state,
   getRowId,
@@ -26,6 +29,11 @@ function Table({
   if (applyRowActions)
     tableProps.renderRowActions = ({ row }) => (
       <Box>
+        {Boolean(onAddUserToEntity) && (
+          <IconButton color="info" size="small" onClick={() => onAddUserToEntity(row)}>
+            <GroupAddOutlined />
+          </IconButton>
+        )}
         {Boolean(onEditEntity) && (
           <IconButton size="small" onClick={() => onEditEntity(row)}>
             <EditOutlined color="warning" />

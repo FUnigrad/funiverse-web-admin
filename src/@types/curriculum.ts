@@ -36,3 +36,8 @@ export interface CurriculumSyllabus {
   };
   semester: number;
 }
+export interface CurriculumUser {
+  id: number;
+  code: string;
+  name: string;
+}

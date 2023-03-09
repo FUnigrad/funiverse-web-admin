@@ -39,7 +39,7 @@ function SyllabusDetailPage() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: [QueryKey.Syllabi, slug],
+    queryKey: [QueryKey.Syllabi, 'slug'],
     queryFn: () => syllabusApis.getSyllabus(slug),
     refetchOnWindowFocus: false,
     // select: (data) => transfromSyllabusDetail(data),

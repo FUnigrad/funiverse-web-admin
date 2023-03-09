@@ -85,7 +85,7 @@ function SpecializationPage() {
     dispatch({
       type: 'open',
       payload: {
-        title: 'Edit Group',
+        title: 'Edit Specialization',
         content: () => <SpecializationForm defaultValues={{ ...(defaultValues as any) }} />,
         // content: () => <SubjectForm defaultValues />,
       },

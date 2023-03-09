@@ -47,16 +47,20 @@ const StatusMaintenance = Loader(lazy(() => import('src/content/pages/Status/Mai
 
 // FUniverse
 const GroupPage = Loader(lazy(() => import('src/pages/Group')));
+const GroupUsersPage = Loader(lazy(() => import('src/pages/Group/GroupUsers')));
+const GroupDetailPage = Loader(lazy(() => import('src/pages/Group/GroupDetail')));
 const UserPage = Loader(lazy(() => import('src/pages/User')));
 const CurriculumPage = Loader(lazy(() => import('src/pages/Curriculum')));
 const CurriculumFormPage = Loader(lazy(() => import('src/pages/Curriculum/CurriculumForm')));
 const CurriculumDetailPage = Loader(lazy(() => import('src/pages/Curriculum/CurriculumDetail')));
+const CurriculumUsersPage = Loader(lazy(() => import('src/pages/Curriculum/CurriculumUsers')));
 const SyllabusPage = Loader(lazy(() => import('src/pages/Syllabus')));
 const SyllabusFormPage = Loader(lazy(() => import('src/pages/Syllabus/SyllabusForm')));
 const SyllabusDetailPage = Loader(lazy(() => import('src/pages/Syllabus/SyllabusDetail')));
 const SubjectPage = Loader(lazy(() => import('src/pages/Subject')));
 const MajorPage = Loader(lazy(() => import('src/pages/Major')));
-const SpecializationPage = Loader(lazy(() => import('src/pages/Specialization')));
+const MajorDetailPage = Loader(lazy(() => import('src/pages/Major/MajorDetail')));
+// const SpecializationPage = Loader(lazy(() => import('src/pages/Specialization')));
 const routes: RouteObject[] = [
   {
     path: '',
@@ -109,6 +113,14 @@ const routes: RouteObject[] = [
         path: '',
         element: <GroupPage />,
       },
+      {
+        path: ':slug',
+        element: <GroupDetailPage />,
+      },
+      {
+        path: ':slug/users',
+        element: <GroupUsersPage />,
+      },
     ],
   },
   {
@@ -139,18 +151,22 @@ const routes: RouteObject[] = [
         path: '',
         element: <MajorPage />,
       },
-    ],
-  },
-  {
-    path: 'specializations',
-    element: <SidebarLayout />,
-    children: [
       {
-        path: '',
-        element: <SpecializationPage />,
+        path: ':slug',
+        element: <MajorDetailPage />,
       },
     ],
   },
+  // {
+  //   path: 'specializations',
+  //   element: <SidebarLayout />,
+  //   children: [
+  //     {
+  //       path: '',
+  //       element: <SpecializationPage />,
+  //     },
+  //   ],
+  // },
   {
     path: 'syllabi',
     element: <SidebarLayout />,
@@ -163,14 +179,14 @@ const routes: RouteObject[] = [
         path: ':slug',
         element: <SyllabusDetailPage />,
       },
-      {
-        path: 'create',
-        element: <SyllabusFormPage />,
-      },
-      {
-        path: ':slug/edit',
-        element: <SyllabusFormPage />,
-      },
+      // {
+      //   path: 'create',
+      //   element: <SyllabusFormPage />,
+      // },
+      // {
+      //   path: ':slug/edit',
+      //   element: <SyllabusFormPage />,
+      // },
     ],
   },
   {
@@ -186,13 +202,17 @@ const routes: RouteObject[] = [
         element: <CurriculumDetailPage />,
       },
       {
-        path: 'create',
-        element: <CurriculumFormPage />,
+        path: ':slug/users',
+        element: <CurriculumUsersPage />,
       },
-      {
-        path: ':slug/edit',
-        element: <CurriculumFormPage />,
-      },
+      // {
+      //   path: 'create',
+      //   element: <CurriculumFormPage />,
+      // },
+      // {
+      //   path: ':slug/edit',
+      //   element: <CurriculumFormPage />,
+      // },
     ],
   },
   {

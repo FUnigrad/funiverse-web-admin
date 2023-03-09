@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { pluralize } from 'src/utils';
 interface ListPageHeaderProps {
@@ -19,6 +20,9 @@ function ListPageHeader({ entity, createHref, onCreateEntity }: ListPageHeaderPr
     : {};
   return (
     <Paper sx={{ p: 2, marginBottom: 2 }}>
+      <Helmet>
+        <title>FUniverse | {entity.toUpperCase()}</title>
+      </Helmet>
       <Grid container justifyContent="space-between" alignItems="center">
         <Grid item xs={6}>
           <Typography variant="h3" component="h3" gutterBottom sx={{ textTransform: 'capitalize' }}>

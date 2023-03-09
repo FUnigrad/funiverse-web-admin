@@ -38,7 +38,7 @@ function reducer(state: Omit<ModalContextValue, 'dispatch'>, action: ModalAction
         content: action.payload.content,
         onConfirm: action.onConfirm,
         onCreateOrSave: null,
-        confirmTitle: action.payload.confirmTitle,
+        confirmTitle: action.payload.confirmTitle ?? 'Deactivate',
       };
     default:
       return state;

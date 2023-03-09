@@ -78,8 +78,11 @@ function GroupForm({ defaultValues }: GroupFormProps) {
     mutationFn: (body) => (body.id ? groupApis.updateGroup(body) : groupApis.createGroup(body)),
     onSuccess: () => {
       toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Group successfully!`);
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Groups, 'slug'] });
+      if (!defaultValues?.id) {
+        queryClient.invalidateQueries({ queryKey: [QueryKey.Groups] });
+      }
       dispatch({ type: 'close' });
-      queryClient.invalidateQueries({ queryKey: [QueryKey.Groups] });
     },
   });
   const {

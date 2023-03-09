@@ -1,11 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, TextField, Typography, Checkbox } from '@mui/material';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+import MuiLink from '@mui/material/Link';
 import type { MRT_ColumnDef } from 'material-react-table';
 import { MRT_Row } from 'material-react-table';
 import { useContext, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 // import Select from 'react-select';
-import { Group, GroupType } from 'src/@types';
+import { Group, GroupType, User } from 'src/@types';
 import { QueryKey, groupApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
@@ -16,20 +20,28 @@ import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import GroupForm, { GroupFormInputs } from './GroupForm';
 import { toast } from 'react-toastify';
-
+import { Link, useNavigate } from 'react-router-dom';
 // class || department || course
+
 // class: name, curriculum
 // department: name
 // course: syllabus, class // WARN: Syllabus code - Class
 
 function GroupPage() {
   const { dispatch } = useContext(ModalContext);
+  const navigate = useNavigate();
+
   const queryClient = useQueryClient();
   const columns = useMemo<MRT_ColumnDef<Group>[]>(
     () => [
       {
         header: 'Name',
         accessorKey: 'name',
+        Cell: ({ cell, row }) => (
+          <MuiLink component={Link} to={`${row.id}`}>
+            {cell.getValue<string>()}
+          </MuiLink>
+        ),
         enableHiding: false,
       },
       {
@@ -147,13 +159,17 @@ function GroupPage() {
       },
     });
   }
+  function onAddUserToEntity(row: MRT_Row<User>) {
+    navigate(`${row.id}/users`);
+  }
   return (
     <Box>
       <ListPageHeader entity="group" onCreateEntity={onCreateEntity} />
       <Table
         columns={columns}
         data={data}
-        onEditEntity={onEditEntity}
+        // onEditEntity={onEditEntity}
+        onAddUserToEntity={onAddUserToEntity}
         onDeleteEntity={onDeleteEntity}
         state={{
           isLoading,

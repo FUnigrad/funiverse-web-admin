@@ -47,3 +47,9 @@ export interface Teacher {
   curriculum:   null;
   active:       boolean;
 }
+
+export interface GroupUser {
+  id: number;
+  code: string;
+  name: string;
+}

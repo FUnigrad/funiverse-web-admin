@@ -40,7 +40,11 @@ function MajorForm({ defaultValues }: MajorFormProps) {
     mutationFn: (body) => (body.id ? majorApis.updateMajor(body) : majorApis.createMajor(body)),
     onSuccess: () => {
       toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Major successfully!`);
-      queryClient.invalidateQueries({ queryKey: [QueryKey.Majors] });
+      if (defaultValues?.id) {
+        queryClient.invalidateQueries({ queryKey: [QueryKey.Majors, 'slug'] });
+      } else {
+        queryClient.invalidateQueries({ queryKey: [QueryKey.Majors] });
+      }
       dispatch({ type: 'close' });
     },
   });

@@ -24,20 +24,28 @@ import { toast } from 'react-toastify';
 const roleOptions = [
   { value: UserRole.Student, label: 'Student' },
   { value: UserRole.Teacher, label: 'Teacher' },
-  { value: UserRole.SystemAdmin, label: 'System Admin' },
-  { value: UserRole.DepartmentAdmin, label: 'Department Admin' },
+  // { value: UserRole.SystemAdmin, label: 'System Admin' },
+  // { value: UserRole.DepartmentAdmin, label: 'Department Admin' },
   { value: UserRole.WorkspaceAdmin, label: 'Workspace Admin' },
 ] as const;
 const UserSchema = z.object({
   name: z.string().min(1),
-  code: z.string().min(1),
+  // code: z.string().min(1),
   role: z.string().min(1),
-  schoolYear: z.string().min(1),
+  identifyNumber: z.union([
+    z
+      .string({
+        errorMap: () => ({ message: 'String must contain exactly 9 or 12 characters' }),
+      })
+      .length(9),
+    z.string().length(12),
+  ]),
+  // schoolYear: z.string().min(1),
   personalMail: z.string().email(),
-  eduMail: z.string().email(),
+  // eduMail: z.string().email(),
   // avatar: z.string().min(1),
   phoneNumber: z.string().min(1),
-  curriculum: z.object({ value: z.number(), label: z.string() }).or(z.number()),
+  curriculum: z.object({ value: z.number(), label: z.string() }).or(z.number()).optional(),
   active: z.boolean(),
 });
 
@@ -78,6 +86,8 @@ function UserForm({ defaultValues }: UserFormProps) {
     },
   });
 
+  const watchRole = watch('role');
+
   function onSubmit(data) {
     console.log('data: ', defaultValues?.id, data);
     const body: UserFormBody = {
@@ -87,6 +97,7 @@ function UserForm({ defaultValues }: UserFormProps) {
         id: getSelectValue(data.curriculum),
       },
     };
+    if (data.role !== UserRole.Student) delete body.curriculum;
     if (defaultValues?.id) body.id = defaultValues?.id;
     mutation.mutate(body);
   }
@@ -127,19 +138,19 @@ function UserForm({ defaultValues }: UserFormProps) {
           required
           error={Boolean(errors.role) && errors.role.message === 'Required'}
         />
-        <TextField
+        {/* <TextField
           label="Code"
           required
           error={Boolean(errors.code)}
           helperText={errors.code?.message}
           {...register('code')}
-        />
+        /> */}
         <TextField
-          label="School Year"
+          label="Identify number"
           required
-          error={Boolean(errors.schoolYear)}
-          helperText={errors.schoolYear?.message}
-          {...register('schoolYear')}
+          error={Boolean(errors.identifyNumber)}
+          helperText={errors.identifyNumber?.message}
+          {...register('identifyNumber')}
         />
         <TextField
           label="Personal E-mail"
@@ -148,13 +159,13 @@ function UserForm({ defaultValues }: UserFormProps) {
           helperText={errors.personalMail?.message}
           {...register('personalMail')}
         />
-        <TextField
+        {/* <TextField
           label="Education E-mail"
           required
           error={Boolean(errors.eduMail)}
           helperText={errors.eduMail?.message}
           {...register('eduMail')}
-        />
+        /> */}
         {/* <TextField
           label="Avatar"
           // required
@@ -169,13 +180,15 @@ function UserForm({ defaultValues }: UserFormProps) {
           helperText={errors.phoneNumber?.message}
           {...register('phoneNumber')}
         />
-        <AsyncSelect
-          fieldName="curriculum"
-          control={control}
-          required
-          promiseOptions={promiseOptions}
-          error={Boolean(errors.curriculum)}
-        />
+        {watchRole === UserRole.Student && (
+          <AsyncSelect
+            fieldName="curriculum"
+            control={control}
+            required
+            promiseOptions={promiseOptions}
+            error={Boolean(errors.curriculum)}
+          />
+        )}
         <Controller
           name="active"
           control={control}

@@ -9,7 +9,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router';
 import { Syllabus } from 'src/@types';
-import { searchApis, syllabusApis } from 'src/apis';
+import { QueryKey, searchApis, syllabusApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { getSelectValue } from 'src/utils';
@@ -92,9 +92,13 @@ function SyllabusFormPage({
     mutationFn: (body) =>
       body.id ? syllabusApis.updateSyllabus(body) : syllabusApis.createSyllabus(body),
     onSuccess: (response) => {
-      dispatch({ type: 'close' });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Syllabi, 'slug'] });
       toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Syllabus successfully!`);
-      if (!defaultValues?.id) navigate(`${response.id}`);
+      if (!defaultValues?.id) {
+        queryClient.invalidateQueries({ queryKey: [QueryKey.Syllabi] });
+        navigate(`${response.id}`);
+      }
+      dispatch({ type: 'close' });
     },
   });
   function onSubmit(data: SyllabusFormInputs) {

@@ -45,6 +45,11 @@ function MajorPage() {
       {
         header: 'Name',
         accessorKey: 'name',
+        Cell: ({ cell, row }) => (
+          <MuiLink component={Link} to={`${row.id}`}>
+            {cell.getValue<string>()}
+          </MuiLink>
+        ),
         enableHiding: false,
       },
       {
@@ -74,24 +79,24 @@ function MajorPage() {
       onCreateOrSave: () => {},
     });
   }
-  function onEditEntity(row: MRT_Row<Major>) {
-    const { original } = row;
-    const defaultValues = {
-      id: original.id,
-      name: original.name,
-      code: original.code,
-      active: original.active,
-    };
-    dispatch({
-      type: 'open',
-      payload: {
-        title: 'Edit Group',
-        content: () => <MajorForm defaultValues={{ ...(defaultValues as any) }} />,
-        // content: () => <SubjectForm defaultValues />,
-      },
-      onCreateOrSave: () => {},
-    });
-  }
+  // function onEditEntity(row: MRT_Row<Major>) {
+  //   const { original } = row;
+  //   const defaultValues = {
+  //     id: original.id,
+  //     name: original.name,
+  //     code: original.code,
+  //     active: original.active,
+  //   };
+  //   dispatch({
+  //     type: 'open',
+  //     payload: {
+  //       title: 'Edit Major',
+  //       content: () => <MajorForm defaultValues={{ ...(defaultValues as any) }} />,
+  //       // content: () => <SubjectForm defaultValues />,
+  //     },
+  //     onCreateOrSave: () => {},
+  //   });
+  // }
   function onDeleteEntity(row: MRT_Row<Major>) {
     if (!row) return;
     dispatch({
@@ -115,7 +120,7 @@ function MajorPage() {
       <Table
         columns={columns}
         data={data}
-        onEditEntity={onEditEntity}
+        // onEditEntity={onEditEntity}
         onDeleteEntity={onDeleteEntity}
         state={{
           isLoading,

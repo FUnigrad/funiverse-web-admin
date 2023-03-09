@@ -24,10 +24,10 @@ import { toast } from 'react-toastify';
 const SpecializationSchema = z.object({
   name: z.string().min(1),
   code: z.string().min(1),
-  major: z
-    .number()
-    .positive()
-    .or(z.object({ value: z.number().positive(), label: z.string() })),
+  // major: z
+  //   .number()
+  //   .positive()
+  //   .or(z.object({ value: z.number().positive(), label: z.string() })),
   active: z.boolean(),
 });
 
@@ -116,14 +116,14 @@ function SpecializationForm({ defaultValues }: SpecializationFormProps) {
         helperText={errors.code?.message}
         {...register('code')}
       />
-      <AsyncSelect
+      {/* <AsyncSelect
         fieldName="major"
         control={control}
         required
         // isMulti
         promiseOptions={promiseOptions}
         error={Boolean(errors.major)}
-      />
+      /> */}
       <Controller
         name="active"
         control={control}

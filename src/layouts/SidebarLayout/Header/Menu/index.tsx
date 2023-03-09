@@ -9,7 +9,7 @@ import { NavLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import Button from '@mui/material/Button';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { QueryKey } from 'src/apis';
 import { termApis } from 'src/apis/termApis';
 import { ModalContext } from 'src/contexts/ModalContext';
@@ -70,6 +70,7 @@ function HeaderMenu() {
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
   const { dispatch } = useContext(ModalContext);
+  const queryClient = useQueryClient();
 
   const handleOpen = (): void => {
     setOpen(true);
@@ -85,9 +86,15 @@ function HeaderMenu() {
   const { data: nextData } = useQuery({
     queryKey: [QueryKey.Terms, 'next'],
     queryFn: () => termApis.getTerm('next'),
+    cacheTime: 0,
   });
   const mutation = useMutation({
     mutationFn: termApis.startNewSemester,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Terms, 'current'] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Terms, 'next'] });
+      dispatch({ type: 'close' });
+    },
   });
   //TODO: Urgent
   function handleStartNewSemester() {
@@ -103,7 +110,7 @@ function HeaderMenu() {
             . Do you want to start{' '}
             <b>
               {nextData?.season} {nextData?.year}
-            </b>{' '}
+            </b>
             ?
           </Typography>
         ),
@@ -125,9 +132,7 @@ function HeaderMenu() {
               saveTitle: 'Confirm',
             },
             onCreateOrSave: () => {
-              console.log('onCreateOrSave');
-              //TODO: Update start API
-              // mutation.mutate();
+              mutation.mutate();
             },
           });
         }, 0);

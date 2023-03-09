@@ -78,7 +78,7 @@ function CurriculumDetailPage() {
   const { slug } = useParams();
 
   const curriculumDetailQuery = useQuery({
-    queryKey: [QueryKey.Curriculums, slug],
+    queryKey: [QueryKey.Curriculums, 'slug'],
     queryFn: () => curriculumApis.getCurriculum(slug),
     refetchOnWindowFocus: false,
     // select: (data) => transfromCurriculumDetail(data),
