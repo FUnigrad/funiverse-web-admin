@@ -29,7 +29,7 @@ function GroupUsersPage() {
   // const mutation = useMutation({
   //   mutationFn: (id) => curriculumApis.deleteCurriculum(id),
   //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: [QueryKey.Curriculums] });
+  //     queryClient.invalidateQueries({ queryKey: [QueryKey.Curricula] });
   //     toast.success(`Deactivate User successfully!`);
   //     dispatch({ type: 'close' });
   //   },
@@ -103,7 +103,7 @@ function GroupUsersPage() {
       },
     });
   }
-  function onAddUserToEntity() {}
+  function onAddUserToGroup() {}
   return (
     <Box>
       {/* <ListPageHeader entity="curriculum" onCreateEntity={onCreateEntity} /> */}
@@ -113,7 +113,7 @@ function GroupUsersPage() {
         <Typography variant="h3" component="h3" gutterBottom sx={{ textTransform: 'capitalize' }}>
           Users in group
         </Typography>
-        <Button startIcon={<Add />} variant="contained" onClick={onAddUserToEntity}>
+        <Button startIcon={<Add />} variant="contained" onClick={onAddUserToGroup}>
           Add Users
         </Button>
       </Box>

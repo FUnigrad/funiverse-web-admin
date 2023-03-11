@@ -63,34 +63,34 @@ function SpecializationPage() {
     refetchOnWindowFocus: false,
   });
   function onCreateEntity() {
-    dispatch({
-      type: 'open',
-      payload: {
-        title: 'Create Specialization',
-        // content: () => <SubjectForm defaultValues={{ ...(defaultValues as any) }} />,
-        content: () => <SpecializationForm />,
-      },
-      onCreateOrSave: () => {},
-    });
+    // dispatch({
+    //   type: 'open',
+    //   payload: {
+    //     title: 'Create Specialization',
+    //     // content: () => <SubjectForm defaultValues={{ ...(defaultValues as any) }} />,
+    //     content: () => <SpecializationForm />,
+    //   },
+    //   onCreateOrSave: () => {},
+    // });
   }
   function onEditEntity(row: MRT_Row<Specialization>) {
-    const { original } = row;
-    const defaultValues = {
-      id: original.id,
-      name: original.name,
-      code: original.code,
-      active: original.active,
-      major: { value: original.major.id, label: original.major.name },
-    };
-    dispatch({
-      type: 'open',
-      payload: {
-        title: 'Edit Specialization',
-        content: () => <SpecializationForm defaultValues={{ ...(defaultValues as any) }} />,
-        // content: () => <SubjectForm defaultValues />,
-      },
-      onCreateOrSave: () => {},
-    });
+    // const { original } = row;
+    // const defaultValues = {
+    //   id: original.id,
+    //   name: original.name,
+    //   code: original.code,
+    //   active: original.active,
+    //   major: { value: original.major.id, label: original.major.name },
+    // };
+    // dispatch({
+    //   type: 'open',
+    //   payload: {
+    //     title: 'Edit Specialization',
+    //     content: () => <SpecializationForm defaultValues={{ ...(defaultValues as any) }} />,
+    //     // content: () => <SubjectForm defaultValues />,
+    //   },
+    //   onCreateOrSave: () => {},
+    // });
   }
   function onDeleteEntity(row: MRT_Row<Specialization>) {
     if (!row) return;

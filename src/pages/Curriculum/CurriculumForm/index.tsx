@@ -116,9 +116,7 @@ function CurriculumFormPage({
     },
   });
   const { data, isLoading, isError } = useQuery({
-    queryKey: defaultValues?.id
-      ? [QueryKey.Curriculums, defaultValues?.id]
-      : [QueryKey.Curriculums],
+    queryKey: defaultValues?.id ? [QueryKey.Curricula, defaultValues?.id] : [QueryKey.Curricula],
     queryFn: () => curriculumApis.getCurriculum(defaultValues?.id),
     refetchOnWindowFocus: false,
     retry: 0,
@@ -288,7 +286,7 @@ function CurriculumSyllabusForm({
         `${defaultValues?.id ? 'Update' : 'Add'} Syllabus into Curriculum successfully!`,
       );
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.Curriculums, curriculumId, QueryKey.Syllabi],
+        queryKey: [QueryKey.Curricula, curriculumId, QueryKey.Syllabi],
       });
       dispatch({ type: 'close' });
     },

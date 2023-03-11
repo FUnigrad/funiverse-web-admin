@@ -253,10 +253,10 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/curriculums"
+                  to="/curricula"
                   startIcon={<MovingOutlined />}
                 >
-                  Curriculums
+                  Curricula
                 </Button>
               </ListItem>
               <ListItem component="div">

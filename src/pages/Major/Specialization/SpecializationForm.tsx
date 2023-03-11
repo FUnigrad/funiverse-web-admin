@@ -36,8 +36,9 @@ const SpecializationSchema = z.object({
 export type SpecializationFormInputs = z.infer<typeof SpecializationSchema>;
 interface SpecializationFormProps {
   defaultValues?: SpecializationFormInputs & { id?: number };
+  majorId: string | number;
 }
-function SpecializationForm({ defaultValues }: SpecializationFormProps) {
+function SpecializationForm({ defaultValues, majorId }: SpecializationFormProps) {
   const queryClient = useQueryClient();
 
   const { dispatch, onConfirm, onCreateOrSave } = useContext(ModalContext);
@@ -78,7 +79,7 @@ function SpecializationForm({ defaultValues }: SpecializationFormProps) {
 
   function onSubmit(data) {
     console.log('data: ', defaultValues?.id, data);
-    const body = { ...data, major: { id: getSelectValue(data.major) } };
+    const body = { ...data, major: { id: majorId } };
     if (defaultValues?.id) body.id = defaultValues.id;
     mutation.mutate(body);
   }

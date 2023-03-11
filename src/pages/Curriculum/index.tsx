@@ -26,7 +26,7 @@ function CurriculumPage() {
   const mutation = useMutation({
     mutationFn: (id) => curriculumApis.deleteCurriculum(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.Curriculums] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Curricula] });
       toast.success(`Deactivate Curriculum successfully!`);
       dispatch({ type: 'close' });
     },

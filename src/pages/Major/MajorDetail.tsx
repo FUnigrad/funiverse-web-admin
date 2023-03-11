@@ -93,7 +93,7 @@ function MajorDetailPage() {
       payload: {
         title: 'Add Specialization',
         // content: () => <SubjectForm defaultValues={{ ...(defaultValues as any) }} />,
-        content: () => <SpecializationForm />,
+        content: () => <SpecializationForm majorId={slug} />,
       },
       onCreateOrSave: () => {},
     });

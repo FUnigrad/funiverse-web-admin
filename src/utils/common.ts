@@ -1,7 +1,7 @@
-import { SelectOption } from 'src/@types';
 function pluralize(noun: string): string {
   const exceptions = {
     syllabus: 'syllabi',
+    curriculum: 'curricula',
   };
 
   if (exceptions[noun.toLowerCase()]) {
@@ -50,5 +50,18 @@ const getSelectValue = (option: any): any => {
 const getPreviousPathSlash = (path: string) => {
   return path.substring(0, path.lastIndexOf('/'));
 };
-
-export { pluralize, fakePromise, generateOptions, getSelectValue, getPreviousPathSlash };
+function removeAccents(str) {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D');
+}
+export {
+  pluralize,
+  fakePromise,
+  generateOptions,
+  getSelectValue,
+  getPreviousPathSlash,
+  removeAccents,
+};

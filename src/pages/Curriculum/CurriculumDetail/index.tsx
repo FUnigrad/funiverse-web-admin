@@ -78,7 +78,7 @@ function CurriculumDetailPage() {
   const { slug } = useParams();
 
   const curriculumDetailQuery = useQuery({
-    queryKey: [QueryKey.Curriculums, 'slug'],
+    queryKey: [QueryKey.Curricula, 'slug'],
     queryFn: () => curriculumApis.getCurriculum(slug),
     refetchOnWindowFocus: false,
     // select: (data) => transfromCurriculumDetail(data),
@@ -87,7 +87,7 @@ function CurriculumDetailPage() {
   });
 
   const curriculumSyllabusQuery = useQuery({
-    queryKey: [QueryKey.Curriculums, slug, QueryKey.Syllabi],
+    queryKey: [QueryKey.Curricula, slug, QueryKey.Syllabi],
     queryFn: () => curriculumApis.getCurriculumSyllabuses(slug),
     refetchOnWindowFocus: false,
   });
@@ -173,7 +173,7 @@ function CurriculumDetailPage() {
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', m: '24px 0' }}
       >
         <Typography variant="h3" component="h3" gutterBottom sx={{ textTransform: 'capitalize' }}>
-          Syllabi
+          Curriculum Plan
         </Typography>
         <Button startIcon={<Add />} variant="contained" onClick={onAddCurriculumSyllabus}>
           Add syllabus

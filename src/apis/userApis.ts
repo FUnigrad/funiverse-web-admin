@@ -7,4 +7,5 @@ export const userApis = {
   updateUser: (newUser) => axiosClient.put('/user', newUser),
   createUser: (newUser) => axiosClient.post('/user', newUser),
   deleteUser: (id) => axiosClient.delete(`/user/${id}`),
+  getCurriculumUsersNone: () => axiosClient.get(`user/curriculum/none`),
 };

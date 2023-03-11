@@ -12,7 +12,7 @@ export const QueryKey = {
   Syllabus: 'syllabus',
   Subjects: 'subjects',
   Users: 'users',
-  Curriculums: 'curriculums',
+  Curricula: 'curricula',
   Majors: 'majors',
   Specializations: 'Specializations',
   Terms: 'Terms',

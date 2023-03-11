@@ -82,11 +82,13 @@ function HeaderMenu() {
   const { data: currentData } = useQuery({
     queryKey: [QueryKey.Terms, 'current'],
     queryFn: () => termApis.getTerm('current'),
+    retry: 0,
   });
   const { data: nextData } = useQuery({
     queryKey: [QueryKey.Terms, 'next'],
     queryFn: () => termApis.getTerm('next'),
     cacheTime: 0,
+    retry: 0,
   });
   const mutation = useMutation({
     mutationFn: termApis.startNewSemester,

@@ -190,7 +190,7 @@ const routes: RouteObject[] = [
     ],
   },
   {
-    path: 'curriculums',
+    path: 'curricula',
     element: <SidebarLayout />,
     children: [
       {
