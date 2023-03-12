@@ -6,6 +6,7 @@ export * from './userApis';
 export * from './majorApis';
 export * from './specializationApis';
 export * from './searchApis';
+export * from './comboApis';
 export const QueryKey = {
   Groups: 'groups',
   Syllabi: 'syllabi',
@@ -14,6 +15,7 @@ export const QueryKey = {
   Users: 'users',
   Curricula: 'curricula',
   Majors: 'majors',
-  Specializations: 'Specializations',
-  Terms: 'Terms',
+  Specializations: 'specializations',
+  Terms: 'terms',
+  Combos: 'combos',
 };

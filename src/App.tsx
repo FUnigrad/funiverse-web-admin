@@ -20,7 +20,7 @@ function App() {
           <CssBaseline />
           {content}
           <Modal />
-          <ToastContainer autoClose={3500} newestOnTop />
+          <ToastContainer autoClose={2000} newestOnTop />
         </LocalizationProvider>
       </ModalProvider>
     </ThemeProvider>

@@ -275,10 +275,10 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/comboes"
+                  to="/combos"
                   startIcon={<AutoStoriesOutlined />}
                 >
-                  Comboes
+                  Combos
                 </Button>
               </ListItem>
 

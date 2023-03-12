@@ -1,6 +1,6 @@
 import { fakePromise } from 'src/utils';
 import axiosClient from './axiosClient';
-import { Curriculum, CurriculumSyllabus } from 'src/@types';
+import { Curriculum, CurriculumSyllabus, CurriculumCombo, CurriculumComboDetail } from 'src/@types';
 import { curriculumData } from 'src/__mock__';
 
 export const curriculumApis = {
@@ -10,6 +10,7 @@ export const curriculumApis = {
   updateCurriculum: (newCurriculum) => axiosClient.put('/curriculum', newCurriculum),
   createCurriculum: (newCurriculum) => axiosClient.post('/curriculum', newCurriculum),
   deleteCurriculum: (currId) => axiosClient.delete(`/curriculum/${currId}`),
+  // syllabus
   getCurriculumSyllabuses: (currId) =>
     axiosClient.get<CurriculumSyllabus[]>(`/curriculum/${currId}/syllabus`),
   updateCurriculumSyllabus: (currId, newCurriculumSyllabus) =>
@@ -18,6 +19,7 @@ export const curriculumApis = {
     axiosClient.post(`/curriculum/${currId}/syllabus`, newCurriculumSyllabus),
   deleteCurriculumSyllabus: (currId, curriculumSyllabusId) =>
     axiosClient.delete(`/curriculum/${currId}/syllabus/${curriculumSyllabusId}`),
+  // user
   getCurriculumUsers: (currId) => axiosClient.get(`/curriculum/${currId}/students`),
   addCurriculumUsers: (currId, userIds: number[]) =>
     axiosClient.post(`/curriculum/${currId}/students`, userIds),
@@ -25,4 +27,13 @@ export const curriculumApis = {
     axiosClient.delete(`/curriculum/${currId}/students`, {
       data: users,
     }),
+  // combo
+  getCurriculumCombos: (currId) =>
+    axiosClient.get<CurriculumComboDetail>(`/curriculum/${currId}/combos`),
+  updateCurriculumCombo: (currId, newCurriculumCombo) =>
+    axiosClient.put(`/curriculum/${currId}/combos`, newCurriculumCombo),
+  createCurriculumCombo: (currId, newCurriculumCombo) =>
+    axiosClient.post(`/curriculum/${currId}/combos`, newCurriculumCombo),
+  deleteCurriculumCombo: (currId, curriculumComboId) =>
+    axiosClient.delete(`/curriculum/${currId}/combos/${curriculumComboId}`),
 };

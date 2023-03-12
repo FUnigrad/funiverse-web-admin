@@ -1,6 +1,7 @@
 import { fakePromise } from 'src/utils';
 import axiosClient from './axiosClient';
 import { Major } from 'src/@types';
+import { comboData } from 'src/__mock__';
 
 interface EntitySearchParams {
   entity: string;
@@ -22,7 +23,10 @@ export const searchApis = {
       params: { operator: defaultOperator, ...params },
       transformResponse: [
         function (data) {
-          const parsedData = JSON.parse(data);
+          //TODO: fix combo search here
+          let parsedData = JSON.parse(data);
+          if (params.entity === 'combo')
+            return comboData.map((d) => ({ label: d[field], value: d.id, syllabi: d.syllabi }));
 
           return parsedData.map((d) => ({ label: d[field], value: d.id }));
         },

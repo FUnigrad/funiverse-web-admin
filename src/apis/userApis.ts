@@ -8,4 +8,5 @@ export const userApis = {
   createUser: (newUser) => axiosClient.post('/user', newUser),
   deleteUser: (id) => axiosClient.delete(`/user/${id}`),
   getCurriculumUsersNone: () => axiosClient.get(`user/curriculum/none`),
+  getGroupUsersNone: (groupId: string) => axiosClient.get(`user/group/none?id=${groupId}`),
 };

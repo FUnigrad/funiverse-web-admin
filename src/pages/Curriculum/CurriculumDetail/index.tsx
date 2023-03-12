@@ -1,6 +1,6 @@
 import React, { useMemo, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { QueryKey, groupApis, curriculumApis, syllabusApis } from 'src/apis';
 import {
   TableBody,
@@ -13,7 +13,7 @@ import {
   Checkbox,
   Button,
 } from '@mui/material';
-import { Curriculum, CurriculumSyllabus } from 'src/@types';
+import { Curriculum, CurriculumCombo, CurriculumSyllabus } from 'src/@types';
 import HeaderRowTable from 'src/components/HeaderRowTable';
 import { AxiosResponse } from 'axios';
 import Table from 'src/components/Table';
@@ -30,7 +30,9 @@ import { z } from 'zod';
 import { useForm, Controller } from 'react-hook-form';
 import AsyncSelect from 'src/components/AsyncSelect';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { toast } from 'react-toastify';
+import { useCheckboxSearchList } from 'src/components/CheckboxSearchList';
+import CurriculumComboForm from './CurriculumComboForm';
 function transfromCurriculumDetail(data: Curriculum) {
   return {
     code: { label: 'Curriculum Code', value: data.code },
@@ -43,6 +45,8 @@ function transfromCurriculumDetail(data: Curriculum) {
 }
 
 function CurriculumDetailPage() {
+  const queryClient = useQueryClient();
+
   const columns = useMemo<MRT_ColumnDef<CurriculumSyllabus>[]>(
     () => [
       {
@@ -87,9 +91,37 @@ function CurriculumDetailPage() {
   });
 
   const curriculumSyllabusQuery = useQuery({
-    queryKey: [QueryKey.Curricula, slug, QueryKey.Syllabi],
+    queryKey: [QueryKey.Curricula, 'slug', QueryKey.Syllabi],
     queryFn: () => curriculumApis.getCurriculumSyllabuses(slug),
     refetchOnWindowFocus: false,
+  });
+  const curriculumCombosQuery = useQuery({
+    queryKey: [QueryKey.Curricula, 'slug', QueryKey.Combos],
+    queryFn: () => curriculumApis.getCurriculumCombos(slug),
+    select: (data) => data.combos,
+    refetchOnWindowFocus: false,
+  });
+
+  // const { CheckboxSearchList, values, valuesRef } = useCheckboxSearchList({
+  //   initialList: curriculumCombosQuery.data,
+  //   // initialChecked: comboDetailData?.syllabi ? comboDetailData.syllabi.map((s) => s.id) : [],
+  // });
+
+  const deleteSyllabusMutation = useMutation({
+    mutationFn: (syllabusId) => curriculumApis.deleteCurriculumSyllabus(slug, syllabusId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Curricula, 'slug', QueryKey.Syllabi] });
+      toast.success(`Remove Syllabus successfully!`);
+      dispatch({ type: 'close' });
+    },
+  });
+  const deleteComboMutation = useMutation({
+    mutationFn: (comboId) => curriculumApis.deleteCurriculumCombo(slug, comboId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Curricula, 'slug', QueryKey.Combos] });
+      toast.success(`Remove Combo successfully!`);
+      dispatch({ type: 'close' });
+    },
   });
 
   function onEditCurriculum() {
@@ -124,7 +156,6 @@ function CurriculumDetailPage() {
     });
   }
   function onAddCurriculumSyllabus() {
-    console.log('🚀 ~ slug:', slug);
     dispatch({
       type: 'open',
       payload: {
@@ -152,7 +183,54 @@ function CurriculumDetailPage() {
       onCreateOrSave: () => {},
     });
   }
-  function onDeleteEntity() {}
+
+  function onAddCurriculumCombo() {
+    dispatch({
+      type: 'open',
+      payload: {
+        title: 'Add Combo into Curriculum',
+        content: () => <CurriculumComboForm curriculumId={slug} />,
+      },
+      onCreateOrSave: () => {},
+    });
+  }
+  function onEditCurriculumCombo() {}
+  function onDeleteCurriculumSyllabus(row: MRT_Row<CurriculumSyllabus>) {
+    if (!row) return;
+    dispatch({
+      type: 'open_confirm',
+      onConfirm: () => {
+        deleteSyllabusMutation.mutate(row.id as any);
+      },
+      payload: {
+        title: 'Remove this item',
+        content: () => (
+          <Typography variant="body1">
+            Are you sure you want to remove {row.original.syllabus.name}?
+          </Typography>
+        ),
+        confirmTitle: 'Remove',
+      },
+    });
+  }
+  function onDeleteCurriculumCombo(row: MRT_Row<CurriculumCombo>) {
+    if (!row) return;
+    dispatch({
+      type: 'open_confirm',
+      onConfirm: () => {
+        deleteComboMutation.mutate(row.id as any);
+      },
+      payload: {
+        title: 'Remove this item',
+        content: () => (
+          <Typography variant="body1">
+            Are you sure you want to remove {row.original.name}?
+          </Typography>
+        ),
+        confirmTitle: 'Remove',
+      },
+    });
+  }
   if (curriculumDetailQuery.isLoading) return <div>loading ...</div>;
   if (curriculumDetailQuery.isError) {
     //TODO: Handle error case here
@@ -173,6 +251,29 @@ function CurriculumDetailPage() {
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', m: '24px 0' }}
       >
         <Typography variant="h3" component="h3" gutterBottom sx={{ textTransform: 'capitalize' }}>
+          Combos
+        </Typography>
+        <Button startIcon={<Add />} variant="contained" onClick={onAddCurriculumCombo}>
+          Add combo
+        </Button>
+      </Box>
+      <Table
+        columns={columns}
+        data={curriculumCombosQuery.data}
+        onEditEntity={onEditCurriculumCombo}
+        onDeleteEntity={onDeleteCurriculumCombo}
+        state={{
+          isLoading: curriculumCombosQuery.isLoading,
+          showAlertBanner: curriculumCombosQuery.isError,
+          showProgressBars: curriculumCombosQuery.isFetching,
+        }}
+        getRowId={(originalRow: MRT_Row<CurriculumSyllabus>) => originalRow.id}
+      />
+
+      <Box
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', m: '24px 0' }}
+      >
+        <Typography variant="h3" component="h3" gutterBottom sx={{ textTransform: 'capitalize' }}>
           Curriculum Plan
         </Typography>
         <Button startIcon={<Add />} variant="contained" onClick={onAddCurriculumSyllabus}>
@@ -183,7 +284,7 @@ function CurriculumDetailPage() {
         columns={columns}
         data={curriculumSyllabusQuery.data}
         onEditEntity={onEditCurriculumSyllabus}
-        onDeleteEntity={onDeleteEntity}
+        onDeleteEntity={onDeleteCurriculumSyllabus}
         state={{
           isLoading: curriculumSyllabusQuery.isLoading,
           showAlertBanner: curriculumSyllabusQuery.isError,

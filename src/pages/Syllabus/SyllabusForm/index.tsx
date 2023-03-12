@@ -96,7 +96,7 @@ function SyllabusFormPage({
       toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Syllabus successfully!`);
       if (!defaultValues?.id) {
         queryClient.invalidateQueries({ queryKey: [QueryKey.Syllabi] });
-        navigate(`${response.id}`);
+        // navigate(`${response}`);
       }
       dispatch({ type: 'close' });
     },

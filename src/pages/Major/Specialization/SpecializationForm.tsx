@@ -48,7 +48,7 @@ function SpecializationForm({ defaultValues, majorId }: SpecializationFormProps)
         ? specializationApis.updateSpecialization(body)
         : specializationApis.createSpecialization(body),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.Specializations] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Majors, 'slug', 'specializations'] });
       toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Specialization successfully!`);
       dispatch({ type: 'close' });
     },

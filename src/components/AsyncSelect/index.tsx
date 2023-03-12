@@ -12,6 +12,7 @@ interface AsyncSelectProps {
   required: boolean;
   isMulti?: boolean;
   debounce?: boolean;
+  onRawSelect?: Function;
 }
 function AsyncSelect({
   control,
@@ -21,6 +22,7 @@ function AsyncSelect({
   required,
   isMulti = false,
   debounce = true,
+  onRawSelect,
 }: AsyncSelectProps) {
   const debounceRef = useRef(null);
   const defaultConfig = {
@@ -82,9 +84,10 @@ function AsyncSelect({
               // @ts-ignore - Conflict btw react-hook-form and react-select
               loadOptions={handleLoadOptions}
               onChange={(option: any) => {
-                console.log('🚀 ~ option:', option);
+                // console.log('🚀 ~ option:', option);
                 if (isMulti) onChange(option.map((o) => o.value));
                 else onChange(option.value);
+                if (Boolean(onRawSelect)) onRawSelect(option);
               }}
               styles={{
                 control: (baseStyles) => ({
@@ -103,7 +106,7 @@ function AsyncSelect({
         }}
       />
       <FormHelperText sx={{ m: '3px 14px 0' }} error={error}>
-        {error && `${fieldName} is required`}
+        {error && `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`}
       </FormHelperText>
     </FormControl>
   );

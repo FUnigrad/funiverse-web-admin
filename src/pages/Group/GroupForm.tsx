@@ -36,7 +36,7 @@ const asyncSelectSchema = z
   .positive()
   .or(z.object({ value: z.number().positive(), label: z.string() }));
 const classSchema = z.object({
-  name: nameSchema,
+  // name: nameSchema,
   curriculum: asyncSelectSchema,
 });
 
@@ -93,7 +93,7 @@ function GroupForm({ defaultValues }: GroupFormProps) {
     unregister,
     clearErrors,
     formState: { errors },
-  } = useForm<GroupFormInputs>({
+  } = useForm({
     mode: 'all',
     resolver: zodResolver(GroupSchema),
     defaultValues: {
@@ -192,7 +192,7 @@ function GroupForm({ defaultValues }: GroupFormProps) {
           isDisabled={Boolean(defaultValues?.type)}
           // defaultValue={defaultValues.type ?? ''}
         />
-        {watchType && watchType !== GroupType.Course && (
+        {watchType && watchType !== GroupType.Course && watchType !== GroupType.Class && (
           <TextField
             label="Name"
             required

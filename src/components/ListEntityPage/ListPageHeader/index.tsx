@@ -28,11 +28,11 @@ function ListPageHeader({ entity, createHref, onCreateEntity }: ListPageHeaderPr
           <Typography variant="h3" component="h3" gutterBottom sx={{ textTransform: 'capitalize' }}>
             {`${pluralize(entity)}`}
           </Typography>
-          <Typography variant="subtitle2">
+          {/* <Typography variant="subtitle2">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa aut sit ea nam. Iusto
             molestias veritatis tempora provident reiciendis laboriosam beatae, alias, hic odio
             necessitatibus et nobis itaque quos! Voluptate.
-          </Typography>
+          </Typography> */}
         </Grid>
         <Grid item xs={6} sx={{ textAlign: 'right' }}>
           <Button

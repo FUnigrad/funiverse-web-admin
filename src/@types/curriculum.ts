@@ -1,7 +1,15 @@
+import { Syllabus } from './syllabus';
+
 export interface Major {
   id: number;
   code: string;
   name: string;
+  active: boolean;
+}
+export interface MajorSpecialization {
+  id: number;
+  name: null | string;
+  code: null | string;
   active: boolean;
 }
 export interface Specialization {
@@ -40,4 +48,22 @@ export interface CurriculumUser {
   id: number;
   code: string;
   name: string;
+}
+
+export interface CurriculumComboDetail {
+  curriculum: {
+    id: string;
+    name: string;
+    code: string;
+    active: false;
+  };
+  combos: CurriculumCombo[]
+}
+
+export interface CurriculumCombo {
+  id: number;
+  name: string;
+  code: string;
+  syllabi: Syllabus[];
+  active: boolean;
 }

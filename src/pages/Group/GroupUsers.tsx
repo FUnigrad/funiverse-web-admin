@@ -14,6 +14,7 @@ import { ModalContext } from 'src/contexts/ModalContext';
 import { toast } from 'react-toastify';
 import Button from '@mui/material/Button';
 import Add from '@mui/icons-material/Add';
+import { useCheckboxSearchList } from 'src/components/CheckboxSearchList';
 function GroupUsersPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -26,14 +27,31 @@ function GroupUsersPage() {
     retry: 0,
     enabled: Boolean(slug),
   });
-  // const mutation = useMutation({
-  //   mutationFn: (id) => curriculumApis.deleteCurriculum(id),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: [QueryKey.Curricula] });
-  //     toast.success(`Deactivate User successfully!`);
-  //     dispatch({ type: 'close' });
-  //   },
-  // });
+  const deleteMutation = useMutation({
+    mutationFn: (userId) => groupApis.removeGroupUser(slug, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Groups, 'slug', 'users'] });
+      toast.success(`Remove User successfully!`);
+      dispatch({ type: 'close' });
+    },
+  });
+  const userNotInGroupQuery = useQuery({
+    queryKey: [QueryKey.Groups, 'slug', 'users', 'none'],
+    queryFn: () => userApis.getGroupUsersNone(slug),
+  });
+
+  const { values, CheckboxSearchList } = useCheckboxSearchList({
+    initialList: userNotInGroupQuery.data ?? [],
+  });
+
+  const mutation = useMutation({
+    mutationFn: () => groupApis.addGroupUsers(slug, values),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Groups, 'slug', 'users'] });
+      toast.success(`Add User successfully!`);
+      dispatch({ type: 'close' });
+    },
+  });
   const columns = useMemo<MRT_ColumnDef<User>[]>(
     () => [
       {
@@ -91,19 +109,32 @@ function GroupUsersPage() {
     dispatch({
       type: 'open_confirm',
       onConfirm: () => {
-        // mutation.mutate(row.id as any);
+        deleteMutation.mutate(row.id as any);
       },
       payload: {
-        // title: 'Delete this item',
+        title: 'Remove this user',
         content: () => (
           <Typography variant="body1">
-            Are you sure you want to deactivate {row.original.name}?
+            Are you sure you want to remove {row.original.name}?
           </Typography>
         ),
+        confirmTitle: 'Remove',
       },
     });
   }
-  function onAddUserToGroup() {}
+  function onAddUserToGroup() {
+    dispatch({
+      type: 'open',
+      payload: {
+        title: 'Add Member to Group',
+        content: () => <CheckboxSearchList />,
+        saveTitle: 'Add',
+      },
+      onCreateOrSave: () => {
+        mutation.mutate();
+      },
+    });
+  }
   return (
     <Box>
       {/* <ListPageHeader entity="curriculum" onCreateEntity={onCreateEntity} /> */}

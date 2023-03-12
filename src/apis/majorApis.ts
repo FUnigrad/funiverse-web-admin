@@ -1,6 +1,6 @@
 import { fakePromise } from 'src/utils';
 import axiosClient from './axiosClient';
-import { Major } from 'src/@types';
+import { Major, MajorSpecialization } from 'src/@types';
 
 export const majorApis = {
   getMajors: () => axiosClient.get<Major[]>('/major'),
@@ -8,4 +8,6 @@ export const majorApis = {
   createMajor: (newMajor) => axiosClient.post('/major', newMajor),
   deleteMajor: (id) => axiosClient.delete(`/major/${id}`),
   getMajor: (id: string) => axiosClient.get<Major>(`/major/${id}`),
+  getMajorSpecializations: (id: string) =>
+    axiosClient.get<MajorSpecialization[]>(`/major/${id}/specializations`),
 };

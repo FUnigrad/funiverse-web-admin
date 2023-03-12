@@ -76,7 +76,7 @@ function GroupDetailPage() {
   function onEditGroup() {
     if (!groupDetailData) return;
     const original = groupDetailData;
-    let defaultValues: Partial<GroupFormInputs & { id: number }> = {
+    let defaultValues: Partial<GroupFormInputs & { id: number; name: string }> = {
       id: +groupDetailData.id,
       type: original.type as any,
       active: original.active,
@@ -85,7 +85,7 @@ function GroupDetailPage() {
       case GroupType.Class:
         defaultValues = {
           ...defaultValues,
-          name: original.name,
+          // name: original.name,
           curriculum: { label: original.curriculum.name, value: original.curriculum.id },
         };
         break;

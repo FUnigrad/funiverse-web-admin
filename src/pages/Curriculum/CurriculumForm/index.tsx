@@ -25,39 +25,24 @@ const seasonOptions = [
   { value: 'SUMMER', label: 'Summer' },
   { value: 'FALL', label: 'Fall' },
 ] as const;
-// {
-//   "schoolYear": "K15",
-//   "description": "Curriculum 1",
-//   "major": {
-//       "id": 1
-//   },
-//   "specialization": {
-//       "id": 1
-//   },
-//   "startedTerm": {
-//       "season": "Fall",
-//       "year": "2023"
-//   },
-//   "noSemester": 9,
-//   "active": true
-// }
+
 export type CurriculumBody = {
   id?: number;
   schoolYear: string;
   description: string;
-  major: { id: number };
+  // major: { id: number };
   specialization: { id: number };
   startedTerm: { season: string; year: string };
   noSemester: number;
   active: boolean;
 };
 const CurriculumSchema = z.object({
-  schoolYear: z.string().min(1),
+  // schoolYear: z.string().min(1),
   description: z.string(),
-  major: z
-    .number()
-    .positive()
-    .or(z.object({ value: z.number().positive(), label: z.string() })),
+  // major: z
+  //   .number()
+  //   .positive()
+  //   .or(z.object({ value: z.number().positive(), label: z.string() })),
   specialization: z
     .number()
     .positive()
@@ -94,7 +79,7 @@ function CurriculumFormPage({
       // navigate(-1);
       dispatch({ type: 'close' });
       toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Curriculum successfully!`);
-      if (!defaultValues?.id) navigate(`${data.id}`);
+      if (!defaultValues?.id) navigate(`/curricula/${data}`);
     },
   });
 
@@ -143,8 +128,8 @@ function CurriculumFormPage({
     const { season, year, ...rest } = data;
     const body: CurriculumBody = {
       ...rest,
-      major: { id: getSelectValue(data.major) },
-      specialization: getSelectValue(data.specialization),
+      // major: { id: getSelectValue(data.major) },
+      specialization: { id: getSelectValue(data.specialization) },
       startedTerm: {
         season: getSelectValue(data.season),
         year: `${getSelectValue(data.year)}`,
@@ -176,23 +161,14 @@ function CurriculumFormPage({
         // height: 400,
       }}
     >
-      <TextField
+      {/* <TextField
         label="School Year"
         required
         error={Boolean(errors.schoolYear)}
         helperText={errors.schoolYear?.message}
         {...register('schoolYear')}
-      />
-      <TextField
-        label="Description"
-        error={Boolean(errors.description)}
-        multiline
-        rows={3}
-        sx={{ marginBottom: '20px !important' }}
-        helperText={errors.description?.message}
-        {...register('description')}
-      />
-      <AsyncSelect
+      /> */}
+      {/* <AsyncSelect
         fieldName="major"
         control={control}
         required
@@ -201,7 +177,7 @@ function CurriculumFormPage({
           searchApis.search({ entity: 'major', field: 'name', value: input })
         }
         error={Boolean(errors.major)}
-      />
+      /> */}
       <AsyncSelect
         fieldName="specialization"
         control={control}
@@ -235,6 +211,15 @@ function CurriculumFormPage({
         error={Boolean(errors.year)}
         helperText={errors.year?.message}
         {...register('year')}
+      />
+      <TextField
+        label="Description"
+        error={Boolean(errors.description)}
+        multiline
+        rows={3}
+        sx={{ marginBottom: '20px !important' }}
+        helperText={errors.description?.message}
+        {...register('description')}
       />
       <Controller
         name="active"
@@ -286,7 +271,7 @@ function CurriculumSyllabusForm({
         `${defaultValues?.id ? 'Update' : 'Add'} Syllabus into Curriculum successfully!`,
       );
       queryClient.invalidateQueries({
-        queryKey: [QueryKey.Curricula, curriculumId, QueryKey.Syllabi],
+        queryKey: [QueryKey.Curricula, 'slug', QueryKey.Syllabi],
       });
       dispatch({ type: 'close' });
     },

@@ -1,14 +1,15 @@
 import React, { useContext, useMemo } from 'react';
 import { useParams } from 'react-router';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { QueryKey, majorApis, syllabusApis } from 'src/apis';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { QueryKey, majorApis, syllabusApis, specializationApis } from 'src/apis';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
 
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import Add from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
-import { GroupType, Syllabus, Major, GroupUser } from 'src/@types';
+import { GroupType, Syllabus, Major, GroupUser, MajorSpecialization } from 'src/@types';
 import HeaderRowTable from 'src/components/HeaderRowTable';
 import { AxiosResponse } from 'axios';
 // import SyllabusFormPage from '../SyllabusForm';
@@ -17,7 +18,7 @@ import MajorForm from './MajorForm';
 import Table from 'src/components/Table';
 import { MRT_ColumnDef, MRT_Row } from 'material-react-table';
 import SpecializationForm from './Specialization/SpecializationForm';
-
+import { toast } from 'react-toastify';
 function transfromGroupDetail(data: Major) {
   return {
     code: { label: 'Code', value: data.code },
@@ -29,7 +30,9 @@ function transfromGroupDetail(data: Major) {
 function MajorDetailPage() {
   const { slug } = useParams();
   const { dispatch } = useContext(ModalContext);
-  const columns = useMemo<MRT_ColumnDef<GroupUser>[]>(
+  const queryClient = useQueryClient();
+
+  const columns = useMemo<MRT_ColumnDef<MajorSpecialization>[]>(
     () => [
       {
         header: 'Code',
@@ -40,14 +43,14 @@ function MajorDetailPage() {
         accessorKey: 'name',
         enableHiding: false,
       },
-      // {
-      //   header: 'Active',
-      //   accessorKey: 'active',
-      //   enableSorting: false,
-      //   Cell: ({ cell }) => (
-      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-      //   ),
-      // },
+      {
+        header: 'Active',
+        accessorKey: 'active',
+        enableSorting: false,
+        Cell: ({ cell }) => (
+          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+        ),
+      },
     ],
     [],
   );
@@ -61,6 +64,21 @@ function MajorDetailPage() {
     queryFn: () => majorApis.getMajor(slug),
     retry: 0,
     enabled: Boolean(slug),
+  });
+
+  const majorSpecializationsQuery = useQuery({
+    queryKey: [QueryKey.Majors, 'slug', 'specializations'],
+    queryFn: () => majorApis.getMajorSpecializations(slug),
+    retry: 0,
+    enabled: Boolean(slug),
+  });
+  const mutation = useMutation({
+    mutationFn: () => specializationApis.deleteSpecialization(slug),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Majors, 'slug', 'specializations'] });
+      toast.success(`Deactivate Specialization successfully!`);
+      dispatch({ type: 'close' });
+    },
   });
   // const groupUsersQuery = useQuery({
   //   queryKey: [QueryKey.Majors, 'slug', 'specialization'],
@@ -98,26 +116,44 @@ function MajorDetailPage() {
       onCreateOrSave: () => {},
     });
   }
-  // function onEditSpecialization() {
-  //   const { original } = row;
-  //   const defaultValues = {
-  //     id: original.id,
-  //     name: original.name,
-  //     code: original.code,
-  //     active: original.active,
-  //     major: { value: original.major.id, label: original.major.name },
-  //   };
-  //   dispatch({
-  //     type: 'open',
-  //     payload: {
-  //       title: 'Edit Specialization',
-  //       content: () => <SpecializationForm defaultValues={{ ...(defaultValues as any) }} />,
-  //       // content: () => <SubjectForm defaultValues />,
-  //     },
-  //     onCreateOrSave: () => {},
-  //   });
-  // }
+  function onEditMajorSpecialization(row: MRT_Row<MajorSpecialization>) {
+    const { original } = row;
+    const defaultValues = {
+      id: original.id,
+      name: original.name,
+      code: original.code,
+      active: original.active,
+    };
+    dispatch({
+      type: 'open',
+      payload: {
+        title: 'Edit Specialization',
+        content: () => (
+          <SpecializationForm majorId={slug} defaultValues={{ ...(defaultValues as any) }} />
+        ),
+        // content: () => <SubjectForm defaultValues />,
+      },
+      onCreateOrSave: () => {},
+    });
+  }
 
+  function onDeleteMajorSpecialization(row: MRT_Row<MajorSpecialization>) {
+    if (!row) return;
+    dispatch({
+      type: 'open_confirm',
+      onConfirm: () => {
+        mutation.mutate();
+      },
+      payload: {
+        // title: 'Delete this item',
+        content: () => (
+          <Typography variant="body1">
+            Are you sure you want to deactivate {row.original.name}?
+          </Typography>
+        ),
+      },
+    });
+  }
   if (isLoading) return <div>loading ...</div>;
   if (isError) {
     //TODO: Handle error case here
@@ -144,18 +180,18 @@ function MajorDetailPage() {
           Add specialization
         </Button>
       </Box>
-      {/* <Table
+      <Table
         columns={columns}
-        data={groupUsersQuery.data}
-        // onEditEntity={onEditCurriculumSyllabus}
-        // onDeleteEntity={onDeleteEntity}
+        data={majorSpecializationsQuery.data}
+        onEditEntity={onEditMajorSpecialization}
+        onDeleteEntity={onDeleteMajorSpecialization}
         state={{
-          isLoading: groupUsersQuery.isLoading,
-          showAlertBanner: groupUsersQuery.isError,
-          showProgressBars: groupUsersQuery.isFetching,
+          isLoading: majorSpecializationsQuery.isLoading,
+          showAlertBanner: majorSpecializationsQuery.isError,
+          showProgressBars: majorSpecializationsQuery.isFetching,
         }}
         getRowId={(originalRow: MRT_Row<GroupUser>) => originalRow.id}
-      /> */}
+      />
     </Box>
   );
 }

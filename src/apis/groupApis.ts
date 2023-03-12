@@ -32,5 +32,8 @@ export const groupApis = {
   deleteGroup: (id) => axiosClient.delete(`/group/${id}`),
   getGroup: (id) => axiosClient.get(`/group/${id}`),
   getGroupUsers: (id) => axiosClient.get<GroupUser[]>(`/group/${id}/users`),
+  addGroupUsers: (groupId, userIds: number[]) =>
+    axiosClient.post(`/group/${groupId}/members`, userIds),
+  removeGroupUser: (groupId, userId) => axiosClient.delete(`/group/${groupId}/user/${userId}`),
   getFakedSearch: fakeSearchPromise,
 };

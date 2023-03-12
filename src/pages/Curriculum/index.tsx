@@ -47,10 +47,10 @@ function CurriculumPage() {
         ),
         enableHiding: false,
       },
-      {
-        header: 'Description',
-        accessorKey: 'description',
-      },
+      // {
+      //   header: 'Description',
+      //   accessorKey: 'description',
+      // },
       {
         header: 'School Year',
         accessorKey: 'schoolYear',

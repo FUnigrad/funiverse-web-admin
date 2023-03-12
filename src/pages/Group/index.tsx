@@ -102,7 +102,7 @@ function GroupPage() {
     if (!row) return;
     const { original } = row;
     console.log(row.original);
-    let defaultValues: Partial<GroupFormInputs & { id: number }> = {
+    let defaultValues: Partial<GroupFormInputs & { id: number; name: string }> = {
       id: +row.id,
       type: original.type as any,
       active: original.active,
@@ -111,7 +111,7 @@ function GroupPage() {
       case GroupType.Class:
         defaultValues = {
           ...defaultValues,
-          name: original.name,
+          // name: original.name,
           curriculum: { label: original.curriculum.name, value: original.curriculum.id },
         };
         break;
