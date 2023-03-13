@@ -21,9 +21,9 @@ interface CurriculumFormPageProps {
   defaultValues?: CurriculumFormInputs;
 }
 const seasonOptions = [
-  { value: 'SPRING', label: 'Spring' },
-  { value: 'SUMMER', label: 'Summer' },
-  { value: 'FALL', label: 'Fall' },
+  { value: 'SPRING', label: 'SPRING' },
+  { value: 'SUMMER', label: 'SUMMER' },
+  { value: 'FALL', label: 'FALL' },
 ] as const;
 
 export type CurriculumBody = {
@@ -67,9 +67,10 @@ function CurriculumFormPage({
 }: {
   defaultValues?: CurriculumFormInputs & { id: number };
 }) {
+  console.log('🚀 ~ defaultValues:', defaultValues);
   const navigate = useNavigate();
   const { dispatch } = useContext(ModalContext);
-
+  const queryClient = useQueryClient();
   const location = useLocation();
 
   const mutation = useMutation<Curriculum, unknown, CurriculumBody, unknown>({
@@ -77,6 +78,7 @@ function CurriculumFormPage({
       body.id ? curriculumApis.updateCurriculum(body) : curriculumApis.createCurriculum(body),
     onSuccess: (data) => {
       // navigate(-1);
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Curricula, 'slug'] });
       dispatch({ type: 'close' });
       toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Curriculum successfully!`);
       if (!defaultValues?.id) navigate(`/curricula/${data}`);
@@ -127,6 +129,7 @@ function CurriculumFormPage({
   function onSubmit(data: CurriculumFormInputs) {
     const { season, year, ...rest } = data;
     const body: CurriculumBody = {
+      ...defaultValues,
       ...rest,
       // major: { id: getSelectValue(data.major) },
       specialization: { id: getSelectValue(data.specialization) },
@@ -202,7 +205,7 @@ function CurriculumFormPage({
         options={seasonOptions}
         required
         error={Boolean(errors.season) && errors.season.message === 'Required'}
-        // defaultValue={defaultValues.type ?? ''}
+        // defaultValue={defaultValues.season ?? ''}
       />
       <TextField
         label="Year"

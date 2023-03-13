@@ -158,21 +158,19 @@ function CurriculumDetailPage() {
     // const defaultValues = {};
 
     const defaultValues = {
+      ...original,
       id: original.id,
       schoolYear: original.schoolYear,
       description: original.description,
-      major: generateOptions({ data: original.major, valuePath: 'id', labelPath: 'name' }),
+      // major: generateOptions({ data: original.major, valuePath: 'id', labelPath: 'name' }),
       specialization: generateOptions({
         data: original.specialization,
         valuePath: 'id',
         labelPath: 'name',
       }),
       noSemester: original.noSemester,
-      season: {
-        label: original.startedTerm?.season ?? '',
-        value: original.startedTerm?.season ?? '',
-      },
-      year: { label: original.startedTerm?.year ?? '', value: original.startedTerm?.year ?? '' },
+      season: original.startedTerm?.season ?? '',
+      year: original.startedTerm?.year,
       // active: original.active,
     };
     dispatch({
