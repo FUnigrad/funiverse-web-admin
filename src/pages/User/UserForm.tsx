@@ -93,10 +93,12 @@ function UserForm({ defaultValues }: UserFormProps) {
     const body: UserFormBody = {
       ...data,
       role: getSelectValue(data.role),
-      curriculum: {
-        id: getSelectValue(data.curriculum),
-      },
     };
+
+    if (data.curriculum)
+      body.curriculum = {
+        id: getSelectValue(data.curriculum),
+      } as any;
     if (data.role !== UserRole.Student) delete body.curriculum;
     if (defaultValues?.id) body.id = defaultValues?.id;
     mutation.mutate(body);

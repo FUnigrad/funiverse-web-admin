@@ -114,12 +114,13 @@ function CurriculumUsersPage() {
         deleteMutation.mutate([+row.id]);
       },
       payload: {
-        // title: 'Delete this item',
+        title: 'Remove this item',
         content: () => (
           <Typography variant="body1">
             Are you sure you want to remove {row.original.name}?
           </Typography>
         ),
+        confirmTitle: 'Remove',
       },
     });
   }

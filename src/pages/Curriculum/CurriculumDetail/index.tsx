@@ -35,8 +35,10 @@ import { useCheckboxSearchList } from 'src/components/CheckboxSearchList';
 import CurriculumComboForm from './CurriculumComboForm';
 function transfromCurriculumDetail(data: Curriculum) {
   return {
-    code: { label: 'Curriculum Code', value: data.code },
+    code: { label: 'Code', value: data.code },
     name: { label: 'Name', value: data.name },
+    term: { label: 'Term', value: `${data.startedTerm.season} - ${data.startedTerm.year}` },
+    noSemester: { label: 'Semester', value: `${data.noSemester}` },
     currentSemester: { label: 'Current Semester', value: data.currentSemester },
     schoolYear: { label: 'School Year', value: data.schoolYear },
     description: { label: 'Description', value: data.description },
