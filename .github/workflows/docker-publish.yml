@@ -5,6 +5,8 @@ on:
     branches: [dev]
 env:
   IMAGE_NAME: funiverse-web-admin
+  FILE_PATH: config/frontend/workspace-admin-deployment.yaml
+  APP_NAME: Workspace Admin webapp
 # JOBs
 jobs:
   build:
@@ -48,7 +50,7 @@ jobs:
         with:
           severity: info
           details: |
-            Build FE Succeeded!
+            Build ${{env.APP_NAME}} Successfully!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
       - name: Build Success
@@ -57,7 +59,7 @@ jobs:
         with:
           severity: error
           details: |
-            Build FE Failed!
+            Build ${{env.APP_NAME}} Failed!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
     outputs:
       version: ${{steps.docker_build.outputs.digest}}
@@ -75,22 +77,20 @@ jobs:
         run: echo "VERSION=${{needs.build.outputs.version}}" >> $GITHUB_ENV
       - name: Update Manifest
         run: |
-          cd config/2-frontend
-          sed -i "s+${{env.IMAGE_NAME}}.*+${{env.IMAGE_NAME}}@${{env.VERSION}}+g" 3-workspace-admin-deployment.yaml
+          sed -i "s+${{env.IMAGE_NAME}}.*+${{env.IMAGE_NAME}}@${{env.VERSION}}+g" ${{env.FILE_PATH}}
       - name: Commit and push
         run: |
           git config --global user.name 'nqbao11'
           git config --global user.email 'nqbao11.01@gmail.com'
           git commit -am "deployed latest ${{env.IMAGE_NAME}} by https://github.com/${{github.repository}}/commit/${{github.event.pull_request.head.sha}}"
           git push
-
       - name: Deploy Failed
         uses: rjstone/discord-webhook-notify@v1
         if: failure()
         with:
           severity: error
           details: |
-            Deploy FE Failed!
+            Deploy ${{env.APP_NAME}} Failed!
             Check log in github action
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
@@ -100,5 +100,5 @@ jobs:
         with:
           severity: info
           details: |
-            Deploy FE Success!
+            Deploy ${{env.APP_NAME}} Successfully!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
