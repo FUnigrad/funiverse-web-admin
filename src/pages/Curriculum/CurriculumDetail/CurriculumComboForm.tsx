@@ -34,20 +34,27 @@ const CurriculumComboSchema = z.object({
 export type CurriculumComboFormInputs = z.infer<typeof CurriculumComboSchema>;
 interface CurriculumComboFormProps {
   curriculumId: number | string;
-  defaultValues?: CurriculumComboFormBody;
+  defaultValues?: any;
 }
 // export type CurriculumComboFormBody = CurriculumComboFormInputs & { id: number };
 export type CurriculumComboFormBody = {
-  comboPlans: {
-    syllabus: { id: number };
-    semester: number;
-  }[];
+  combo: { id: number };
+  comboPlans: { syllabus: { id: number }; semester: number }[];
 };
+interface SelectedCombo {
+  value: number;
+  label: string;
+  syllabi: Syllabus[];
+}
 function CurriculumComboForm({ curriculumId, defaultValues }: CurriculumComboFormProps) {
   const queryClient = useQueryClient();
 
   const { dispatch } = useContext(ModalContext);
-  const [syllabi, setSyllabi] = useState<Syllabus[]>([]);
+  const [selectedCombo, setSelectedCombo] = useState<SelectedCombo>({
+    value: 0,
+    label: '',
+    syllabi: [],
+  });
   // const mutation = useMutation<CurriculumCombo, unknown, typeof defaultValues, unknown>({
   //   mutationFn: (body) => (body.id ? comboApis.updateCurriculumCombo(body) : comboApis.createCurriculumCombo(body)),
   //   onSuccess: () => {
@@ -100,7 +107,8 @@ function CurriculumComboForm({ curriculumId, defaultValues }: CurriculumComboFor
     // console.log('data: ', curriculumId, data);
     const body: CurriculumComboFormBody = {
       // ...data,
-      comboPlans: syllabi.map((s, index) => ({
+      combo: { id: selectedCombo.value },
+      comboPlans: selectedCombo.syllabi.map((s, index) => ({
         syllabus: { id: s.id },
         semester: data.semester[index],
       })),
@@ -114,9 +122,9 @@ function CurriculumComboForm({ curriculumId, defaultValues }: CurriculumComboFor
 
   // console.log('🚀 ~ defaultValues', defaultValues);
   console.log('🚀 ~ errors', errors);
-  function onRawSelect({ syllabi }: { syllabi: Syllabus[] }) {
+  function onRawSelect(selectedCombo: SelectedCombo) {
     // console.log(option)
-    setSyllabi(syllabi);
+    setSelectedCombo(selectedCombo);
   }
   return (
     <>
@@ -141,7 +149,7 @@ function CurriculumComboForm({ curriculumId, defaultValues }: CurriculumComboFor
           onRawSelect={onRawSelect}
           error={Boolean(errors.combo)}
         />
-        {syllabi.map((s, index) => (
+        {selectedCombo.syllabi.map((s, index) => (
           <TextField
             key={s.id}
             label={`Semester for ${s.name}`}

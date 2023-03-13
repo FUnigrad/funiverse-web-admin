@@ -76,7 +76,7 @@ function Table({
         },
       }}
       positionActionsColumn="last"
-      enableRowActions
+      enableRowActions={applyRowActions}
       enableFullScreenToggle={false}
     />
   );

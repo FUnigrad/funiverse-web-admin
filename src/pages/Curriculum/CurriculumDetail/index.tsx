@@ -78,6 +78,33 @@ function CurriculumDetailPage() {
     ],
     [],
   );
+  const comboColumns = useMemo<MRT_ColumnDef<CurriculumCombo>[]>(
+    () => [
+      {
+        header: 'Code',
+        accessorKey: 'code',
+      },
+      {
+        header: 'Name',
+        accessorKey: 'name',
+        Cell: ({ cell, row }) => (
+          <MuiLink component={Link} to={`combo/${row.id}`}>
+            {cell.getValue<string>()}
+          </MuiLink>
+        ),
+        enableHiding: false,
+      },
+      {
+        header: 'Active',
+        accessorKey: 'active',
+        enableSorting: false,
+        Cell: ({ cell }) => (
+          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+        ),
+      },
+    ],
+    [],
+  );
   const { dispatch } = useContext(ModalContext);
   const { slug } = useParams();
 
@@ -258,9 +285,9 @@ function CurriculumDetailPage() {
         </Button>
       </Box>
       <Table
-        columns={columns}
+        columns={comboColumns}
         data={curriculumCombosQuery.data}
-        onEditEntity={onEditCurriculumCombo}
+        // onEditEntity={onEditCurriculumCombo}
         onDeleteEntity={onDeleteCurriculumCombo}
         state={{
           isLoading: curriculumCombosQuery.isLoading,

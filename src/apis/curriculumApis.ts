@@ -1,6 +1,12 @@
 import { fakePromise } from 'src/utils';
 import axiosClient from './axiosClient';
-import { Curriculum, CurriculumSyllabus, CurriculumCombo, CurriculumComboDetail } from 'src/@types';
+import {
+  Curriculum,
+  CurriculumSyllabus,
+  CurriculumCombo,
+  CurriculumComboInList,
+  CurriculumComboDetail,
+} from 'src/@types';
 import { curriculumData } from 'src/__mock__';
 
 export const curriculumApis = {
@@ -29,7 +35,9 @@ export const curriculumApis = {
     }),
   // combo
   getCurriculumCombos: (currId) =>
-    axiosClient.get<CurriculumComboDetail>(`/curriculum/${currId}/combos`),
+    axiosClient.get<CurriculumComboInList>(`/curriculum/${currId}/combos`),
+  getCurriculumCombo: (currId, comboId) =>
+    axiosClient.get<CurriculumComboDetail>(`/curriculum/${currId}/combos/${comboId}`),
   updateCurriculumCombo: (currId, newCurriculumCombo) =>
     axiosClient.put(`/curriculum/${currId}/combos`, newCurriculumCombo),
   createCurriculumCombo: (currId, newCurriculumCombo) =>

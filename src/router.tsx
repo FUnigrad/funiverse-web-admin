@@ -53,6 +53,9 @@ const UserPage = Loader(lazy(() => import('src/pages/User')));
 const CurriculumPage = Loader(lazy(() => import('src/pages/Curriculum')));
 const CurriculumFormPage = Loader(lazy(() => import('src/pages/Curriculum/CurriculumForm')));
 const CurriculumDetailPage = Loader(lazy(() => import('src/pages/Curriculum/CurriculumDetail')));
+const CurriculumComboDetailPage = Loader(
+  lazy(() => import('src/pages/Curriculum/CurriculumDetail/CurriculumComboDetail')),
+);
 const CurriculumUsersPage = Loader(lazy(() => import('src/pages/Curriculum/CurriculumUsers')));
 const SyllabusPage = Loader(lazy(() => import('src/pages/Syllabus')));
 const SyllabusFormPage = Loader(lazy(() => import('src/pages/Syllabus/SyllabusForm')));
@@ -207,6 +210,10 @@ const routes: RouteObject[] = [
       {
         path: ':slug',
         element: <CurriculumDetailPage />,
+      },
+      {
+        path: ':slug/combo/:comboSlug',
+        element: <CurriculumComboDetailPage />,
       },
       {
         path: ':slug/users',

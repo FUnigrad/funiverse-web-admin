@@ -1,5 +1,5 @@
 import { Syllabus } from './syllabus';
-
+import {Combo} from './combo'
 export interface Major {
   id: number;
   code: string;
@@ -50,7 +50,7 @@ export interface CurriculumUser {
   name: string;
 }
 
-export interface CurriculumComboDetail {
+export interface CurriculumComboInList {
   curriculum: {
     id: string;
     name: string;
@@ -66,4 +66,16 @@ export interface CurriculumCombo {
   code: string;
   syllabi: Syllabus[];
   active: boolean;
+}
+
+export interface CurriculumComboDetail {
+  combo:      Combo;
+  curriculum: Combo;
+  comboPlans: ComboPlan[];
+}
+
+export interface ComboPlan {
+  syllabus:  Combo;
+  semester:  number;
+  comboPlan: boolean;
 }

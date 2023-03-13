@@ -4,11 +4,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { QueryKey, groupApis, syllabusApis, comboApis } from 'src/apis';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
 
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import Add from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
-import { Combo, ComboDetail, Syllabus } from 'src/@types';
+import { Combo, ComboDetail, Syllabus, CurriculumCombo } from 'src/@types';
 import HeaderRowTable from 'src/components/HeaderRowTable';
 import { AxiosResponse } from 'axios';
 import ComboForm from './ComboForm';
@@ -31,20 +32,24 @@ function ComboDetailPage() {
   const { dispatch } = useContext(ModalContext);
   const queryClient = useQueryClient();
   const checkedValuesRef = useRef(null);
-  const columns = useMemo<MRT_ColumnDef<Syllabus>[]>(
+  const columns = useMemo<MRT_ColumnDef<CurriculumCombo>[]>(
     () => [
       {
-        header: 'Subject Code',
-        accessorKey: 'subject.code',
-      },
-      {
-        header: 'Subject Name',
-        accessorKey: 'subject.name',
+        header: 'Code',
+        accessorKey: 'code',
       },
       {
         header: 'Syllabus Name',
         accessorKey: 'name',
         enableHiding: false,
+      },
+      {
+        header: 'Active',
+        accessorKey: 'active',
+        enableSorting: false,
+        Cell: ({ cell }) => (
+          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+        ),
       },
     ],
     [],
