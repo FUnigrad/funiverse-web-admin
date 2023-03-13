@@ -4,6 +4,7 @@ export const syllabusData: Syllabus[] = [
   {
     id: 1,
     name: 'Syllabus 111',
+    code: '1',
     subject: {
       id: 2,
       name: 'Bo mon Toan 2',
@@ -40,6 +41,8 @@ export const syllabusData: Syllabus[] = [
   {
     id: 2,
     name: 'Syllabus 2',
+    code: '1',
+
     subject: {
       id: 1,
       name: 'Bo mon Toan',
@@ -72,6 +75,8 @@ export const syllabusData: Syllabus[] = [
       {
         id: 1,
         name: null,
+        code: '1',
+
         subject: null,
         noCredit: 0,
         noSlot: 0,
@@ -89,6 +94,7 @@ export const syllabusData: Syllabus[] = [
   {
     id: 3,
     name: 'Syllabus 3',
+    code: '1',
     subject: {
       id: 2,
       name: 'Bo mon Toan 2',
@@ -121,6 +127,8 @@ export const syllabusData: Syllabus[] = [
       {
         id: 1,
         name: null,
+        code: '1',
+
         subject: null,
         noCredit: 0,
         noSlot: 0,
@@ -133,6 +141,7 @@ export const syllabusData: Syllabus[] = [
       {
         id: 2,
         name: null,
+        code: '1',
         subject: null,
         noCredit: 0,
         noSlot: 0,

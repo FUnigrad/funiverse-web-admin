@@ -26,6 +26,7 @@ export type SyllabusBody = Omit<SyllabusFormInputs, 'subject'> & {
 };
 const SyllabusSchema = z.object({
   name: z.string().min(1),
+  code: z.string().min(1),
   subject: z
     .number()
     .positive()
@@ -92,12 +93,11 @@ function SyllabusFormPage({
     mutationFn: (body) =>
       body.id ? syllabusApis.updateSyllabus(body) : syllabusApis.createSyllabus(body),
     onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.Syllabi, 'slug'] });
       toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Syllabus successfully!`);
       if (!defaultValues?.id) {
-        queryClient.invalidateQueries({ queryKey: [QueryKey.Syllabi] });
+        queryClient.invalidateQueries({ queryKey: [QueryKey.Syllabi, 'slug'] });
         // navigate(`${response}`);
-      }
+      } else queryClient.invalidateQueries({ queryKey: [QueryKey.Syllabi] });
       dispatch({ type: 'close' });
     },
   });
@@ -130,6 +130,13 @@ function SyllabusFormPage({
         error={Boolean(errors.name)}
         helperText={errors.name?.message}
         {...register('name')}
+      />
+      <TextField
+        label="Code"
+        required
+        error={Boolean(errors.name)}
+        helperText={errors.name?.message}
+        {...register('code')}
       />
       <AsyncSelect
         fieldName="subject"

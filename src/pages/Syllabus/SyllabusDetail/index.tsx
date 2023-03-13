@@ -16,7 +16,8 @@ import { ModalContext } from 'src/contexts/ModalContext';
 function transfromSyllabusDetail(data: Syllabus) {
   return {
     name: { label: 'Syllabus Name', value: data.name },
-    subjectCode: { label: 'Subject Code', value: data.subject.code },
+    code: { label: 'Code', value: data.code },
+    subjectName: { label: 'Subject Name', value: data.subject?.name },
     noCredit: { label: 'Credit', value: data.noCredit },
     noSlot: { label: 'Slot', value: data.noSlot },
     duration: { label: 'Duration', value: data.duration },
@@ -51,8 +52,8 @@ function SyllabusDetailPage() {
     const defaultValues = {
       ...syllabusDetailData,
       subject: {
-        label: syllabusDetailData.subject.name,
-        value: syllabusDetailData.subject.id,
+        label: syllabusDetailData.subject?.name,
+        value: syllabusDetailData.subject?.id,
       },
     };
     dispatch({

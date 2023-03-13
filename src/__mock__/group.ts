@@ -46,6 +46,7 @@ export const groupData: Group[] = [
     syllabus: {
       id: 1,
       name: 'Test',
+      code: '1',
       subject: null,
       noCredit: 3,
       noSlot: 20,
