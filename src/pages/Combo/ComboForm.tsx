@@ -23,7 +23,7 @@ const ComboSchema = z.object({
   name: z.string().min(1),
   code: z.string().min(1),
   // syllabi: z.array(z.number()).nullable(),
-  active: z.boolean(),
+  // active: z.boolean(),
 });
 
 export type ComboFormInputs = z.infer<typeof ComboSchema>;
@@ -55,7 +55,7 @@ function ComboForm({ defaultValues }: ComboFormProps) {
     mode: 'all',
     resolver: zodResolver(ComboSchema),
     defaultValues: {
-      active: true,
+      // active: true,
       // syllabi: null,
       ...defaultValues,
     },
@@ -118,7 +118,7 @@ function ComboForm({ defaultValues }: ComboFormProps) {
           }
           error={Boolean(errors.syllabi)}
         /> */}
-        <Box />
+        {/* <Box />
         <Controller
           name="active"
           control={control}
@@ -129,7 +129,7 @@ function ComboForm({ defaultValues }: ComboFormProps) {
               labelPlacement="end"
             />
           )}
-        ></Controller>
+        ></Controller> */}
       </Box>
     </>
   );

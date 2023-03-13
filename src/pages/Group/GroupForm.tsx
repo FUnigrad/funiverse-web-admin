@@ -53,17 +53,14 @@ const departmentSchema = z.object({
 // https://github.com/react-hook-form/react-hook-form/issues/9287
 // type GroupFormInputs2 = z.infer<typeof GroupSchema>; //will not work
 export type GroupFormInputs = z.infer<typeof classSchema> &
-  z.infer<typeof courseSchema> & { type: typeof options[number]; active: boolean };
-const GroupSchema = z
-  .object({ active: z.boolean() })
-  .and(
-    z.union([
-      z.object({ type: z.literal(GroupType.Class) }).and(classSchema),
-      z.object({ type: z.literal(GroupType.Course) }).and(courseSchema),
-      z.object({ type: z.literal(GroupType.Department) }).and(departmentSchema),
-      z.object({ type: z.literal(GroupType.Normal) }).and(departmentSchema),
-    ]),
-  );
+  z.infer<typeof courseSchema> & { type: typeof options[number] };
+const GroupSchema = z.union([
+  z.object({ type: z.literal(GroupType.Class) }).and(classSchema),
+  z.object({ type: z.literal(GroupType.Course) }).and(courseSchema),
+  z.object({ type: z.literal(GroupType.Department) }).and(departmentSchema),
+  z.object({ type: z.literal(GroupType.Normal) }).and(departmentSchema),
+]);
+
 interface GroupFormProps {
   defaultValues?: GroupFormBody;
 }
@@ -97,7 +94,7 @@ function GroupForm({ defaultValues }: GroupFormProps) {
     mode: 'all',
     resolver: zodResolver(GroupSchema),
     defaultValues: {
-      active: true,
+      // active: true,
       ...defaultValues,
     },
     // shouldUnregister: true,
@@ -248,7 +245,7 @@ function GroupForm({ defaultValues }: GroupFormProps) {
             />
           </>
         )}
-        <Controller
+        {/* <Controller
           name="active"
           control={control}
           render={({ field: { value, ...field } }) => (
@@ -258,7 +255,7 @@ function GroupForm({ defaultValues }: GroupFormProps) {
               labelPlacement="end"
             />
           )}
-        ></Controller>
+        ></Controller> */}
       </Box>
     </>
   );

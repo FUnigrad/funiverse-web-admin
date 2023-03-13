@@ -144,7 +144,7 @@ function CurriculumDetailPage() {
         value: original.startedTerm?.season ?? '',
       },
       year: { label: original.startedTerm?.year ?? '', value: original.startedTerm?.year ?? '' },
-      active: original.active,
+      // active: original.active,
     };
     dispatch({
       type: 'open',

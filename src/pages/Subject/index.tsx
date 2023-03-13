@@ -99,7 +99,7 @@ function SubjectPage() {
       subjects: original.subjects
         ? generateOptions({ data: original.subjects, valuePath: 'id', labelPath: 'code' })
         : null,
-      active: original.active,
+      // active: original.active,
     };
     dispatch({
       type: 'open',

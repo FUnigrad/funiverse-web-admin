@@ -23,7 +23,7 @@ import { toast } from 'react-toastify';
 const MajorSchema = z.object({
   name: z.string().min(1),
   code: z.string().min(1),
-  active: z.boolean(),
+  // active: z.boolean(),
 });
 
 // https://github.com/react-hook-form/react-hook-form/issues/9287
@@ -60,7 +60,7 @@ function MajorForm({ defaultValues }: MajorFormProps) {
     mode: 'all',
     resolver: zodResolver(MajorSchema),
     defaultValues: {
-      active: true,
+      // active: true,
       ...defaultValues,
     },
   });
@@ -104,7 +104,7 @@ function MajorForm({ defaultValues }: MajorFormProps) {
         helperText={errors.code?.message}
         {...register('code')}
       />
-      <Controller
+      {/* <Controller
         name="active"
         control={control}
         render={({ field: { value, ...field } }) => (
@@ -114,7 +114,7 @@ function MajorForm({ defaultValues }: MajorFormProps) {
             labelPlacement="end"
           />
         )}
-      ></Controller>
+      ></Controller> */}
     </Box>
   );
 }

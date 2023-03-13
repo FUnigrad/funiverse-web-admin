@@ -35,7 +35,7 @@ const SyllabusSchema = z.object({
   duration: z.coerce.number().positive(),
   description: z.string(),
   minAvgMarkToPass: z.coerce.number().positive(),
-  active: z.boolean(),
+  // active: z.boolean(),
 });
 type SyllabusFormInputs = z.infer<typeof SyllabusSchema>;
 function SyllabusFormPage({
@@ -63,7 +63,7 @@ function SyllabusFormPage({
     mode: 'all',
     resolver: zodResolver(SyllabusSchema),
     defaultValues: {
-      active: true,
+      // active: true,
       ...defaultValues,
     },
   });
@@ -182,7 +182,7 @@ function SyllabusFormPage({
         helperText={errors.minAvgMarkToPass?.message}
         {...register('minAvgMarkToPass')}
       />
-      <Controller
+      {/* <Controller
         name="active"
         control={control}
         render={({ field: { value, ...field } }) => (
@@ -192,7 +192,7 @@ function SyllabusFormPage({
             labelPlacement="end"
           />
         )}
-      ></Controller>
+      ></Controller> */}
       {/* <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0 16px' }}>
         <Button onClick={handleClose}>Cancel</Button>
         <Button type="submit" variant="contained">

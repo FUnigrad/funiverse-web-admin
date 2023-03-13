@@ -79,7 +79,7 @@ function GroupDetailPage() {
     let defaultValues: Partial<GroupFormInputs & { id: number; name: string }> = {
       id: +groupDetailData.id,
       type: original.type as any,
-      active: original.active,
+      // active: original.active,
     };
     switch (original.type) {
       case GroupType.Class:

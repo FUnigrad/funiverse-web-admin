@@ -23,12 +23,15 @@ export const searchApis = {
       params: { operator: defaultOperator, ...params },
       transformResponse: [
         function (data) {
-          //TODO: fix combo search here
+          const entity = params.entity;
           let parsedData = JSON.parse(data);
-          if (params.entity === 'combo')
-            return comboData.map((d) => ({ label: d[field], value: d.id, syllabi: d.syllabi }));
+          const entitySearchResultFn = {
+            combo: (d) => ({ label: d[field], value: d.id, syllabi: d.syllabi }),
+            default: (d) => ({ label: d[field], value: d.id }),
+          };
 
-          return parsedData.map((d) => ({ label: d[field], value: d.id }));
+          if (!entitySearchResultFn[entity]) return parsedData.map(entitySearchResultFn.default);
+          return parsedData.map(entitySearchResultFn[entity]);
         },
       ],
     });

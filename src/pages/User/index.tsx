@@ -118,7 +118,7 @@ function UserPage() {
         valuePath: 'id',
         labelPath: 'code',
       }),
-      active: original.active,
+      // active: original.active,
     };
     dispatch({
       type: 'open',

@@ -32,7 +32,7 @@ const SubjectSchema = z.object({
   name: z.string().min(1),
   code: z.string().min(1),
   // combo: z.boolean().optional(),
-  active: z.boolean(),
+  // active: z.boolean(),
 });
 
 // const SubjectSchema = z.discriminatedUnion('combo', [
@@ -82,7 +82,7 @@ function SubjectForm({ defaultValues }: SubjectFormProps) {
     mode: 'all',
     resolver: zodResolver(SubjectSchema),
     defaultValues: {
-      active: true,
+      // active: true,
       // subjects: null,
       // combo: false,
       ...defaultValues,
@@ -160,7 +160,7 @@ function SubjectForm({ defaultValues }: SubjectFormProps) {
           />
         )} */}
         <Box />
-        <Controller
+        {/* <Controller
           name="active"
           control={control}
           render={({ field: { value, ...field } }) => (
@@ -170,7 +170,7 @@ function SubjectForm({ defaultValues }: SubjectFormProps) {
               labelPlacement="end"
             />
           )}
-        ></Controller>
+        ></Controller> */}
       </Box>
     </>
   );

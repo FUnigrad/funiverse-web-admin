@@ -112,7 +112,7 @@ function Modal() {
             variant="contained"
             color="error"
             loading={submitLoading}
-            loadingPosition="start"
+            // loadingPosition="start"
           >
             {confirmTitle}
           </LoadingButton>

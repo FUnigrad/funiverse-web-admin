@@ -93,7 +93,7 @@ function MajorDetailPage() {
       id: original.id,
       name: original.name,
       code: original.code,
-      active: original.active,
+      // active: original.active,
     };
     dispatch({
       type: 'open',
@@ -122,7 +122,7 @@ function MajorDetailPage() {
       id: original.id,
       name: original.name,
       code: original.code,
-      active: original.active,
+      // active: original.active,
     };
     dispatch({
       type: 'open',

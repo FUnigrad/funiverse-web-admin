@@ -34,7 +34,7 @@ export type CurriculumBody = {
   specialization: { id: number };
   startedTerm: { season: string; year: string };
   noSemester: number;
-  active: boolean;
+  // active: boolean;
 };
 const CurriculumSchema = z.object({
   // schoolYear: z.string().min(1),
@@ -58,7 +58,7 @@ const CurriculumSchema = z.object({
     .refine((value) => value < new Date().getFullYear() + 20 && value > new Date().getFullYear(), {
       message: 'Year must be greater than CURRENT YEAR and less than next 20 years',
     }),
-  active: z.boolean(),
+  // active: z.boolean(),
 });
 export type CurriculumFormInputs = z.infer<typeof CurriculumSchema>;
 
@@ -96,7 +96,7 @@ function CurriculumFormPage({
     mode: 'all',
     resolver: zodResolver(CurriculumSchema),
     defaultValues: {
-      active: true,
+      // active: true,
       ...defaultValues,
     },
   });
@@ -221,7 +221,7 @@ function CurriculumFormPage({
         helperText={errors.description?.message}
         {...register('description')}
       />
-      <Controller
+      {/* <Controller
         name="active"
         control={control}
         render={({ field: { value, ...field } }) => (
@@ -231,7 +231,7 @@ function CurriculumFormPage({
             labelPlacement="end"
           />
         )}
-      ></Controller>
+      ></Controller> */}
       {/* <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0 16px' }}>
         <Button onClick={handleClose}>Cancel</Button>
         <Button type="submit" variant="contained">

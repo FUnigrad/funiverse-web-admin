@@ -105,7 +105,7 @@ function GroupPage() {
     let defaultValues: Partial<GroupFormInputs & { id: number; name: string }> = {
       id: +row.id,
       type: original.type as any,
-      active: original.active,
+      // active: original.active,
     };
     switch (original.type) {
       case GroupType.Class:

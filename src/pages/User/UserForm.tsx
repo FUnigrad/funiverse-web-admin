@@ -46,7 +46,7 @@ const UserSchema = z.object({
   // avatar: z.string().min(1),
   phoneNumber: z.string().min(1),
   curriculum: z.object({ value: z.number(), label: z.string() }).or(z.number()).optional(),
-  active: z.boolean(),
+  // active: z.boolean(),
 });
 
 // https://github.com/react-hook-form/react-hook-form/issues/9287
@@ -80,7 +80,7 @@ function UserForm({ defaultValues }: UserFormProps) {
     mode: 'all',
     resolver: zodResolver(UserSchema),
     defaultValues: {
-      active: true,
+      // active: true,
       role: UserRole.Student,
       ...defaultValues,
     },
@@ -189,7 +189,7 @@ function UserForm({ defaultValues }: UserFormProps) {
             error={Boolean(errors.curriculum)}
           />
         )}
-        <Controller
+        {/* <Controller
           name="active"
           control={control}
           render={({ field: { value, ...field } }) => (
@@ -199,7 +199,7 @@ function UserForm({ defaultValues }: UserFormProps) {
               labelPlacement="end"
             />
           )}
-        ></Controller>
+        ></Controller> */}
       </Box>
     </>
   );

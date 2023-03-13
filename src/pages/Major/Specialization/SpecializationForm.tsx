@@ -28,7 +28,7 @@ const SpecializationSchema = z.object({
   //   .number()
   //   .positive()
   //   .or(z.object({ value: z.number().positive(), label: z.string() })),
-  active: z.boolean(),
+  // active: z.boolean(),
 });
 
 // https://github.com/react-hook-form/react-hook-form/issues/9287
@@ -65,7 +65,7 @@ function SpecializationForm({ defaultValues, majorId }: SpecializationFormProps)
     mode: 'all',
     resolver: zodResolver(SpecializationSchema),
     defaultValues: {
-      active: true,
+      // active: true,
       ...defaultValues,
     },
   });
@@ -125,7 +125,7 @@ function SpecializationForm({ defaultValues, majorId }: SpecializationFormProps)
         promiseOptions={promiseOptions}
         error={Boolean(errors.major)}
       /> */}
-      <Controller
+      {/* <Controller
         name="active"
         control={control}
         render={({ field: { value, ...field } }) => (
@@ -135,7 +135,7 @@ function SpecializationForm({ defaultValues, majorId }: SpecializationFormProps)
             labelPlacement="end"
           />
         )}
-      ></Controller>
+      ></Controller> */}
     </Box>
   );
 }
