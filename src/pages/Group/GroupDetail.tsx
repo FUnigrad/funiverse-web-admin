@@ -4,6 +4,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { QueryKey, groupApis, syllabusApis } from 'src/apis';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import Add from '@mui/icons-material/Add';
@@ -116,7 +117,7 @@ function GroupDetailPage() {
 
   function onAddGroupUser() {}
 
-  if (isLoading) return <div>loading ...</div>;
+  if (isLoading) return <CircularProgress />;
   if (isError) {
     //TODO: Handle error case here
     return <div>This ID does not exist!</div>;
