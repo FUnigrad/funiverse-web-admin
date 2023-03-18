@@ -45,6 +45,11 @@ function SubjectPage() {
   const columns = useMemo<MRT_ColumnDef<Subject>[]>(
     () => [
       {
+        header: 'Code',
+        accessorKey: 'code',
+        size: 50,
+      },
+      {
         header: 'Name',
         accessorKey: 'name',
         Cell: ({ cell, row }) => (
@@ -54,26 +59,23 @@ function SubjectPage() {
         ),
         enableHiding: false,
       },
-      {
-        header: 'Code',
-        accessorKey: 'code',
-      },
-      {
-        header: 'Combo',
-        accessorKey: 'combo',
-        enableSorting: false,
-        Cell: ({ cell }) => (
-          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-        ),
-      },
-      {
-        header: 'Active',
-        accessorKey: 'active',
-        enableSorting: false,
-        Cell: ({ cell }) => (
-          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-        ),
-      },
+
+      // {
+      //   header: 'Combo',
+      //   accessorKey: 'combo',
+      //   enableSorting: false,
+      //   Cell: ({ cell }) => (
+      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+      //   ),
+      // },
+      // {
+      //   header: 'Active',
+      //   accessorKey: 'active',
+      //   enableSorting: false,
+      //   Cell: ({ cell }) => (
+      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+      //   ),
+      // },
     ],
     [],
   );

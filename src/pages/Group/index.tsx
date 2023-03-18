@@ -48,26 +48,26 @@ function GroupPage() {
         header: 'Type',
         accessorKey: 'type',
       },
-      {
-        header: 'Curriculum',
-        accessorKey: 'curriculum.name',
-      },
-      {
-        header: 'Syllabus',
-        accessorKey: 'syllabus.id',
-      },
-      {
-        header: 'Teacher',
-        accessorKey: 'teacher.name',
-      },
-      {
-        header: 'Active',
-        accessorKey: 'active',
-        enableSorting: false,
-        Cell: ({ cell }) => (
-          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-        ),
-      },
+      // {
+      //   header: 'Curriculum',
+      //   accessorKey: 'curriculum.name',
+      // },
+      // {
+      //   header: 'Syllabus',
+      //   accessorKey: 'syllabus.id',
+      // },
+      // {
+      //   header: 'Teacher',
+      //   accessorKey: 'teacher.name',
+      // },
+      // {
+      //   header: 'Active',
+      //   accessorKey: 'active',
+      //   enableSorting: false,
+      //   Cell: ({ cell }) => (
+      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+      //   ),
+      // },
     ],
     [],
   );

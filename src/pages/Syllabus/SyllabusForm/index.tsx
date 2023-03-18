@@ -20,9 +20,10 @@ interface SyllabusFormPageProps {
   defaultValues?: SyllabusFormInputs;
 }
 
-export type SyllabusBody = Omit<SyllabusFormInputs, 'subject'> & {
+export type SyllabusBody = Omit<SyllabusFormInputs, 'subject' | 'preRequisite'> & {
   id?: number;
   subject: { id: number };
+  preRequisite: { id: number }[];
 };
 const SyllabusSchema = z.object({
   name: z.string().min(1),
@@ -33,9 +34,11 @@ const SyllabusSchema = z.object({
     .or(z.object({ value: z.number().positive(), label: z.string() })),
   noCredit: z.coerce.number().positive(),
   noSlot: z.coerce.number().positive(),
-  duration: z.coerce.number().positive(),
+  // duration: z.coerce.number().positive(),
   description: z.string(),
   minAvgMarkToPass: z.coerce.number().positive(),
+  preRequisite: z.array(z.number()).optional(),
+
   // active: z.boolean(),
 });
 type SyllabusFormInputs = z.infer<typeof SyllabusSchema>;
@@ -65,6 +68,7 @@ function SyllabusFormPage({
     resolver: zodResolver(SyllabusSchema),
     defaultValues: {
       // active: true,
+      preRequisite: null,
       ...defaultValues,
     },
   });
@@ -94,7 +98,7 @@ function SyllabusFormPage({
       body.id ? syllabusApis.updateSyllabus(body) : syllabusApis.createSyllabus(body),
     onSuccess: (response) => {
       toast.success(`${defaultValues?.id ? 'Update' : 'Create'} Syllabus successfully!`);
-      if (!defaultValues?.id) {
+      if (defaultValues?.id) {
         queryClient.invalidateQueries({ queryKey: [QueryKey.Syllabi, 'slug'] });
         // navigate(`${response}`);
       } else queryClient.invalidateQueries({ queryKey: [QueryKey.Syllabi] });
@@ -103,11 +107,13 @@ function SyllabusFormPage({
   });
   function onSubmit(data: SyllabusFormInputs) {
     const { subject, ...rest } = data;
+    console.log('🚀 ~ data:', data);
     const body: SyllabusBody = {
       ...rest,
       //TODO: Enhance type subject here
       subject: { id: getSelectValue(subject as any) as number },
-    };
+    } as any;
+    if (data.preRequisite) body.preRequisite = data.preRequisite.map((x) => ({ id: x }));
     if (syllabusId) body.id = +syllabusId;
     mutation.mutate(body);
   }
@@ -134,8 +140,8 @@ function SyllabusFormPage({
       <TextField
         label="Code"
         required
-        error={Boolean(errors.name)}
-        helperText={errors.name?.message}
+        error={Boolean(errors.code)}
+        helperText={errors.code?.message}
         {...register('code')}
       />
       <AsyncSelect
@@ -147,6 +153,15 @@ function SyllabusFormPage({
           searchApis.search({ entity: 'subject', field: 'name', value: input })
         }
         error={Boolean(errors.subject)}
+      />
+      <AsyncSelect
+        fieldName="preRequisite"
+        control={control}
+        isMulti
+        promiseOptions={(input) =>
+          searchApis.search({ entity: 'syllabus', field: 'name', value: input })
+        }
+        error={Boolean(errors.preRequisite)}
       />
       <TextField
         label="Credit"
@@ -164,14 +179,14 @@ function SyllabusFormPage({
         helperText={errors.noSlot?.message}
         {...register('noSlot')}
       />
-      <TextField
+      {/* <TextField
         label="Duration"
         type="number"
         required
         error={Boolean(errors.duration)}
         helperText={errors.duration?.message}
         {...register('duration')}
-      />
+      /> */}
       <TextField
         label="Description"
         error={Boolean(errors.description)}

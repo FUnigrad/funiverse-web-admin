@@ -9,7 +9,7 @@ interface AsyncSelectProps {
   fieldName: string;
   promiseOptions: (inputValue: string) => Promise<any[]>;
   error: boolean;
-  required: boolean;
+  required?: boolean;
   isMulti?: boolean;
   debounce?: boolean;
   onRawSelect?: Function;
@@ -65,7 +65,7 @@ function AsyncSelect({
           boxSizing: 'border-box',
           color: error ? 'red' : 'inherit',
         }}
-        required
+        required={required}
       >
         {fieldName}
       </FormLabel>

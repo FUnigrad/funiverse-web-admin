@@ -33,11 +33,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 import { useCheckboxSearchList } from 'src/components/CheckboxSearchList';
 import CurriculumComboForm from './CurriculumComboForm';
+import { capitalizeAndOmitUnderscore } from 'src/utils';
 function transfromCurriculumDetail(data: Curriculum) {
+  const formattedSeason = capitalizeAndOmitUnderscore(data.startedTerm.season);
   return {
     code: { label: 'Code', value: data.code },
     name: { label: 'Name', value: data.name },
-    term: { label: 'Term', value: `${data.startedTerm.season} - ${data.startedTerm.year}` },
+    term: { label: 'Term', value: `${formattedSeason} ${data.startedTerm.year}` },
     noSemester: { label: 'Semester', value: `${data.noSemester}` },
     currentSemester: { label: 'Current Semester', value: data.currentSemester },
     schoolYear: { label: 'School Year', value: data.schoolYear },
@@ -52,7 +54,7 @@ function CurriculumDetailPage() {
   const columns = useMemo<MRT_ColumnDef<CurriculumSyllabus>[]>(
     () => [
       {
-        header: 'Subject Code',
+        header: 'Code',
         accessorKey: 'syllabus.code',
       },
       {
@@ -96,14 +98,14 @@ function CurriculumDetailPage() {
         ),
         enableHiding: false,
       },
-      {
-        header: 'Active',
-        accessorKey: 'active',
-        enableSorting: false,
-        Cell: ({ cell }) => (
-          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-        ),
-      },
+      // {
+      //   header: 'Active',
+      //   accessorKey: 'active',
+      //   enableSorting: false,
+      //   Cell: ({ cell }) => (
+      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+      //   ),
+      // },
     ],
     [],
   );

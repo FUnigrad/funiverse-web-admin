@@ -136,7 +136,7 @@ function CurriculumComboForm({ curriculumId, defaultValues }: CurriculumComboFor
         noValidate
         sx={{
           '& .MuiTextField-root': { m: 1, width: '100%' },
-          height: 400,
+          height: 350,
         }}
       >
         <AsyncSelect

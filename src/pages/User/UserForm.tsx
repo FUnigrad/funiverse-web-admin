@@ -26,6 +26,7 @@ const roleOptions = [
   { value: UserRole.Teacher, label: 'Teacher' },
   // { value: UserRole.SystemAdmin, label: 'System Admin' },
   // { value: UserRole.DepartmentAdmin, label: 'Department Admin' },
+  { value: UserRole.DepartmentAdmin, label: 'Officer' },
   { value: UserRole.WorkspaceAdmin, label: 'Workspace Admin' },
 ] as const;
 const UserSchema = z.object({

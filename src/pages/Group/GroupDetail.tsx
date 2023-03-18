@@ -63,7 +63,6 @@ function GroupDetailPage() {
   } = useQuery({
     queryKey: [QueryKey.Groups, 'slug'],
     queryFn: () => groupApis.getGroup(slug),
-    retry: 0,
     enabled: Boolean(slug),
   });
   // const groupUsersQuery = useQuery({

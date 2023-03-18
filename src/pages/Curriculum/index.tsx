@@ -55,14 +55,14 @@ function CurriculumPage() {
         header: 'School Year',
         accessorKey: 'schoolYear',
       },
-      {
-        header: 'Active',
-        accessorKey: 'active',
-        enableSorting: false,
-        Cell: ({ cell }) => (
-          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-        ),
-      },
+      // {
+      //   header: 'Active',
+      //   accessorKey: 'active',
+      //   enableSorting: false,
+      //   Cell: ({ cell }) => (
+      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+      //   ),
+      // },
     ],
     [],
   );

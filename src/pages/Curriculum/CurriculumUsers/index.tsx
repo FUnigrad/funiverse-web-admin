@@ -77,14 +77,14 @@ function CurriculumUsersPage() {
         header: 'Phone Number',
         accessorKey: 'phoneNumber',
       },
-      {
-        header: 'Active',
-        accessorKey: 'active',
-        enableSorting: false,
-        Cell: ({ cell }) => (
-          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-        ),
-      },
+      // {
+      //   header: 'Active',
+      //   accessorKey: 'active',
+      //   enableSorting: false,
+      //   Cell: ({ cell }) => (
+      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+      //   ),
+      // },
     ],
     [],
   );

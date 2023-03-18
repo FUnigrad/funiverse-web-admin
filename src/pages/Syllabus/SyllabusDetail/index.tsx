@@ -12,15 +12,15 @@ import HeaderRowTable from 'src/components/HeaderRowTable';
 import { AxiosResponse } from 'axios';
 import SyllabusFormPage from '../SyllabusForm';
 import { ModalContext } from 'src/contexts/ModalContext';
-
+import { generateOptions } from 'src/utils';
 function transfromSyllabusDetail(data: Syllabus) {
   return {
-    name: { label: 'Syllabus Name', value: data.name },
+    name: { label: 'Name', value: data.name },
     code: { label: 'Code', value: data.code },
     subjectName: { label: 'Subject Name', value: data.subject?.name },
     noCredit: { label: 'Credit', value: data.noCredit },
     noSlot: { label: 'Slot', value: data.noSlot },
-    duration: { label: 'Duration', value: data.duration },
+    // duration: { label: 'Duration', value: data.duration },
     preRequisite: {
       label: 'Pre-Requisite',
       value: data.preRequisite ? data.preRequisite.map((s) => s.name).join(', ') : '',
@@ -55,6 +55,11 @@ function SyllabusDetailPage() {
         label: syllabusDetailData.subject?.name,
         value: syllabusDetailData.subject?.id,
       },
+      preRequisite: generateOptions({
+        data: syllabusDetailData.preRequisite,
+        labelPath: 'name',
+        valuePath: 'id',
+      }),
     };
     dispatch({
       type: 'open',

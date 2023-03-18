@@ -20,7 +20,7 @@ import { ModalContext } from 'src/contexts/ModalContext';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import UserForm from './UserForm';
-import { generateOptions } from 'src/utils';
+import { generateOptions, capitalizeAndOmitUnderscore } from 'src/utils';
 import { toast } from 'react-toastify';
 
 function UserPage() {
@@ -63,6 +63,7 @@ function UserPage() {
       {
         header: 'Role',
         accessorKey: 'role',
+        Cell: ({ cell, row }) => capitalizeAndOmitUnderscore(cell.getValue<string>()),
       },
       {
         header: 'Phone Number',
@@ -72,13 +73,13 @@ function UserPage() {
       //   header: 'School Year',
       //   accessorKey: 'schoolYear',
       // },
-      {
-        header: 'Active',
-        accessorKey: 'active',
-        Cell: ({ cell }) => (
-          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-        ),
-      },
+      // {
+      //   header: 'Active',
+      //   accessorKey: 'active',
+      //   Cell: ({ cell }) => (
+      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+      //   ),
+      // },
     ],
     [],
   );

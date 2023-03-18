@@ -6,7 +6,7 @@ import { MRT_Row, MRT_ColumnDef } from 'material-react-table';
 import { useContext, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { User } from 'src/@types';
+import { User, Group } from 'src/@types';
 import { QueryKey, curriculumApis, searchApis, userApis, groupApis } from 'src/apis';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
 import Table from 'src/components/Table';
@@ -52,6 +52,13 @@ function GroupUsersPage() {
       dispatch({ type: 'close' });
     },
   });
+
+  const groupDetailQuery = useQuery({
+    queryKey: [QueryKey.Groups, 'slug'],
+    queryFn: () => groupApis.getGroup(slug),
+    enabled: Boolean(slug),
+  });
+
   const columns = useMemo<MRT_ColumnDef<User>[]>(
     () => [
       {
@@ -75,14 +82,14 @@ function GroupUsersPage() {
         header: 'Phone Number',
         accessorKey: 'phoneNumber',
       },
-      {
-        header: 'Active',
-        accessorKey: 'active',
-        enableSorting: false,
-        Cell: ({ cell }) => (
-          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-        ),
-      },
+      // {
+      //   header: 'Active',
+      //   accessorKey: 'active',
+      //   enableSorting: false,
+      //   Cell: ({ cell }) => (
+      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+      //   ),
+      // },
     ],
     [],
   );
@@ -126,7 +133,7 @@ function GroupUsersPage() {
     dispatch({
       type: 'open',
       payload: {
-        title: 'Add Member to Group',
+        title: `Add Member to Group ${groupDetailQuery.data.name}`,
         content: () => <CheckboxSearchList />,
         saveTitle: 'Add',
       },

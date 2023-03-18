@@ -41,6 +41,7 @@ function MajorPage() {
       {
         header: 'Code',
         accessorKey: 'code',
+        size: 50,
       },
       {
         header: 'Name',
@@ -52,14 +53,14 @@ function MajorPage() {
         ),
         enableHiding: false,
       },
-      {
-        header: 'Active',
-        accessorKey: 'active',
-        enableSorting: false,
-        Cell: ({ cell }) => (
-          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-        ),
-      },
+      // {
+      //   header: 'Active',
+      //   accessorKey: 'active',
+      //   enableSorting: false,
+      //   Cell: ({ cell }) => (
+      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+      //   ),
+      // },
     ],
     [],
   );

@@ -1,3 +1,4 @@
+import React from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -10,6 +11,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Divider from '@mui/material/Divider';
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 import { removeAccents } from 'src/utils';
 interface CheckboxSearchListProps {
@@ -63,31 +65,33 @@ function CheckboxSearchList({
           list.map((item) => {
             const labelId = `checkbox-list-label-${item.id}`;
             return (
-              <ListItem
-                key={item.id}
-                // secondaryAction={
-                //   <IconButton edge="end" aria-label="comments">
-                //     <DeleteOutlined color="error" />
-                //   </IconButton>
-                // }
-                disablePadding
-              >
-                <ListItemButton role={undefined} onClick={() => handleToggle(item.id)} dense>
-                  <ListItemIcon>
-                    <Checkbox
-                      edge="start"
-                      checked={checked.indexOf(item.id) !== -1}
-                      tabIndex={-1}
-                      disableRipple
-                      inputProps={{ 'aria-labelledby': labelId }}
+              <React.Fragment key={item.id}>
+                <ListItem
+                  // secondaryAction={
+                  //   <IconButton edge="end" aria-label="comments">
+                  //     <DeleteOutlined color="error" />
+                  //   </IconButton>
+                  // }
+                  disablePadding
+                >
+                  <ListItemButton role={undefined} onClick={() => handleToggle(item.id)} dense>
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={checked.indexOf(item.id) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{ 'aria-labelledby': labelId }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText
+                      id={labelId}
+                      primary={`${item.name} ${item.email ? `- ${item.email}` : ''}`}
                     />
-                  </ListItemIcon>
-                  <ListItemText
-                    id={labelId}
-                    primary={`${item.name} ${item.email ? `- ${item.email}` : ''}`}
-                  />
-                </ListItemButton>
-              </ListItem>
+                  </ListItemButton>
+                </ListItem>
+                <Divider />
+              </React.Fragment>
             );
           })
         ) : (

@@ -37,15 +37,15 @@ function SyllabusPage() {
   const columns = useMemo<MRT_ColumnDef<Syllabus>[]>(
     () => [
       {
-        header: 'Subject Code',
+        header: 'Code',
         accessorKey: 'subject.code',
       },
+      // {
+      //   header: 'Subject Name',
+      //   accessorKey: 'subject.name',
+      // },
       {
-        header: 'Subject Name',
-        accessorKey: 'subject.name',
-      },
-      {
-        header: 'Syllabus Name',
+        header: 'Name',
         accessorKey: 'name',
         Cell: ({ cell, row }) => (
           <MuiLink component={Link} to={`${row.id}`}>
@@ -58,14 +58,14 @@ function SyllabusPage() {
         header: 'No credit',
         accessorKey: 'noCredit',
       },
-      {
-        header: 'Active',
-        accessorKey: 'active',
-        enableSorting: false,
-        Cell: ({ cell }) => (
-          <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-        ),
-      },
+      // {
+      //   header: 'Active',
+      //   accessorKey: 'active',
+      //   enableSorting: false,
+      //   Cell: ({ cell }) => (
+      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
+      //   ),
+      // },
     ],
     [],
   );
