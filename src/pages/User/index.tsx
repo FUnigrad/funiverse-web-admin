@@ -54,6 +54,11 @@ function UserPage() {
       {
         header: 'Name',
         accessorKey: 'name',
+        Cell: ({ cell, row }) => (
+          <MuiLink component={Link} to={`${row.id}`}>
+            {cell.getValue<string>()}
+          </MuiLink>
+        ),
         enableHiding: false,
       },
       {
@@ -96,14 +101,6 @@ function UserPage() {
 
   function onEditEntity(row: MRT_Row<User>) {
     const { original } = row;
-    console.log(
-      '🚀 ~ row:',
-      generateOptions({
-        data: original.curriculum,
-        valuePath: 'id',
-        labelPath: 'code',
-      }),
-    );
     const defaultValues = {
       id: original.id,
       name: original.name,
@@ -155,7 +152,7 @@ function UserPage() {
       <Table
         columns={columns}
         data={data}
-        onEditEntity={onEditEntity}
+        // onEditEntity={onEditEntity}
         onDeleteEntity={onDeleteEntity}
         state={{
           isLoading,

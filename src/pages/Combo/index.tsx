@@ -123,7 +123,7 @@ function ComboPage() {
       <Table
         columns={columns}
         data={data}
-        onEditEntity={onEditEntity}
+        // onEditEntity={onEditEntity}
         onDeleteEntity={onDeleteEntity}
         state={{
           isLoading,

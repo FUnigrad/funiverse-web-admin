@@ -49,7 +49,10 @@ const StatusMaintenance = Loader(lazy(() => import('src/content/pages/Status/Mai
 const GroupPage = Loader(lazy(() => import('src/pages/Group')));
 const GroupUsersPage = Loader(lazy(() => import('src/pages/Group/GroupUsers')));
 const GroupDetailPage = Loader(lazy(() => import('src/pages/Group/GroupDetail')));
+
 const UserPage = Loader(lazy(() => import('src/pages/User')));
+const UserDetailPage = Loader(lazy(() => import('src/pages/User/UserDetail')));
+
 const CurriculumPage = Loader(lazy(() => import('src/pages/Curriculum')));
 const CurriculumFormPage = Loader(lazy(() => import('src/pages/Curriculum/CurriculumForm')));
 const CurriculumDetailPage = Loader(lazy(() => import('src/pages/Curriculum/CurriculumDetail')));
@@ -136,6 +139,10 @@ const routes: RouteObject[] = [
       {
         path: '',
         element: <UserPage />,
+      },
+      {
+        path: ':slug',
+        element: <UserDetailPage />,
       },
     ],
   },

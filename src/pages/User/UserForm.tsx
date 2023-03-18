@@ -46,7 +46,11 @@ const UserSchema = z.object({
   // eduMail: z.string().email(),
   // avatar: z.string().min(1),
   phoneNumber: z.string().min(1),
-  curriculum: z.object({ value: z.number(), label: z.string() }).or(z.number()).optional(),
+  curriculum: z
+    .object({ value: z.number(), label: z.string() })
+    .or(z.number())
+    .nullable()
+    .optional(),
   // active: z.boolean(),
 });
 
@@ -64,7 +68,9 @@ function UserForm({ defaultValues }: UserFormProps) {
   const mutation = useMutation<User, unknown, typeof defaultValues, unknown>({
     mutationFn: (body) => (body.id ? userApis.updateUser(body) : userApis.createUser(body)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.Users] });
+      if (defaultValues?.id) queryClient.invalidateQueries({ queryKey: [QueryKey.Users, 'slug'] });
+      else queryClient.invalidateQueries({ queryKey: [QueryKey.Users] });
+
       toast.success(`${defaultValues?.id ? 'Update' : 'Create'} User successfully!`);
       dispatch({ type: 'close' });
     },
@@ -187,7 +193,7 @@ function UserForm({ defaultValues }: UserFormProps) {
           <AsyncSelect
             fieldName="curriculum"
             control={control}
-            required
+            // required
             promiseOptions={promiseOptions}
             error={Boolean(errors.curriculum)}
           />
