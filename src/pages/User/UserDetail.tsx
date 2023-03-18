@@ -9,7 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import Add from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
-import { GroupType, Syllabus, User, GroupUser } from 'src/@types';
+import { GroupType, Syllabus, User, GroupUser, UserRole } from 'src/@types';
 import HeaderRowTable from 'src/components/HeaderRowTable';
 import { AxiosResponse } from 'axios';
 // import SyllabusFormPage from '../SyllabusForm';
@@ -20,16 +20,21 @@ import { MRT_ColumnDef, MRT_Row } from 'material-react-table';
 import { generateOptions } from 'src/utils';
 
 function transfromGroupDetail(data: User) {
+  const studentData =
+    data.role === UserRole.Student
+      ? {
+          schoolYear: { label: 'School Year', value: data.schoolYear },
+          curriculum: { label: 'Curriculum', value: data.curriculum?.name },
+        }
+      : {};
   return {
     name: { label: 'Name', value: data.name },
+    code: { label: 'Code', value: data.code },
     role: { label: 'Role', value: data.role },
     email: { label: 'E-mail', value: data.eduMail },
+    ...studentData,
     phoneNumber: { label: 'Phone Number', value: data.phoneNumber },
     personalMail: { label: 'Personal e-mail', value: data.personalMail },
-    // preRequisite: {
-    //   label: 'Pre-Requisite',
-    //   value: data.preRequisite ? data.preRequisite.map((s) => s.name).join(', ') : '',
-    // },
     active: { label: 'Active', value: `${data.active}` },
   };
 }

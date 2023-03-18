@@ -95,7 +95,7 @@ function CheckboxSearchList({
             );
           })
         ) : (
-          <Typography sx={{ textAlign: 'center' }}>No users</Typography>
+          <Typography sx={{ textAlign: 'center' }}>No records</Typography>
         )}
       </List>
     </Box>

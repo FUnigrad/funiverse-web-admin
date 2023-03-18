@@ -52,6 +52,10 @@ function UserPage() {
       //   ),
       // },
       {
+        header: 'Code',
+        accessorKey: 'code',
+      },
+      {
         header: 'Name',
         accessorKey: 'name',
         Cell: ({ cell, row }) => (

@@ -86,7 +86,7 @@ function CurriculumComboForm({ curriculumId, defaultValues }: CurriculumComboFor
     mutationFn: (body) => curriculumApis.createCurriculumCombo(curriculumId, body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Curricula, 'slug', QueryKey.Combos] });
-      toast.success(`Remove Combo successfully!`);
+      toast.success(`Add Combo successfully!`);
       dispatch({ type: 'close' });
     },
   });

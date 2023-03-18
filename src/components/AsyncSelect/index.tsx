@@ -77,6 +77,7 @@ function AsyncSelect({
             <ReactAsyncSelect
               required={required}
               cacheOptions
+              defaultOptions
               defaultValue={value}
               placeholder={`Search ${fieldName} ...`}
               maxMenuHeight={130}
