@@ -7,7 +7,6 @@ export const syllabusApis = {
   getSyllabuses: () => axiosClient.get<Syllabus[]>(`/syllabus`),
   getSyllabus: (id: string) => axiosClient.get<Syllabus>(`/syllabus/${id}`),
   createSyllabus: (newSyllabus: SyllabusBody) => axiosClient.post('/syllabus', newSyllabus),
-  updateSyllabus: (newSyllabus: SyllabusBody) =>
-    axiosClient.put(`/syllabus/${newSyllabus.id}`, newSyllabus),
+  updateSyllabus: (newSyllabus: SyllabusBody) => axiosClient.put(`/syllabus`, newSyllabus),
   deleteSyllabus: (id: number) => axiosClient.delete(`/syllabus/${id}`),
 };

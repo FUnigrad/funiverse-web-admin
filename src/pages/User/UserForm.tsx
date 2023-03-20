@@ -20,7 +20,7 @@ import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSelectValue } from 'src/utils';
 import { toast } from 'react-toastify';
-
+const phoneRegExp = /^\+?\d{9,15}$/;
 const roleOptions = [
   { value: UserRole.Student, label: 'Student' },
   { value: UserRole.Teacher, label: 'Teacher' },
@@ -45,7 +45,7 @@ const UserSchema = z.object({
   personalMail: z.string().email(),
   // eduMail: z.string().email(),
   // avatar: z.string().min(1),
-  phoneNumber: z.string().min(1),
+  phoneNumber: z.string().regex(phoneRegExp, { message: 'Invalid phone number' }),
   curriculum: z
     .object({ value: z.number(), label: z.string() })
     .or(z.number())

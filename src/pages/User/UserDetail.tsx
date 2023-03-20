@@ -17,7 +17,7 @@ import { ModalContext } from 'src/contexts/ModalContext';
 import UserForm from './UserForm';
 import Table from 'src/components/Table';
 import { MRT_ColumnDef, MRT_Row } from 'material-react-table';
-import { generateOptions } from 'src/utils';
+import { capitalizeAndOmitUnderscore, generateOptions } from 'src/utils';
 
 function transfromGroupDetail(data: User) {
   const studentData =
@@ -30,11 +30,12 @@ function transfromGroupDetail(data: User) {
   return {
     name: { label: 'Name', value: data.name },
     code: { label: 'Code', value: data.code },
-    role: { label: 'Role', value: data.role },
+    identifyNumber: { label: 'Identify Number', value: data.identifyNumber },
+    role: { label: 'Role', value: capitalizeAndOmitUnderscore(data.role) },
     email: { label: 'E-mail', value: data.eduMail },
+    personalMail: { label: 'Personal e-mail', value: data.personalMail },
     ...studentData,
     phoneNumber: { label: 'Phone Number', value: data.phoneNumber },
-    personalMail: { label: 'Personal e-mail', value: data.personalMail },
     active: { label: 'Active', value: `${data.active}` },
   };
 }

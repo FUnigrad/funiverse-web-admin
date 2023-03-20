@@ -12,6 +12,7 @@ export interface User {
   phoneNumber:  string;
   curriculum:   Curriculum;
   active:       boolean;
+  identifyNumber: string;
 }
 //TODO: update ROLE here
 export interface UserPayload {

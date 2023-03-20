@@ -31,6 +31,7 @@ const generateUser = (): User => {
       .padStart(4, '0')}`,
     curriculum: generateCurriculum(),
     active: Math.random() < 0.5,
+    identifyNumber: '123',
   };
 };
 
