@@ -10,7 +10,7 @@ const axiosClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  baseURL: 'http://funiverse.world:30000',
+  baseURL: 'http://funiverse.world:30000/api',
   paramsSerializer: { serialize: (params) => qs.stringify(params) },
   // baseURL: 'http://dev.funiverse.world/api',
   proxy: {
