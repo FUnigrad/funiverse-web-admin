@@ -37,7 +37,7 @@ const SyllabusSchema = z.object({
   // duration: z.coerce.number().positive(),
   description: z.string(),
   minAvgMarkToPass: z.coerce.number().positive(),
-  preRequisite: z.array(z.number()).optional(),
+  preRequisite: z.array(z.number()).optional().nullable(),
 
   // active: z.boolean(),
 });
