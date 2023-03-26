@@ -46,8 +46,10 @@ function CheckboxSearchList({
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     const originalList = originalListRef.current;
-    const newList = originalList.filter((item) =>
-      removeAccents(item.name.toLowerCase()).includes(removeAccents(value.toLowerCase())),
+    const newList = originalList.filter(
+      (item) =>
+        Boolean(item?.name) &&
+        removeAccents(item.name.toLowerCase()).includes(removeAccents(value.toLowerCase())),
     );
     setSearchInput(value);
     setList(newList);
