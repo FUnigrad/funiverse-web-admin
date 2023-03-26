@@ -33,14 +33,9 @@ const UserSchema = z.object({
   name: z.string().min(1),
   // code: z.string().min(1),
   role: z.string().min(1),
-  identifyNumber: z.union([
-    z
-      .string({
-        errorMap: () => ({ message: 'String must contain exactly 9 or 12 characters' }),
-      })
-      .length(9),
-    z.string().length(12),
-  ]),
+  identifyNumber: z
+    .string({ errorMap: () => ({ message: 'Number must contain exactly 9 or 12 characters' }) })
+    .regex(/^(?:\d{9}|\d{12})$/),
   // schoolYear: z.string().min(1),
   personalMail: z.string().email(),
   // eduMail: z.string().email(),

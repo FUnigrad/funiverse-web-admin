@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 
 import Sidebar from './Sidebar';
 import Header from './Header';
+import { Breadcrumbs } from 'src/router';
 
 interface SidebarLayoutProps {
   children?: ReactNode;
@@ -53,6 +54,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = () => {
           }}
         >
           <Box display="block" sx={{ padding: 3 }}>
+            {/* <Breadcrumbs /> */}
             <Outlet />
           </Box>
         </Box>
