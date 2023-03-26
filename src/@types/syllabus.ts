@@ -12,4 +12,5 @@ export interface Syllabus {
   description:      null | string;
   minAvgMarkToPass: number;
   active:           boolean;
+  syllabusCombo:    boolean;
 }

@@ -4,7 +4,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { QueryKey, groupApis, syllabusApis } from 'src/apis';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import Add from '@mui/icons-material/Add';
@@ -17,12 +17,19 @@ import { ModalContext } from 'src/contexts/ModalContext';
 import GroupForm, { GroupFormInputs } from './GroupForm';
 import Table from 'src/components/Table';
 import { MRT_ColumnDef, MRT_Row } from 'material-react-table';
-
 function transfromGroupDetail(data: Group) {
+  const classDetail = {} as any;
+  if (data.type === GroupType.Class) {
+    classDetail.curriculum = {
+      label: 'Curriculum',
+      value: `${data.curriculum.code} - ${data.curriculum.name}`,
+    };
+  }
   return {
     name: { label: 'Name', value: data.name },
-    private: { label: 'Private', value: `${data.private}` },
     type: { label: 'Type', value: data.type },
+    ...classDetail,
+    private: { label: 'Private', value: `${data.private}` },
     // preRequisite: {
     //   label: 'Pre-Requisite',
     //   value: data.preRequisite ? data.preRequisite.map((s) => s.name).join(', ') : '',
@@ -77,6 +84,7 @@ function GroupDetailPage() {
     if (!groupDetailData) return;
     const original = groupDetailData;
     let defaultValues: Partial<GroupFormInputs & { id: number; name: string }> = {
+      ...groupDetailData,
       id: +groupDetailData.id,
       type: original.type as any,
       // active: original.active,
@@ -117,7 +125,7 @@ function GroupDetailPage() {
 
   function onAddGroupUser() {}
 
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return <SuspenseLoader />;
   if (isError) {
     //TODO: Handle error case here
     return <div>This ID does not exist!</div>;

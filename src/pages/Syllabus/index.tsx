@@ -37,8 +37,8 @@ function SyllabusPage() {
   const columns = useMemo<MRT_ColumnDef<Syllabus>[]>(
     () => [
       {
-        header: 'Syllabus Code',
-        accessorKey: 'subject.code',
+        header: 'Code',
+        accessorKey: 'code',
       },
       // {
       //   header: 'Subject Name',

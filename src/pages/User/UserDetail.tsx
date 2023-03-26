@@ -4,7 +4,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { QueryKey, userApis, syllabusApis } from 'src/apis';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import Add from '@mui/icons-material/Add';
@@ -67,6 +67,7 @@ function GroupDetailPage() {
       name: userDetailData.name,
       code: userDetailData.code,
       role: userDetailData.role,
+      identifyNumber: userDetailData.identifyNumber,
       schoolYear: userDetailData.schoolYear,
       personalMail: userDetailData.personalMail,
       eduMail: userDetailData.eduMail,
@@ -89,7 +90,7 @@ function GroupDetailPage() {
     });
   }
 
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return <SuspenseLoader />;
   if (isError) {
     //TODO: Handle error case here
     return <div>This ID does not exist!</div>;

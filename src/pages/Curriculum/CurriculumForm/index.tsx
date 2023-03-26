@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
-import CircularProgress from '@mui/material/CircularProgress';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
 import { useContext } from 'react';
@@ -148,7 +148,7 @@ function CurriculumFormPage({
   if (isLoading && defaultValues?.id)
     return (
       <Box sx={{ display: 'flex' }}>
-        <CircularProgress />
+        <SuspenseLoader />
       </Box>
     );
 
@@ -323,7 +323,12 @@ function CurriculumSyllabusForm({
         control={control}
         required
         promiseOptions={(input) =>
-          searchApis.search({ entity: 'syllabus', field: 'name', value: input })
+          searchApis.search({
+            entity: 'syllabus',
+            field: ['isSyllabusCombo', 'name'],
+            value: [false, input],
+            operator: ['bool', 'like'],
+          })
         }
         error={Boolean(errors.syllabus)}
       />
@@ -331,8 +336,9 @@ function CurriculumSyllabusForm({
         label="Semester"
         type="number"
         required
-        error={Boolean(errors.noSemester)}
-        helperText={errors.noSemester?.message}
+        error={Boolean(errors.semester)}
+        helperText={errors.semester?.message}
+        autoFocus={false}
         {...register('semester')}
       />
     </Box>

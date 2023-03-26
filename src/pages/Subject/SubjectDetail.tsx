@@ -15,7 +15,7 @@ import SubjectForm from './SubjectForm';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { MRT_ColumnDef, MRT_Row } from 'material-react-table';
 import Table from 'src/components/Table';
-import CircularProgress from '@mui/material/CircularProgress';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 function transfromSubjectDetail(data: Subject) {
   return {
@@ -80,7 +80,7 @@ function SubjectDetailPage() {
     });
   }
 
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return <SuspenseLoader />;
   if (isError) {
     //TODO: Handle error case here
     return <div>This ID does not exist!</div>;

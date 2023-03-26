@@ -15,7 +15,7 @@ import { AxiosResponse } from 'axios';
 import { ModalContext } from 'src/contexts/ModalContext';
 import Table from 'src/components/Table';
 import { MRT_ColumnDef, MRT_Row } from 'material-react-table';
-import CircularProgress from '@mui/material/CircularProgress';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 function transfromSyllabusDetail(data: Combo) {
   return {
@@ -84,7 +84,7 @@ function CurriculumComboDetailPage() {
     // });
   }
 
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return <SuspenseLoader />;
   if (isError) {
     //TODO: Handle error case here
     return <div>This ID does not exist!</div>;

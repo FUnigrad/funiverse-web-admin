@@ -156,4 +156,4 @@ export const syllabusData: Syllabus[] = [
     minAvgMarkToPass: 4,
     active: true,
   },
-];
+] as any;

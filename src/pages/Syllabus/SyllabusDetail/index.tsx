@@ -13,7 +13,7 @@ import { AxiosResponse } from 'axios';
 import SyllabusFormPage from '../SyllabusForm';
 import { ModalContext } from 'src/contexts/ModalContext';
 import { generateOptions } from 'src/utils';
-import CircularProgress from '@mui/material/CircularProgress';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 function transfromSyllabusDetail(data: Syllabus) {
   return {
@@ -73,7 +73,7 @@ function SyllabusDetailPage() {
     });
   }
 
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return <SuspenseLoader />;
   if (isError) {
     //TODO: Handle error case here
     return <div>This ID does not exist!</div>;

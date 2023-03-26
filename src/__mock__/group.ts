@@ -55,7 +55,7 @@ export const groupData: Group[] = [
       description: null,
       minAvgMarkToPass: 2,
       active: true,
-    },
+    } as any,
     teacher: {
       id: 1,
       name: 'trang',

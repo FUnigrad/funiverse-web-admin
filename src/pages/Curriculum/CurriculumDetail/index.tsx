@@ -2,17 +2,12 @@ import React, { useMemo, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { QueryKey, groupApis, curriculumApis, syllabusApis } from 'src/apis';
-import {
-  TableBody,
-  TableRow,
-  TableCell,
-  Paper,
-  Box,
-  Typography,
-  Link as MuiLink,
-  Checkbox,
-  Button,
-} from '@mui/material';
+import SuspenseLoader from 'src/components/SuspenseLoader';
+import MuiLink from '@mui/material/Link';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+
 import { Curriculum, CurriculumCombo, CurriculumSyllabus } from 'src/@types';
 import HeaderRowTable from 'src/components/HeaderRowTable';
 import { AxiosResponse } from 'axios';
@@ -260,7 +255,7 @@ function CurriculumDetailPage() {
       },
     });
   }
-  if (curriculumDetailQuery.isLoading) return <div>loading ...</div>;
+  if (curriculumDetailQuery.isLoading) return <SuspenseLoader />;
   if (curriculumDetailQuery.isError) {
     //TODO: Handle error case here
     return <div>This ID does not exist!</div>;

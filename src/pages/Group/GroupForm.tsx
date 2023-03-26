@@ -112,6 +112,7 @@ function GroupForm({ defaultValues }: GroupFormProps) {
   function onSubmit(data: GroupFormInputs) {
     console.log('data: ', defaultValues?.id, data);
     const body: GroupFormBody = {
+      ...defaultValues,
       ...data,
     };
     if (defaultValues?.id) {
@@ -136,6 +137,7 @@ function GroupForm({ defaultValues }: GroupFormProps) {
     if (defaultValues?.id) body.id = defaultValues.id;
 
     mutation.mutate(body);
+    // console.log("🚀 ~ body:", body)
   }
 
   // useEffect(() => {

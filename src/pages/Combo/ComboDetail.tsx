@@ -18,7 +18,7 @@ import { MRT_ColumnDef, MRT_Row } from 'material-react-table';
 import Table from 'src/components/Table';
 import { useCheckboxSearchList } from 'src/components/CheckboxSearchList';
 import { toast } from 'react-toastify';
-import CircularProgress from '@mui/material/CircularProgress';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 function transfromComboDetail(data: Combo) {
   return {
@@ -124,7 +124,7 @@ function ComboDetailPage() {
     });
   }
   function onDeleteSyllabus() {}
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return <SuspenseLoader />;
   if (isError) {
     //TODO: Handle error case here
     return <div>This ID does not exist!</div>;

@@ -18,7 +18,7 @@ import MajorForm from './MajorForm';
 import Table from 'src/components/Table';
 import { MRT_ColumnDef, MRT_Row } from 'material-react-table';
 import SpecializationForm from './Specialization/SpecializationForm';
-import CircularProgress from '@mui/material/CircularProgress';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import { toast } from 'react-toastify';
 function transfromGroupDetail(data: Major) {
   return {
@@ -156,7 +156,7 @@ function MajorDetailPage() {
       },
     });
   }
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return <SuspenseLoader />;
   if (isError) {
     //TODO: Handle error case here
     return <div>This ID does not exist!</div>;
