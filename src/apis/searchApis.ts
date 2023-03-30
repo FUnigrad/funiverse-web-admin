@@ -38,4 +38,6 @@ export const searchApis = {
       ],
     });
   },
+  searchSyllabus: (params: { id: string; type: 'combo' | 'curriculum'; value: string }) =>
+    axiosClient.get('/syllabus/available', { params }),
 };

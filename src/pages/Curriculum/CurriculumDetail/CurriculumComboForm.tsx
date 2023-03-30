@@ -143,8 +143,14 @@ function CurriculumComboForm({ curriculumId, defaultValues }: CurriculumComboFor
           fieldName="combo"
           control={control}
           required
-          promiseOptions={(input) =>
-            searchApis.search({ entity: 'combo', field: 'name', value: input })
+          promiseOptions={
+            (input) =>
+              searchApis.searchSyllabus({
+                id: `${curriculumId}`,
+                value: input,
+                type: 'combo',
+              })
+            // searchApis.search({ entity: 'combo', field: 'name', value: input })
           }
           onRawSelect={onRawSelect}
           error={Boolean(errors.combo)}

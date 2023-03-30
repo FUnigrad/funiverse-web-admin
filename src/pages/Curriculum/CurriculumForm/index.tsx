@@ -324,13 +324,19 @@ function CurriculumSyllabusForm({
         fieldName="syllabus"
         control={control}
         required
-        promiseOptions={(input) =>
-          searchApis.search({
-            entity: 'syllabus',
-            field: ['isSyllabusCombo', 'name'],
-            value: [false, input],
-            operator: ['bool', 'like'],
-          })
+        promiseOptions={
+          (input) =>
+            searchApis.searchSyllabus({
+              id: curriculumId,
+              value: input,
+              type: 'curriculum',
+            })
+          // searchApis.search({
+          //   entity: 'syllabus',
+          //   field: ['isSyllabusCombo', 'name'],
+          //   value: [false, input],
+          //   operator: ['bool', 'like'],
+          // })
         }
         error={Boolean(errors.syllabus)}
       />
