@@ -9,11 +9,16 @@ import { NavLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { QueryKey } from 'src/apis';
 import { termApis } from 'src/apis/termApis';
 import { ModalContext } from 'src/contexts/ModalContext';
 import Typography from '@mui/material/Typography';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import dayjs from 'dayjs';
+import { useRefState } from 'src/hooks';
 
 const ListWrapper = styled(Box)(
   ({ theme }) => `
@@ -71,7 +76,7 @@ function HeaderMenu() {
   const [isOpen, setOpen] = useState<boolean>(false);
   const { dispatch } = useContext(ModalContext);
   const queryClient = useQueryClient();
-
+  const [selectedDateRef, setSelectedDate] = useRefState();
   const handleOpen = (): void => {
     setOpen(true);
   };
@@ -100,41 +105,79 @@ function HeaderMenu() {
   });
   //TODO: Urgent
   function handleStartNewSemester() {
+    if (!nextData) return;
+    const {
+      season: { startMonth, endMonth },
+      year,
+    } = nextData;
+    const startNextDate = dayjs()
+      .month(startMonth - 1)
+      .year(+year)
+      .startOf('month');
+    const endNextDate = dayjs()
+      .month(endMonth - 1)
+      .year(+year)
+      .endOf('month');
     dispatch({
       type: 'open',
       payload: {
         content: () => (
-          <Typography variant="h6" color="initial">
-            Current semester is:{' '}
-            <b>
-              {currentData?.season?.name} {currentData?.year}
-            </b>
-            . Do you want to start{' '}
-            <b>
-              {nextData?.season} {nextData?.year}
-            </b>
-            ?
-          </Typography>
+          <Box>
+            <Typography variant="h6" color="initial">
+              Current semester is:{' '}
+              <b>
+                {currentData?.season?.name} {currentData?.year}
+              </b>
+              . Do you want to start{' '}
+              <b>
+                {nextData?.season?.name} {nextData?.year}
+              </b>
+              ?
+            </Typography>
+            <DemoContainer components={['DatePicker']}>
+              <DatePicker
+                minDate={startNextDate}
+                maxDate={endNextDate}
+                label="Start date"
+                disablePast
+                slotProps={{
+                  textField: {
+                    // helperText: 'MM / DD / YYYY',
+                  },
+                }}
+                // value={selectedDateRef.current}
+                onChange={(value) => setSelectedDate(value)}
+                defaultValue={startNextDate}
+              />
+            </DemoContainer>
+          </Box>
         ),
         title: 'Start new semester',
         saveTitle: 'Start',
       },
       onCreateOrSave: () => {
         dispatch({ type: 'close' });
+        console.log(selectedDateRef.current);
+
         setTimeout(() => {
+          const date = dayjs(selectedDateRef.current as any).format('YYYY-MM-DD');
           dispatch({
             type: 'open',
             payload: {
               content: () => (
                 <Typography variant="h6" color="initial">
-                  Doing this action means that you will ... .//TODO: Warning message here
+                  Start{' '}
+                  <b>
+                    {nextData?.season?.name} {nextData.year}
+                  </b>{' '}
+                  at <b>{date}</b>?. Doing this action means that you will lost all...
                 </Typography>
               ),
               title: 'Confirm start new semester',
               saveTitle: 'Confirm',
             },
             onCreateOrSave: () => {
-              mutation.mutate();
+              mutation.mutate({ startDate: date });
             },
           });
         }, 0);

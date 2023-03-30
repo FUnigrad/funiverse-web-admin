@@ -15,7 +15,6 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   }
   if (accessToken) {
     const user = appCookies.getDecodedAccessToken();
-    console.log(user);
     if (user.role !== UserRole.WorkspaceAdmin) {
       appCookies.clearAll();
       window.location.href = __DEV__
