@@ -209,6 +209,17 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
+                  to="/seasons"
+                  startIcon={<GroupsOutlined />}
+                >
+                  Seasons
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
                   to="/groups"
                   startIcon={<GroupsOutlined />}
                 >

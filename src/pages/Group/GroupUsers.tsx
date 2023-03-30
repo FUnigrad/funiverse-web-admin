@@ -79,8 +79,8 @@ function GroupUsersPage() {
       //   accessorKey: 'role',
       // },
       {
-        header: 'Phone Number',
-        accessorKey: 'phoneNumber',
+        header: 'Role',
+        accessorKey: 'role',
       },
       // {
       //   header: 'Active',

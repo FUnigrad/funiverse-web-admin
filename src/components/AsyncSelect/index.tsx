@@ -13,6 +13,7 @@ interface AsyncSelectProps {
   isMulti?: boolean;
   debounce?: boolean;
   onRawSelect?: Function;
+  readOnly?: boolean;
 }
 function AsyncSelect({
   control,
@@ -23,6 +24,7 @@ function AsyncSelect({
   isMulti = false,
   debounce = true,
   onRawSelect,
+  readOnly = false,
 }: AsyncSelectProps) {
   const debounceRef = useRef(null);
   const defaultConfig = {
@@ -100,6 +102,7 @@ function AsyncSelect({
                   ...errorSelectStyle,
                 }),
               }}
+              isDisabled={readOnly}
               {...defaultConfig}
               {...field}
             />

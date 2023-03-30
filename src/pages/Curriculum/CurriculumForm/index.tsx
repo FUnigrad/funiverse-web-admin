@@ -182,6 +182,7 @@ function CurriculumFormPage({
         error={Boolean(errors.major)}
       /> */}
       <AsyncSelect
+        readOnly={Boolean(defaultValues?.id)}
         fieldName="specialization"
         control={control}
         required
@@ -319,6 +320,7 @@ function CurriculumSyllabusForm({
       }}
     >
       <AsyncSelect
+        readOnly={Boolean(defaultValues?.id)}
         fieldName="syllabus"
         control={control}
         required

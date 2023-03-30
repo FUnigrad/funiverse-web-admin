@@ -101,7 +101,7 @@ function ComboDetailPage() {
     dispatch({
       type: 'open',
       payload: {
-        title: 'Edit Combo in Curriculum',
+        title: 'Edit Combo',
         content: () => <ComboForm defaultValues={defaultValues as any} />,
       },
       onCreateOrSave: () => {},

@@ -68,6 +68,7 @@ const SubjectPage = Loader(lazy(() => import('src/pages/Subject')));
 const SubjectDetailPage = Loader(lazy(() => import('src/pages/Subject/SubjectDetail')));
 const ComboPage = Loader(lazy(() => import('src/pages/Combo')));
 const ComboDetailPage = Loader(lazy(() => import('src/pages/Combo/ComboDetail')));
+const SeasonPage = Loader(lazy(() => import('src/pages/Season')));
 const MajorPage = Loader(lazy(() => import('src/pages/Major')));
 const MajorDetailPage = Loader(lazy(() => import('src/pages/Major/MajorDetail')));
 // const SpecializationPage = Loader(lazy(() => import('src/pages/Specialization')));
@@ -113,6 +114,20 @@ const routes: RouteObject[] = [
         path: '*',
         element: <Status404 />,
       },
+    ],
+  },
+  {
+    path: 'seasons',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <SeasonPage />,
+      },
+      // {
+      //   path: ':slug',
+      //   element: <GroupDetailPage />,
+      // },
     ],
   },
   {

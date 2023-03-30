@@ -107,7 +107,7 @@ function HeaderMenu() {
           <Typography variant="h6" color="initial">
             Current semester is:{' '}
             <b>
-              {currentData?.season} {currentData?.year}
+              {currentData?.season?.name} {currentData?.year}
             </b>
             . Do you want to start{' '}
             <b>
@@ -144,7 +144,7 @@ function HeaderMenu() {
   return (
     <>
       <Button variant="outlined" color="primary" onClick={handleStartNewSemester}>
-        {currentData?.season} {currentData?.year}
+        {currentData?.season?.name} {currentData?.year}
       </Button>
       {/* <ListWrapper
         sx={{

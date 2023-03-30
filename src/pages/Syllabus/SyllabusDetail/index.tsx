@@ -66,7 +66,7 @@ function SyllabusDetailPage() {
     dispatch({
       type: 'open',
       payload: {
-        title: 'Edit Syllabus in Curriculum',
+        title: 'Edit Syllabus',
         content: () => <SyllabusFormPage syllabusId={slug} defaultValues={defaultValues as any} />,
       },
       onCreateOrSave: () => {},
