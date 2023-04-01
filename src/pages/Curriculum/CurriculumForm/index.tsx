@@ -9,7 +9,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router';
 import { Curriculum, CurriculumSyllabus } from 'src/@types';
-import { QueryKey, curriculumApis, searchApis } from 'src/apis';
+import { QueryKey, curriculumApis, searchApis, seasonApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import Select from 'src/components/Select';
 import { ModalContext } from 'src/contexts/ModalContext';
@@ -20,11 +20,11 @@ import { toast } from 'react-toastify';
 interface CurriculumFormPageProps {
   defaultValues?: CurriculumFormInputs;
 }
-const seasonOptions = [
-  { value: 'SPRING', label: 'Spring' },
-  { value: 'SUMMER', label: 'Summer' },
-  { value: 'FALL', label: 'Fall' },
-] as const;
+// const seasonOptions = [
+//   { value: 'SPRING', label: 'Spring' },
+//   { value: 'SUMMER', label: 'Summer' },
+//   { value: 'FALL', label: 'Fall' },
+// ] as const;
 
 export type CurriculumBody = {
   id?: number;
@@ -32,7 +32,7 @@ export type CurriculumBody = {
   description: string;
   // major: { id: number };
   specialization: { id: number };
-  startedTerm: { season: string; year: string };
+  startedTerm: { season: { id: number }; year: string };
   noSemester: number;
   // active: boolean;
 };
@@ -49,9 +49,9 @@ const CurriculumSchema = z.object({
     .or(z.object({ value: z.number().positive(), label: z.string() })),
   noSemester: z.coerce.number().positive(),
   season: z
-    .string()
-    .min(1)
-    .or(z.object({ value: z.string().min(1), label: z.string() })),
+    .number()
+    .positive()
+    .or(z.object({ value: z.number().positive(), label: z.string() })),
   year: z.coerce
     .number()
     .positive()
@@ -122,6 +122,11 @@ function CurriculumFormPage({
       // reset(defaultValues);
     },
   });
+  const seasonsQuery = useQuery({
+    queryKey: [QueryKey.Seasons],
+    queryFn: seasonApis.getSeasons,
+  });
+  const seasonOptions = seasonsQuery.data?.map((s) => ({ label: s.name, value: s.id }));
   function handleClose() {
     // navigate(getPreviousPathSlash(location.pathname));
     navigate(-1);
@@ -134,7 +139,7 @@ function CurriculumFormPage({
       // major: { id: getSelectValue(data.major) },
       specialization: { id: getSelectValue(data.specialization) },
       startedTerm: {
-        season: getSelectValue(data.season),
+        season: { id: getSelectValue(data.season) },
         year: `${getSelectValue(data.year)}`,
       },
     } as CurriculumBody;
@@ -203,7 +208,7 @@ function CurriculumFormPage({
       <Select
         control={control}
         fieldName="season"
-        options={seasonOptions}
+        options={seasonOptions ?? []}
         required
         error={Boolean(errors.season) && errors.season.message === 'Required'}
         // defaultValue={defaultValues.season ?? ''}

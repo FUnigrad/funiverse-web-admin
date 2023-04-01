@@ -30,7 +30,7 @@ import { useCheckboxSearchList } from 'src/components/CheckboxSearchList';
 import CurriculumComboForm from './CurriculumComboForm';
 import { capitalizeAndOmitUnderscore } from 'src/utils';
 function transfromCurriculumDetail(data: Curriculum) {
-  const formattedSeason = capitalizeAndOmitUnderscore(data.startedTerm.season);
+  const formattedSeason = capitalizeAndOmitUnderscore(data.startedTerm.season.name);
   return {
     code: { label: 'Code', value: data.code },
     name: { label: 'Name', value: data.name },

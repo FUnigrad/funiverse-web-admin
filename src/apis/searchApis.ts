@@ -39,5 +39,13 @@ export const searchApis = {
     });
   },
   searchSyllabus: (params: { id: string; type: 'combo' | 'curriculum'; value: string }) =>
-    axiosClient.get('/syllabus/available', { params }),
+    axiosClient.get('/syllabus/available', {
+      params,
+      transformResponse: [
+        function (data) {
+          let parsedData = JSON.parse(data);
+          return parsedData.map((d) => ({ label: `${d.name} - ${d.code}`, value: d.id }));
+        },
+      ],
+    }),
 };

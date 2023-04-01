@@ -1,5 +1,6 @@
 import { Syllabus } from './syllabus';
 import {Combo} from './combo'
+import { Season } from './season';
 export interface Major {
   id: number;
   code: string;
@@ -28,7 +29,7 @@ export interface Curriculum {
   major: Major;
   specialization: Specialization;
   startedTerm: {
-    season: string;
+    season: Season;
     year: string;
   };
   noSemester: number;
