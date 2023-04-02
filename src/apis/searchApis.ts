@@ -27,7 +27,7 @@ export const searchApis = {
           const entity = params.entity;
           let parsedData = JSON.parse(data);
           const entitySearchResultFn = {
-            combo: (d) => ({ label: d[field], value: d.id, syllabi: d.syllabi }),
+            combo: (d) => ({ label: d.name, value: d.id, syllabi: d.syllabi }),
             subject: (d) => ({ label: `${d[field]} - ${d.code}`, value: d.id }),
             default: (d) => ({ label: d[field], value: d.id }),
           };
