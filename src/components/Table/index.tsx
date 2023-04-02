@@ -69,6 +69,13 @@ function Table({
           },
         },
       }}
+      muiTopToolbarProps={{
+        sx: {
+          '& .MuiCollapse-root .MuiFormControl-root': {
+            minHeight: '30px',
+          },
+        },
+      }}
       {...tableProps}
       displayColumnDefOptions={{
         'mrt-row-actions': {
