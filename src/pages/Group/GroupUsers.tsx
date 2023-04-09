@@ -6,7 +6,7 @@ import { MRT_Row, MRT_ColumnDef } from 'material-react-table';
 import { useContext, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { User, Group } from 'src/@types';
+import { User, Group, GroupUser } from 'src/@types';
 import { QueryKey, curriculumApis, searchApis, userApis, groupApis } from 'src/apis';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
 import Table from 'src/components/Table';
@@ -59,7 +59,7 @@ function GroupUsersPage() {
     enabled: Boolean(slug),
   });
 
-  const columns = useMemo<MRT_ColumnDef<User>[]>(
+  const columns = useMemo<MRT_ColumnDef<GroupUser>[]>(
     () => [
       {
         header: 'Code',
@@ -80,7 +80,8 @@ function GroupUsersPage() {
       // },
       {
         header: 'Role',
-        accessorKey: 'role',
+        accessorKey: 'groupAdmin',
+        Cell: ({ cell }) => <span>{cell.getValue<boolean>() ? 'Admin' : 'Member'}</span>,
       },
       // {
       //   header: 'Active',
