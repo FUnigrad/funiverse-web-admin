@@ -32,6 +32,6 @@ export enum UserRole {
   Student = 'STUDENT',
   Teacher = 'TEACHER',
   SystemAdmin = 'SYSTEM_ADMIN',
-  DepartmentAdmin = 'DEPARTMENT_ADMIN',
+  DepartmentAdmin = 'OFFICER',
   WorkspaceAdmin = 'WORKSPACE_ADMIN'
 }

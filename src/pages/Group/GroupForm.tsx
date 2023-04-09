@@ -110,7 +110,6 @@ function GroupForm({ defaultValues }: GroupFormProps) {
   }, [clearErrors, watchType]);
 
   function onSubmit(data: GroupFormInputs) {
-    console.log('data: ', defaultValues?.id, data);
     const body: GroupFormBody = {
       ...defaultValues,
       ...data,
@@ -126,10 +125,12 @@ function GroupForm({ defaultValues }: GroupFormProps) {
       body.syllabus = {
         id: getSelectValue((data as any).syllabus),
       };
-    if (data.class)
-      body.class = {
+    if (data.class) {
+      body.referenceClass = {
         id: getSelectValue((data as any).class),
       };
+      delete body.class;
+    }
     if (data.teacher)
       body.teacher = {
         id: getSelectValue((data as any).teacher),
@@ -137,7 +138,6 @@ function GroupForm({ defaultValues }: GroupFormProps) {
     if (defaultValues?.id) body.id = defaultValues.id;
 
     mutation.mutate(body);
-    // console.log("🚀 ~ body:", body)
   }
 
   // useEffect(() => {
@@ -212,13 +212,6 @@ function GroupForm({ defaultValues }: GroupFormProps) {
 
         {watchType === GroupType.Course && (
           <>
-            <AsyncSelect
-              fieldName="syllabus"
-              control={control}
-              required
-              promiseOptions={promiseOptionFactory({ entity: 'syllabus' })}
-              error={Boolean(errors.syllabus)}
-            />
             {!defaultValues?.id && (
               <AsyncSelect
                 fieldName="class"
@@ -233,6 +226,13 @@ function GroupForm({ defaultValues }: GroupFormProps) {
                 error={Boolean(errors.class)}
               />
             )}
+            <AsyncSelect
+              fieldName="syllabus"
+              control={control}
+              required
+              promiseOptions={promiseOptionFactory({ entity: 'syllabus' })}
+              error={Boolean(errors.syllabus)}
+            />
             <AsyncSelect
               fieldName="teacher"
               control={control}

@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AuthGuard } from './guards';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { StepperProvider } from './contexts/StepperContext';
 // const queryClient = new QueryClient();
 function App() {
   const content = useRoutes(router);
@@ -20,10 +21,12 @@ function App() {
     <ThemeProvider>
       <ModalProvider>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <CssBaseline />
-          <AuthGuard>{content}</AuthGuard>
-          <Modal />
-          <ToastContainer autoClose={2000} newestOnTop />
+          <StepperProvider>
+            <CssBaseline />
+            <AuthGuard>{content}</AuthGuard>
+            <Modal />
+            <ToastContainer autoClose={2000} newestOnTop />
+          </StepperProvider>
         </LocalizationProvider>
       </ModalProvider>
     </ThemeProvider>

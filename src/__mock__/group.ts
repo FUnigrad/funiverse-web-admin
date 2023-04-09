@@ -1,5 +1,5 @@
 import { Group, GroupType } from 'src/@types';
-export const groupData: Group[] = [
+export const groupData: any = [
   {
     id: 1,
     name: 'CLASS',

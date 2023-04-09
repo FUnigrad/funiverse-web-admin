@@ -20,4 +20,6 @@ export const QueryKey = {
   Terms: 'terms',
   Combos: 'combos',
   Seasons: 'seasons',
+  Slot: 'slot',
+  Prepare: 'prepare',
 };

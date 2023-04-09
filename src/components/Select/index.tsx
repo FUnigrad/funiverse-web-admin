@@ -3,7 +3,16 @@ import { Controller } from 'react-hook-form';
 import ReactSelect from 'react-select';
 import { SelectProps } from 'src/@types';
 
-function Select({ control, fieldName, options, error, required, isDisabled = false }: SelectProps) {
+function Select({
+  control,
+  fieldName,
+  options,
+  error,
+  required,
+  isDisabled = false,
+  size = 'default',
+  label = fieldName,
+}: SelectProps) {
   const defaultConfig = {
     isSearchable: false,
     isClearable: false,
@@ -17,7 +26,14 @@ function Select({ control, fieldName, options, error, required, isDisabled = fal
       }
     : {};
   return (
-    <FormControl sx={{ width: '100%', m: '10px 0', position: 'relative' }}>
+    <FormControl
+      sx={{
+        width: '100%',
+        m: '10px 0',
+        position: 'relative',
+        minHeight: size === 'small' ? 38 : 90,
+      }}
+    >
       <FormLabel
         sx={{
           position: 'absolute',
@@ -35,7 +51,7 @@ function Select({ control, fieldName, options, error, required, isDisabled = fal
         }}
         required
       >
-        {fieldName}
+        {label}
       </FormLabel>
       <Controller
         name={fieldName}
@@ -45,7 +61,7 @@ function Select({ control, fieldName, options, error, required, isDisabled = fal
             <ReactSelect
               ref={ref}
               required={required}
-              placeholder={`Select ${fieldName} ...`}
+              placeholder={`Select ${label} ...`}
               defaultValue={options.find((o) => o.value === value)}
               maxMenuHeight={130}
               isDisabled={isDisabled}
@@ -55,6 +71,9 @@ function Select({ control, fieldName, options, error, required, isDisabled = fal
               getOptionLabel={(option: any) => option.label}
               onChange={(option: any) => {
                 onChange(option.value);
+              }}
+              classNames={{
+                control: () => (size === 'small' ? 'react-select__control--small' : ''),
               }}
               styles={{
                 control: (baseStyles) => ({

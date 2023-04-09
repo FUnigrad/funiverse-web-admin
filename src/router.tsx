@@ -63,6 +63,7 @@ const CurriculumComboDetailPage = Loader(
 const CurriculumUsersPage = Loader(lazy(() => import('src/pages/Curriculum/CurriculumUsers')));
 const SyllabusPage = Loader(lazy(() => import('src/pages/Syllabus')));
 const SyllabusFormPage = Loader(lazy(() => import('src/pages/Syllabus/SyllabusForm')));
+const TermPreparePage = Loader(lazy(() => import('src/pages/TermPrepare')));
 const SyllabusDetailPage = Loader(lazy(() => import('src/pages/Syllabus/SyllabusDetail')));
 const SubjectPage = Loader(lazy(() => import('src/pages/Subject')));
 const SubjectDetailPage = Loader(lazy(() => import('src/pages/Subject/SubjectDetail')));
@@ -114,6 +115,20 @@ const routes: RouteObject[] = [
         path: '*',
         element: <Status404 />,
       },
+    ],
+  },
+  {
+    path: 'term',
+    // element: <SidebarLayout />,
+    children: [
+      {
+        path: 'prepare',
+        element: <TermPreparePage />,
+      },
+      // {
+      //   path: ':slug',
+      //   element: <GroupDetailPage />,
+      // },
     ],
   },
   {

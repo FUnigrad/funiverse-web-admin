@@ -1,7 +1,7 @@
 import { groupData } from 'src/__mock__';
 import axiosClient from './axiosClient';
 import { fakePromise } from 'src/utils';
-import { Group, GroupUser } from 'src/@types';
+import { Group, GroupUser, GroupSlot, CreateSlotPayload } from 'src/@types';
 const searchData = [
   {
     value: 1,
@@ -36,4 +36,11 @@ export const groupApis = {
     axiosClient.post(`/group/${groupId}/members`, userIds),
   removeGroupUser: (groupId, userId) => axiosClient.delete(`/group/${groupId}/user/${userId}`),
   getFakedSearch: fakeSearchPromise,
+
+  //slotm
+  getGroupSlots: (groupId: string) => axiosClient.get<GroupSlot[]>(`/group/${groupId}/slot`),
+  createGroupSlot: (groupId: string, body: CreateSlotPayload[]) =>
+    axiosClient.post(`/group/${groupId}/slot`, body),
+  updateGroupSlot: (groupId: string, body: CreateSlotPayload[]) =>
+    axiosClient.post(`/group/${groupId}/slot`, body),
 };

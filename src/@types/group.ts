@@ -32,6 +32,11 @@ export interface Group {
   teacher:         Teacher;
   private:         boolean;
   active:          boolean;
+  publish:         boolean;
+}
+
+export interface PrepareGroup extends Group {
+  referenceClass:  Group | null;
 }
 
 export interface Teacher {
@@ -52,4 +57,19 @@ export interface GroupUser {
   id: number;
   code: string;
   name: string;
+}
+
+export interface GroupSlot {
+  id:        number;
+  no:        number;
+  order:     number;
+  dayOfWeek: number;
+  room:      string;
+  date:      null;
+}
+
+export interface CreateSlotPayload {
+  order:     number;
+  dayOfWeek: number;
+  room:      string;
 }

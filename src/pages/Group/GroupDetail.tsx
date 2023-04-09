@@ -9,7 +9,7 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import Add from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
-import { GroupType, Syllabus, Group, GroupUser } from 'src/@types';
+import { GroupType, Syllabus, Group, GroupUser, GroupSlot } from 'src/@types';
 import HeaderRowTable from 'src/components/HeaderRowTable';
 import { AxiosResponse } from 'axios';
 // import SyllabusFormPage from '../SyllabusForm';
@@ -17,6 +17,7 @@ import { ModalContext } from 'src/contexts/ModalContext';
 import GroupForm, { GroupFormInputs } from './GroupForm';
 import Table from 'src/components/Table';
 import { MRT_ColumnDef, MRT_Row } from 'material-react-table';
+import GroupSlotForm from './GroupSlotForm';
 function transfromGroupDetail(data: Group) {
   const classDetail = {} as any;
   if (data.type === GroupType.Class) {
@@ -41,25 +42,29 @@ function transfromGroupDetail(data: Group) {
 function GroupDetailPage() {
   const { slug } = useParams();
   const { dispatch } = useContext(ModalContext);
-  const columns = useMemo<MRT_ColumnDef<GroupUser>[]>(
+  const columns = useMemo<MRT_ColumnDef<GroupSlot>[]>(
     () => [
       {
-        header: 'Code',
-        accessorKey: 'code',
+        header: 'No.',
+        accessorKey: 'no',
       },
       {
-        header: 'Name',
-        accessorKey: 'name',
-        enableHiding: false,
+        header: 'Order',
+        accessorKey: 'order',
       },
-      // {
-      //   header: 'Active',
-      //   accessorKey: 'active',
-      //   enableSorting: false,
-      //   Cell: ({ cell }) => (
-      //     <Checkbox disableRipple disableTouchRipple checked={cell.getValue<boolean>()} readOnly />
-      //   ),
-      // },
+      {
+        header: 'Day of week',
+        accessorKey: 'dayOfWeek',
+      },
+      {
+        header: 'Room',
+        accessorKey: 'room',
+      },
+      {
+        header: 'Start Date',
+        accessorKey: 'date',
+        Cell: ({ cell }) => <span>{cell ? cell : 'TBD'}</span>,
+      },
     ],
     [],
   );
@@ -73,12 +78,11 @@ function GroupDetailPage() {
     queryFn: () => groupApis.getGroup(slug),
     enabled: Boolean(slug),
   });
-  // const groupUsersQuery = useQuery({
-  //   queryKey: [QueryKey.Groups, 'slug', 'users'],
-  //   queryFn: () => groupApis.getGroupUsers(slug),
-  //   retry: 0,
-  //   enabled: Boolean(slug),
-  // });
+  const groupSlotsQuery = useQuery({
+    queryKey: [QueryKey.Groups, 'slug', QueryKey.Slot],
+    queryFn: () => groupApis.getGroupSlots(slug),
+    enabled: Boolean(slug),
+  });
 
   function onEditGroup() {
     if (!groupDetailData) return;
@@ -123,7 +127,26 @@ function GroupDetailPage() {
     });
   }
 
-  function onAddGroupUser() {}
+  function onAddGroupSlot() {
+    dispatch({
+      type: 'open',
+      payload: {
+        title: 'Add Slot',
+        content: () => <GroupSlotForm groupId={slug} />,
+      },
+      onCreateOrSave: () => {},
+    });
+  }
+  function onCreateGroupSlot() {
+    dispatch({
+      type: 'open',
+      payload: {
+        title: 'Create Slot',
+        content: () => <GroupSlotForm groupId={slug} />,
+      },
+      onCreateOrSave: () => {},
+    });
+  }
 
   if (isLoading) return <SuspenseLoader />;
   if (isError) {
@@ -141,28 +164,53 @@ function GroupDetailPage() {
         </Button>
       </Box>
       <HeaderRowTable data={transfromGroupDetail(groupDetailData)} />
-      {/* <Box
-        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', m: '24px 0' }}
-      >
-        <Typography variant="h3" component="h3" gutterBottom sx={{ textTransform: 'capitalize' }}>
-          Users
-        </Typography>
-        <Button startIcon={<Add />} variant="contained" onClick={onAddGroupUser}>
-          Add user
-        </Button>
-      </Box> */}
-      {/* <Table
-        columns={columns}
-        data={groupUsersQuery.data}
-        // onEditEntity={onEditCurriculumSyllabus}
-        // onDeleteEntity={onDeleteEntity}
-        state={{
-          isLoading: groupUsersQuery.isLoading,
-          showAlertBanner: groupUsersQuery.isError,
-          showProgressBars: groupUsersQuery.isFetching,
-        }}
-        getRowId={(originalRow: MRT_Row<GroupUser>) => originalRow.id}
-      /> */}
+
+      {groupDetailData.type === GroupType.Course && (
+        <>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              m: '24px 0',
+            }}
+          >
+            <Typography
+              variant="h3"
+              component="h3"
+              gutterBottom
+              sx={{ textTransform: 'capitalize' }}
+            >
+              Slots
+            </Typography>
+            <Box>
+              <Button
+                sx={{ mr: 1 }}
+                startIcon={<Add />}
+                variant="contained"
+                onClick={onAddGroupSlot}
+              >
+                Add slot
+              </Button>
+              <Button startIcon={<Add />} variant="contained" onClick={onCreateGroupSlot}>
+                Create slot
+              </Button>
+            </Box>
+          </Box>
+          <Table
+            columns={columns}
+            data={groupSlotsQuery.data}
+            // onEditEntity={onEditCurriculumSyllabus}
+            // onDeleteEntity={onDeleteEntity}
+            state={{
+              isLoading: groupSlotsQuery.isLoading,
+              showAlertBanner: groupSlotsQuery.isError,
+              showProgressBars: groupSlotsQuery.isFetching,
+            }}
+            getRowId={(originalRow: MRT_Row<GroupUser>) => originalRow.id}
+          />
+        </>
+      )}
     </Box>
   );
 }

@@ -4,8 +4,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { useRef, useState, useContext } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useRef, useState, useContext, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import Button from '@mui/material/Button';
@@ -76,7 +76,7 @@ function HeaderMenu() {
   const [isOpen, setOpen] = useState<boolean>(false);
   const { dispatch } = useContext(ModalContext);
   const queryClient = useQueryClient();
-  const [selectedDateRef, setSelectedDate] = useRefState();
+  const navigate = useNavigate();
   const handleOpen = (): void => {
     setOpen(true);
   };
@@ -103,17 +103,32 @@ function HeaderMenu() {
       dispatch({ type: 'close' });
     },
   });
+  const createStartDateMutation = useMutation({
+    mutationFn: (body: { startDate: string }) => termApis.createTermStartDate(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Terms, 'next'] });
+      navigate('/term/prepare');
+      dispatch({ type: 'close' });
+    },
+  });
+  const startNextDate = dayjs()
+    .month(nextData?.season.startMonth - 1)
+    .year(+nextData?.year)
+    .startOf('month');
+  const initDate = nextData?.startDate ? dayjs(nextData.startDate) : startNextDate;
+  const [selectedDateRef, setSelectedDate] = useRefState(initDate);
+  useEffect(() => {
+    if (nextData?.startDate) setSelectedDate(dayjs(nextData?.startDate));
+  }, [nextData?.startDate]);
+
   //TODO: Urgent
   function handleStartNewSemester() {
     if (!nextData) return;
     const {
       season: { startMonth, endMonth },
       year,
+      startDate,
     } = nextData;
-    const startNextDate = dayjs()
-      .month(startMonth - 1)
-      .year(+year)
-      .startOf('month');
     const endNextDate = dayjs()
       .month(endMonth - 1)
       .year(+year)
@@ -128,7 +143,7 @@ function HeaderMenu() {
               <b>
                 {currentData?.season?.name} {currentData?.year}
               </b>
-              . Do you want to start{' '}
+              . Do you want to prepare{' '}
               <b>
                 {nextData?.season?.name} {nextData?.year}
               </b>
@@ -143,44 +158,43 @@ function HeaderMenu() {
                 slotProps={{
                   textField: {
                     // helperText: 'MM / DD / YYYY',
+                    sx: { width: '100%' },
                   },
                 }}
-                // value={selectedDateRef.current}
                 onChange={(value) => setSelectedDate(value)}
-                defaultValue={startNextDate}
+                defaultValue={initDate}
               />
             </DemoContainer>
           </Box>
         ),
-        title: 'Start new semester',
-        saveTitle: 'Start',
+        title: 'Prepare new semester',
+        saveTitle: 'Prepare',
       },
       onCreateOrSave: () => {
-        dispatch({ type: 'close' });
-        console.log(selectedDateRef.current);
+        const date = dayjs(selectedDateRef.current).format('YYYY-MM-DD');
+        createStartDateMutation.mutate({ startDate: date });
 
-        setTimeout(() => {
-          const date = dayjs(selectedDateRef.current as any).format('YYYY-MM-DD');
-          dispatch({
-            type: 'open',
-            payload: {
-              content: () => (
-                <Typography variant="h6" color="initial">
-                  Start{' '}
-                  <b>
-                    {nextData?.season?.name} {nextData.year}
-                  </b>{' '}
-                  at <b>{date}</b>?. Doing this action means that you will lost all...
-                </Typography>
-              ),
-              title: 'Confirm start new semester',
-              saveTitle: 'Confirm',
-            },
-            onCreateOrSave: () => {
-              mutation.mutate({ startDate: date });
-            },
-          });
-        }, 0);
+        // setTimeout(() => {
+        //   dispatch({
+        //     type: 'open',
+        //     payload: {
+        //       content: () => (
+        //         <Typography variant="h6" color="initial">
+        //           Start{' '}
+        //           <b>
+        //             {nextData?.season?.name} {nextData.year}
+        //           </b>{' '}
+        //           at <b>{date}</b>?. Doing this action means that you will lost all...
+        //         </Typography>
+        //       ),
+        //       title: 'Confirm start new semester',
+        //       saveTitle: 'Confirm',
+        //     },
+        //     onCreateOrSave: () => {
+        //       mutation.mutate({ startDate: date });
+        //     },
+        //   });
+        // }, 0);
       },
     });
   }

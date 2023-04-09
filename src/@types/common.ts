@@ -48,6 +48,9 @@ export interface SelectProps {
   error: boolean;
   required: boolean;
   isDisabled?: boolean;
+  // classNames?: string;
+  size?: 'small' | 'default';
+  label?: string;
 }
 export const Semester = {
   Spring: 'Spring',
