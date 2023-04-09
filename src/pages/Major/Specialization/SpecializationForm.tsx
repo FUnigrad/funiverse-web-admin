@@ -24,6 +24,7 @@ import { toast } from 'react-toastify';
 const SpecializationSchema = z.object({
   name: z.string().min(1),
   code: z.string().min(1),
+  studentCode: z.string().min(1),
   // major: z
   //   .number()
   //   .positive()
@@ -116,6 +117,13 @@ function SpecializationForm({ defaultValues, majorId }: SpecializationFormProps)
         error={Boolean(errors.code)}
         helperText={errors.code?.message}
         {...register('code')}
+      />
+      <TextField
+        label="Student Code"
+        required
+        error={Boolean(errors.studentCode)}
+        helperText={errors.studentCode?.message}
+        {...register('studentCode')}
       />
       {/* <AsyncSelect
         fieldName="major"
