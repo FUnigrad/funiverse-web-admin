@@ -51,20 +51,21 @@ function TermActions() {
   const isSubmitStepper = activeStep === StepperLength - 1;
   const queryClient = useQueryClient();
 
-  function handleNextClick() {
-    switch (activeStep) {
-      case StepEnum.Step1:
-        // createStartDateMutation.mutate({startDate})
-        break;
+  // function handleNextClick() {
+  //   console.log('Submit outside awesome')
+  //   switch (activeStep) {
+  //     case StepEnum.Step1:
+  //       // createStartDateMutation.mutate({startDate})
+  //       break;
 
-      default:
-        break;
-    }
-    if (isSubmitStepper) {
-      return;
-    }
-    dispatchStepper({ type: 'next' });
-  }
+  //     default:
+  //       break;
+  //   }
+  //   if (isSubmitStepper) {
+  //     return;
+  //   }
+  //   dispatchStepper({ type: 'next' });
+  // }
   return (
     <Box
       sx={{
@@ -86,7 +87,7 @@ function TermActions() {
           Back
         </Button>
       )}
-      <Button variant="contained" color="primary" onClick={handleNextClick}>
+      <Button variant="contained" color="primary" type="submit" form="slotsForm">
         {isSubmitStepper ? 'Submit' : 'Next'}
       </Button>
     </Box>

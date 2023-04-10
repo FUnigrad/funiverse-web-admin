@@ -8,19 +8,54 @@ import { termApis } from 'src/apis/termApis';
 import Box from '@mui/material/Box';
 import { useRefState } from 'src/hooks';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
+import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
+import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import AddCircleOutlined from '@mui/icons-material/AddCircleOutlined';
+import AddOutlined from '@mui/icons-material/AddOutlined';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { PrepareGroup } from 'src/@types';
 import TextField from '@mui/material/TextField';
+import { useTheme, styled } from '@mui/material/styles';
 import Select from 'src/components/Select';
+import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
+import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
+import Popper from 'src/components/Popper';
 
+const Accordion = styled((props: AccordionProps) => (
+  <MuiAccordion disableGutters elevation={0} {...props} />
+))(({ theme }) => ({
+  // border: `1px solid ${theme.palette.divider}`,
+  border: 'none !important',
+  '&:not(:last-child)': {
+    borderBottom: 0,
+  },
+  '&:before': {
+    display: 'none',
+  },
+}));
+
+const AccordionSummary = styled((props: AccordionSummaryProps) => (
+  <MuiAccordionSummary
+    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
+    {...props}
+  />
+))(({ theme }) => ({
+  // backgroundColor:
+  //   theme.palette.mode === 'dark'
+  //     ? 'rgba(255, 255, 255, .05)'
+  //     : 'rgba(0, 0, 0, .03)',
+  flexDirection: 'row-reverse',
+  '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
+    transform: 'rotate(90deg)',
+  },
+  '& .MuiAccordionSummary-content': {
+    marginLeft: theme.spacing(1),
+  },
+}));
 const options = [
   { label: 'test0', value: 0 },
   { label: 'test1', value: 1 },
@@ -35,24 +70,11 @@ function Step1() {
   //   queryFn: () => termApis.getTerm('next'),
   // });
   // const [selectedDateRef, setSelectedDate] = useRefState();
-  const [groupInputs, setGroupInputs] = useState<any>();
-
+  // const [groupInputs, setGroupInputs] = useState<Record<string, { id: string }[]>>();
+  const theme = useTheme();
   const { data: prepareGroups, isLoading } = useQuery({
     queryKey: [QueryKey.Terms, QueryKey.Prepare, QueryKey.Groups],
     queryFn: termApis.getGroups,
-    onSuccess: (response) => {
-      /**
-       * {
-       *  [input1, 2, 3,]
-       *  [input1, 2, 3,]
-       *  [input1, 2, 3,]
-       * {
-       */
-      const groupInputs = response.reduce((result, g) => {
-        return { ...result, [g.id]: [] };
-      }, {});
-      setGroupInputs(groupInputs);
-    },
   });
   const {
     register,
@@ -63,15 +85,7 @@ function Step1() {
     clearErrors,
     formState: { errors },
   } = useForm({});
-  // const orderArray = useFieldArray({
-  //   control,
-  //   name: 'order',
-  // });
-  // const dayArray = useFieldArray({
-  //   control,
-  //   name: 'day',
-  // });
-  const slotArray = useFieldArray({
+  const { fields, insert, append, remove } = useFieldArray({
     control,
     name: 'slot',
   });
@@ -82,22 +96,29 @@ function Step1() {
       </Box>
     );
 
-  function handleAddSlotClick(group: PrepareGroup) {
+  function handleAddSlotClick(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    group: PrepareGroup,
+  ) {
+    event.stopPropagation();
     const gid = group.id;
-    const inputs = groupInputs[gid];
-    const newGroupInputs = { ...groupInputs, [gid]: [...inputs, {}] };
-    setGroupInputs(newGroupInputs);
+    append({ gid, order: '', day: '', room: '' });
+  }
+
+  function handleDeleteInputClick(group: PrepareGroup, index: number) {
+    remove(index);
   }
 
   function onSubmit(data) {
     console.log(data);
   }
 
+  // const groupIds = groupInputs && Object.keys(groupInputs).map(Number);
   return (
     <Box
       onSubmit={handleSubmit(onSubmit)}
       component="form"
-      id="entityForm"
+      id="slotsForm"
       autoComplete="off"
       noValidate
       sx={{
@@ -107,71 +128,105 @@ function Step1() {
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
         {prepareGroups.map((g) => (
-          <Accordion key={g.id} defaultExpanded>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography variant="h5" color="initial">
-                {g.name}
-              </Typography>
+          <Accordion
+            key={g.id}
+            defaultExpanded
+            sx={{
+              border: `1px solid ${theme.colors.alpha.black[30]}`,
+              '& .MuiAccordionSummary-root': { pt: 1 },
+            }}
+          >
+            <AccordionSummary>
+              <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+                <Typography variant="h5" color="initial">
+                  {g.name}
+                </Typography>
+                <Box sx={{ ml: 'auto' }}>
+                  <Popper>
+                    <Button
+                      variant="text"
+                      color="primary"
+                      onClick={(e) => e.stopPropagation()}
+                      sx={{
+                        py: '4px',
+                        '&:hover': {
+                          // background: 'unset',
+                          // textDecoration: 'underline',
+                        },
+                      }}
+                    >
+                      Select Teacher
+                    </Button>
+                  </Popper>
+                  <Button
+                    sx={{
+                      py: '7px',
+                      '&:hover': {
+                        // background: 'unset',
+                        // textDecoration: 'underline',
+                      },
+                    }}
+                    variant="text"
+                    color="primary"
+                    startIcon={<AddOutlined />}
+                    size="small"
+                    onClick={(e) => handleAddSlotClick(e, g)}
+                  >
+                    Add slot
+                  </Button>
+                </Box>
+              </Box>
             </AccordionSummary>
-            <Box>
-              {groupInputs &&
-                groupInputs[g.id]?.map((gI, index) => (
-                  <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: '0 10px' }}>
-                    <Select
-                      control={control}
-                      options={options}
-                      fieldName={`slot[${index}][${g.id}].order`}
-                      required
-                      error={false}
-                      size="small"
-                      label="Order"
-                      // {...register(`order.${index}`)}
-                    />
-                    <Select
-                      control={control}
-                      options={dayOptions}
-                      fieldName={`slot[${index}][${g.id}].day`}
-                      required
-                      error={false}
-                      size="small"
-                      label="Day of week"
-                      // {...register(`day.${index}`)}
-                    />
-                    <TextField
-                      id="room"
-                      label="Room"
-                      size="small"
-                      sx={{ '&.MuiFormControl-root': { minHeight: 38 } }}
-                      {...register(`slot[${index}][${g.id}].room`)}
-                    />
-                  </Box>
-                ))}
+            <Box sx={{ px: 2 }}>
+              {fields.map(
+                (gI, index) =>
+                  g.id === (gI as any).gid && (
+                    <Box
+                      key={`${gI.id}`}
+                      sx={{ display: 'flex', alignItems: 'center', gap: '0 10px' }}
+                    >
+                      <Select
+                        control={control}
+                        options={options}
+                        fieldName={`slot[${index}].order`}
+                        required
+                        error={false}
+                        size="small"
+                        label="Order"
+                      />
+                      <Select
+                        control={control}
+                        options={dayOptions}
+                        fieldName={`slot[${index}].day`}
+                        required
+                        error={false}
+                        size="small"
+                        label="Day of week"
+                      />
+                      <TextField
+                        id="room"
+                        label="Room"
+                        size="small"
+                        sx={{ '&.MuiFormControl-root': { minHeight: 38 } }}
+                        {...register(`slot[${index}].room`)}
+                      />
+                      <IconButton
+                        onClick={() => handleDeleteInputClick(g, index)}
+                        size="small"
+                        sx={{ borderRadius: '50%' }}
+                        color="secondary"
+                      >
+                        <DeleteOutlined />
+                      </IconButton>
+                    </Box>
+                  ),
+              )}
             </Box>
-            <Button
-              sx={{
-                py: 0,
-                '&:hover': {
-                  background: 'unset',
-                  textDecoration: 'underline',
-                },
-              }}
-              variant="text"
-              color="primary"
-              startIcon={<AddCircleOutlined />}
-              size="small"
-              onClick={() => handleAddSlotClick(g)}
-            >
-              Add slot
-            </Button>
           </Accordion>
         ))}
-        <Button variant="outlined" color="primary" type="submit">
+        {/* <Button variant="outlined" color="primary" type="submit">
           submit
-        </Button>
+        </Button> */}
       </Box>
     </Box>
   );
