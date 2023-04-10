@@ -8,13 +8,13 @@ export const stepConfigs = [
   {
     condition: (activeStep: StepEnum) => activeStep === StepEnum.Step1,
     component: <Step1 />,
-    header: <StepHeader heading={'Overview'} />,
+    header: <StepHeader heading={'Group Configurations'} />,
   },
-  {
-    condition: (activeStep: StepEnum) => activeStep === StepEnum.Step2,
-    component: <Step2 />,
-    header: <StepHeader heading={'Teacher Assigning'} />,
-  },
+  // {
+  //   condition: (activeStep: StepEnum) => activeStep === StepEnum.Step2,
+  //   component: <Step2 />,
+  //   header: <StepHeader heading={'Teacher Assigning'} />,
+  // },
 ];
 
 function StepHeader({ heading, description }: { heading: string; description?: string }) {

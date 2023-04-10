@@ -28,7 +28,7 @@ function TermPreparePage() {
           height: '100vh',
         }}
       >
-        <Paper sx={{ pt: '60px', display: 'flex', flexFlow: 'column', minHeight: 300 }}>
+        <Paper sx={{ pt: '60px', display: 'flex', flexFlow: 'column', minHeight: '100vh' }}>
           <Box sx={{ px: 3, mb: 3 }}>
             {stepConfigs.find(({ condition }) => condition(activeStep)).header}
           </Box>
@@ -51,30 +51,32 @@ function TermActions() {
   const isSubmitStepper = activeStep === StepperLength - 1;
   const queryClient = useQueryClient();
 
-  function handleNextClick() {
-    switch (activeStep) {
-      case StepEnum.Step1:
-        // createStartDateMutation.mutate({startDate})
-        break;
+  // function handleNextClick() {
+  //   console.log('Submit outside awesome')
+  //   switch (activeStep) {
+  //     case StepEnum.Step1:
+  //       // createStartDateMutation.mutate({startDate})
+  //       break;
 
-      default:
-        break;
-    }
-    if (isSubmitStepper) {
-      return;
-    }
-    dispatchStepper({ type: 'next' });
-  }
+  //     default:
+  //       break;
+  //   }
+  //   if (isSubmitStepper) {
+  //     return;
+  //   }
+  //   dispatchStepper({ type: 'next' });
+  // }
   return (
     <Box
       sx={{
         mt: 'auto',
-        ml: 'auto',
+        // ml: 'auto',
         pb: 5,
         pr: 10,
         display: 'flex',
         justifyContent: 'center',
         gap: '0 10px',
+        alignItems: 'center',
       }}
     >
       {activeStep !== StepEnum.Step1 && (
@@ -86,8 +88,8 @@ function TermActions() {
           Back
         </Button>
       )}
-      <Button variant="contained" color="primary" onClick={handleNextClick}>
-        {isSubmitStepper ? 'Submit' : 'Next'}
+      <Button variant="contained" color="primary" type="submit" form="slotsForm">
+        Submit
       </Button>
     </Box>
   );
