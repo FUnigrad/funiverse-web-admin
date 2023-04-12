@@ -3,7 +3,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { QueryKey } from 'src/apis';
+import { QueryKey, groupApis } from 'src/apis';
 import { termApis } from 'src/apis/termApis';
 import Box from '@mui/material/Box';
 import { useRefState } from 'src/hooks';
@@ -17,15 +17,17 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import AddOutlined from '@mui/icons-material/AddOutlined';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { PrepareGroup, User } from 'src/@types';
+import { ClassSlot, PrepareGroup, User, WeekDay } from 'src/@types';
 import TextField from '@mui/material/TextField';
+import Modal from '@mui/material/Modal';
 import { useTheme, styled } from '@mui/material/styles';
 import Select from 'src/components/Select';
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import Popper from 'src/components/Popper';
 import { useStepperContext } from 'src/contexts/StepperContext';
-
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} {...props} />
 ))(({ theme }) => ({
@@ -57,13 +59,22 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
     marginLeft: theme.spacing(1),
   },
 }));
-const options = [
-  { label: 'test0', value: 0 },
-  { label: 'test1', value: 1 },
+const orderOptions = [
+  { label: '1', value: 1 },
+  { label: '2', value: 2 },
+  { label: '3', value: 3 },
+  { label: '4', value: 4 },
+  { label: '5', value: 5 },
+  { label: '6', value: 6 },
 ];
 const dayOptions = [
-  { label: 'dayOptions0', value: 0 },
-  { label: 'dayOptions1', value: 1 },
+  { label: 'Monday', value: WeekDay.Monday },
+  { label: 'Tuesday', value: WeekDay.Tuesday },
+  { label: 'Wednesday', value: WeekDay.Wednesday },
+  { label: 'Thursday', value: WeekDay.Thursday },
+  { label: 'Friday', value: WeekDay.Friday },
+  { label: 'Saturday', value: WeekDay.Saturday },
+  { label: 'Sunday', value: WeekDay.Sunday },
 ];
 function Step1() {
   // const { data: nextData, isLoading } = useQuery({
@@ -93,8 +104,32 @@ function Step1() {
   const [selectedTeachers, setSelectedTeachers] = useState<{ groupId: number; teacher: User }[]>(
     [],
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { dispatchStepper } = useStepperContext();
-
+  const assignTeacherMutation = useMutation({
+    mutationFn: (body: { groupId; teacherId }[]) => groupApis.assignTeacher(body),
+    onError: () => {
+      toast.error(`Create slots failed!`);
+      setIsSubmitting(false);
+    },
+  });
+  const navigate = useNavigate();
+  const createClassSlotMutation = useMutation({
+    mutationFn: (body: ClassSlot[]) => groupApis.createGroupSlotAuto(body),
+    onError: () => {
+      toast.error(`Create slots failed!`);
+      setIsSubmitting(false);
+    },
+    onSuccess: () => {
+      setIsSubmitting(false);
+      toast.success(`Create slots successfully!`);
+      navigate('/');
+    },
+  });
+  const { data: nextData } = useQuery({
+    queryKey: [QueryKey.Terms, 'next'],
+    queryFn: () => termApis.getTerm('next'),
+  });
   if (isLoading)
     return (
       <Box>
@@ -108,7 +143,7 @@ function Step1() {
   ) {
     event.stopPropagation();
     const gid = group.id;
-    append({ gid, order: '', day: '', room: '' });
+    append({ gid, order: '', dayOfWeek: '', room: '' });
   }
 
   function handleDeleteInputClick(group: PrepareGroup, index: number) {
@@ -116,7 +151,22 @@ function Step1() {
   }
 
   function onSubmit(data) {
-    console.log(data);
+    const slot = data.slot;
+    if (!slot) return;
+
+    setIsSubmitting(true);
+
+    const startDate = dayjs(nextData.startDate).format('YYYY-MM-DD');
+    const transformedSlot = transformClassSlot(slot).map((s) => ({ ...s, startDate }));
+    const transformedTeachers = selectedTeachers.map((t) => ({
+      groupId: t.groupId,
+      teacherId: t.teacher.id,
+    }));
+    assignTeacherMutation.mutate(transformedTeachers, {
+      onSuccess: () => {
+        createClassSlotMutation.mutate(transformedSlot);
+      },
+    });
   }
   function handleSelect(group: PrepareGroup, user: User) {
     const selected = { groupId: group.id, teacher: user };
@@ -207,7 +257,7 @@ function Step1() {
                     >
                       <Select
                         control={control}
-                        options={options}
+                        options={orderOptions}
                         fieldName={`slot[${index}].order`}
                         required
                         error={false}
@@ -217,7 +267,7 @@ function Step1() {
                       <Select
                         control={control}
                         options={dayOptions}
-                        fieldName={`slot[${index}].day`}
+                        fieldName={`slot[${index}].dayOfWeek`}
                         required
                         error={false}
                         size="small"
@@ -248,8 +298,26 @@ function Step1() {
           submit
         </Button> */}
       </Box>
+      <Modal open={isSubmitting}>
+        <Box>
+          <SuspenseLoader />
+        </Box>
+      </Modal>
     </Box>
   );
 }
 
 export default Step1;
+
+function transformClassSlot(data: any[]): ClassSlot[] {
+  return Object.values(
+    data.reduce((acc, curr) => {
+      const { gid, ...rest } = curr;
+      if (!acc[gid]) {
+        acc[gid] = { groupId: gid, slots: [] };
+      }
+      acc[gid].slots.push(rest);
+      return acc;
+    }, {}),
+  );
+}

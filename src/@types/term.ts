@@ -1,4 +1,4 @@
-import { Season } from "./season";
+import { Season } from './season';
 
 export enum SeasonEnum {
   Spring = 'SPRING',
@@ -6,9 +6,18 @@ export enum SeasonEnum {
   Fall = 'FALL',
 }
 export interface Term {
-  id:        number;
-  season:    Season;
-  year:      string;
+  id: number;
+  season: Season;
+  year: string;
   startDate: string;
 }
 
+export enum WeekDay {
+  Monday = 1,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  Sunday,
+}

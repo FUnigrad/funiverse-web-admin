@@ -1,7 +1,7 @@
 import { groupData } from 'src/__mock__';
 import axiosClient from './axiosClient';
 import { fakePromise } from 'src/utils';
-import { Group, GroupUser, GroupSlot, CreateSlotPayload } from 'src/@types';
+import { Group, GroupUser, GroupSlot, CreateSlotPayload, ClassSlot } from 'src/@types';
 const searchData = [
   {
     value: 1,
@@ -43,4 +43,7 @@ export const groupApis = {
     axiosClient.post(`/group/${groupId}/slot`, body),
   updateGroupSlot: (groupId: string, body: CreateSlotPayload[]) =>
     axiosClient.post(`/group/${groupId}/slot`, body),
+  createGroupSlotAuto: (body: ClassSlot[]) => axiosClient.post('/group/slot/bulk-create', body),
+  assignTeacher: (body: { groupId: number; teacherId: number }[]) =>
+    axiosClient.post('/group/assign-teacher', body),
 };

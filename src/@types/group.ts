@@ -76,3 +76,13 @@ export interface CreateSlotPayload {
   dayOfWeek: number;
   room:      string;
 }
+
+export interface ClassSlot {
+  groupId: number;
+  startDate: string;
+  slots: {
+    order: number;
+    dayOfWeek: number;
+    room: string;
+  }[];
+}
