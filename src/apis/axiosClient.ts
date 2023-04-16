@@ -1,5 +1,6 @@
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import qs from 'query-string';
+import { __DEV__ } from 'src/utils';
 import { appCookies } from 'src/utils/cookies';
 
 const axiosClient = axios.create({
@@ -76,13 +77,18 @@ async function handle401Error(error: AxiosError) {
   isRefreshing = true;
   const refreshToken = appCookies.getRefreshToken();
 
-  const baseAuth = 'http://authen.system.funiverse.world/auth/refresh-token';
-  const { accessToken } = await axios.post<{ accessToken: string }>(baseAuth, { refreshToken });
-
-  appCookies.setAccessToken(accessToken);
+  const authApiURL = 'http://authen.system.funiverse.world/auth/refresh-token';
+  try {
+    const { accessToken } = await axios.post<{ accessToken: string }>(authApiURL, { refreshToken });
+    appCookies.setAccessToken(accessToken);
+    originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+  } catch (error) {
+    window.location.href = __DEV__
+      ? 'http://localhost:8000/verify'
+      : process.env.NEXT_PUBLIC_LANDING_URL + 'verify';
+  }
 
   processQueue(null, null);
 
-  originalRequest.headers.Authorization = `Bearer ${accessToken}`;
   return axiosClient.request(originalRequest);
 }
