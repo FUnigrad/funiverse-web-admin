@@ -4,7 +4,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { useRef, useState, useContext, useEffect } from 'react';
+import { useRef, useState, useContext, useEffect, useMemo } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
@@ -17,7 +17,7 @@ import { ModalContext } from 'src/contexts/ModalContext';
 import Typography from '@mui/material/Typography';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { useRefState } from 'src/hooks';
 
 const ListWrapper = styled(Box)(
@@ -111,15 +111,21 @@ function HeaderMenu() {
       dispatch({ type: 'close' });
     },
   });
-  const startNextDate = dayjs()
-    .month(nextData?.season.startMonth - 1)
-    .year(+nextData?.year)
-    .startOf('month');
-  const initDate = nextData?.startDate ? dayjs(nextData.startDate) : startNextDate;
-  const [selectedDateRef, setSelectedDate] = useRefState(initDate);
+  const startNextDate = useMemo(
+    () =>
+      dayjs()
+        .month(nextData?.season.startMonth - 1)
+        .year(+nextData?.year)
+        .startOf('month'),
+    [nextData?.season.startMonth, nextData?.year],
+  );
+
+  const [selectedDateRef, setSelectedDate] = useRefState<Dayjs>();
+
   useEffect(() => {
     if (nextData?.startDate) setSelectedDate(dayjs(nextData?.startDate));
-  }, [nextData?.startDate]);
+    else setSelectedDate(startNextDate);
+  }, [nextData?.startDate, setSelectedDate, startNextDate]);
 
   //TODO: Urgent
   function handleStartNewSemester() {
@@ -154,15 +160,18 @@ function HeaderMenu() {
                 minDate={startNextDate}
                 maxDate={endNextDate}
                 label="Start date"
-                disablePast
+                // disablePast
                 slotProps={{
                   textField: {
                     // helperText: 'MM / DD / YYYY',
                     sx: { width: '100%' },
                   },
                 }}
-                onChange={(value) => setSelectedDate(value)}
-                defaultValue={initDate}
+                onChange={(value) => {
+                  setSelectedDate(value);
+                }}
+                defaultValue={selectedDateRef.current}
+                // value={selectedDateRef.current}
               />
             </DemoContainer>
           </Box>
