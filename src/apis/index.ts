@@ -8,6 +8,7 @@ export * from './specializationApis';
 export * from './searchApis';
 export * from './comboApis';
 export * from './seasonApis';
+export * from './termApis';
 export const QueryKey = {
   Groups: 'groups',
   Syllabi: 'syllabi',

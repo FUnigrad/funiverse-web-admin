@@ -64,6 +64,7 @@ const CurriculumUsersPage = Loader(lazy(() => import('src/pages/Curriculum/Curri
 const SyllabusPage = Loader(lazy(() => import('src/pages/Syllabus')));
 const SyllabusFormPage = Loader(lazy(() => import('src/pages/Syllabus/SyllabusForm')));
 const TermPreparePage = Loader(lazy(() => import('src/pages/TermPrepare')));
+const OnboardPage = Loader(lazy(() => import('src/pages/Onboard')));
 const SyllabusDetailPage = Loader(lazy(() => import('src/pages/Syllabus/SyllabusDetail')));
 const SubjectPage = Loader(lazy(() => import('src/pages/Subject')));
 const SubjectDetailPage = Loader(lazy(() => import('src/pages/Subject/SubjectDetail')));
@@ -72,6 +73,7 @@ const ComboDetailPage = Loader(lazy(() => import('src/pages/Combo/ComboDetail'))
 const SeasonPage = Loader(lazy(() => import('src/pages/Season')));
 const MajorPage = Loader(lazy(() => import('src/pages/Major')));
 const MajorDetailPage = Loader(lazy(() => import('src/pages/Major/MajorDetail')));
+const ImportDataPage = Loader(lazy(() => import('src/pages/ImportData')));
 // const SpecializationPage = Loader(lazy(() => import('src/pages/Specialization')));
 const routes: RouteObject[] = [
   {
@@ -124,6 +126,20 @@ const routes: RouteObject[] = [
       {
         path: 'prepare',
         element: <TermPreparePage />,
+      },
+      // {
+      //   path: ':slug',
+      //   element: <GroupDetailPage />,
+      // },
+    ],
+  },
+  {
+    path: 'onboard',
+    // element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <OnboardPage />,
       },
       // {
       //   path: ':slug',
@@ -278,6 +294,16 @@ const routes: RouteObject[] = [
       {
         path: ':slug',
         element: <ComboDetailPage />,
+      },
+    ],
+  },
+  {
+    path: 'import',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: 'data',
+        element: <ImportDataPage />,
       },
     ],
   },

@@ -1127,9 +1127,9 @@ export const PureLightTheme = createTheme({
     MuiStepConnector: {
       styleOverrides: {
         root: {
-          '& .MuiStepConnector-line': {
-            minHeight: 48,
-          },
+          // '& .MuiStepConnector-line': {
+          //   minHeight: 48,
+          // },
         },
       },
     },

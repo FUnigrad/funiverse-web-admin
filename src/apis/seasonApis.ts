@@ -9,4 +9,7 @@ export const seasonApis = {
   deleteSeason: (seasonId) => axiosClient.delete(`/season/${seasonId}`),
   //syllabus
   updateSeason: (newSeason: CreateSeasonPayload) => axiosClient.put('/season', newSeason),
+
+  createWorkspaceSeason: (seasons: { season: CreateSeasonPayload[] }) =>
+    axiosClient.post('/workspace/season', seasons),
 };

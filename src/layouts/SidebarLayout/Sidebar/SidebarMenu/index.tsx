@@ -12,7 +12,7 @@ import {
   MuseumOutlined,
   AutoStoriesOutlined,
 } from '@mui/icons-material';
-import DesignServicesTwoToneIcon from '@mui/icons-material/DesignServicesTwoTone';
+import ExtensionIcon from '@mui/icons-material/Extension';
 import BrightnessLowTwoToneIcon from '@mui/icons-material/BrightnessLowTwoTone';
 import MmsTwoToneIcon from '@mui/icons-material/MmsTwoTone';
 import TableChartTwoToneIcon from '@mui/icons-material/TableChartTwoTone';
@@ -31,6 +31,7 @@ import ChromeReaderModeTwoToneIcon from '@mui/icons-material/ChromeReaderModeTwo
 import WorkspacePremiumTwoToneIcon from '@mui/icons-material/WorkspacePremiumTwoTone';
 import CameraFrontTwoToneIcon from '@mui/icons-material/CameraFrontTwoTone';
 import DisplaySettingsTwoToneIcon from '@mui/icons-material/DisplaySettingsTwoTone';
+import DatabaseIcon from '@mui/icons-material/BackupOutlined';
 
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
@@ -210,7 +211,7 @@ function SidebarMenu() {
                   component={RouterLink}
                   onClick={closeSidebar}
                   to="/seasons"
-                  startIcon={<GroupsOutlined />}
+                  startIcon={<ExtensionIcon />}
                 >
                   Seasons
                 </Button>
@@ -315,6 +316,30 @@ function SidebarMenu() {
                   Messenger
                 </Button>
               </ListItem> */}
+            </List>
+          </SubMenuWrapper>
+        </List>
+        <List
+          component="div"
+          subheader={
+            <ListSubheader component="div" disableSticky>
+              Utilities
+            </ListSubheader>
+          }
+        >
+          <SubMenuWrapper>
+            <List>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/import/data"
+                  startIcon={<DatabaseIcon />}
+                >
+                  Import Data
+                </Button>
+              </ListItem>
             </List>
           </SubMenuWrapper>
         </List>
