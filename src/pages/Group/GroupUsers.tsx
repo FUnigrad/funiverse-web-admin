@@ -52,6 +52,14 @@ function GroupUsersPage() {
       dispatch({ type: 'close' });
     },
   });
+  const setAdminMutation = useMutation<unknown, unknown, { userId; data }>({
+    mutationFn: ({ userId, data }) => groupApis.setAdmin(slug, userId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Groups, 'slug', 'users'] });
+      toast.success(`Update successfully!`);
+      dispatch({ type: 'close' });
+    },
+  });
 
   const groupDetailQuery = useQuery({
     queryKey: [QueryKey.Groups, 'slug'],
@@ -68,6 +76,11 @@ function GroupUsersPage() {
       {
         header: 'Name',
         accessorKey: 'name',
+        Cell: ({ cell, row }) => (
+          <MuiLink component={Link} to={`/users/${row.id}`}>
+            {cell.getValue<string>()}
+          </MuiLink>
+        ),
         enableHiding: false,
       },
       {
@@ -143,6 +156,27 @@ function GroupUsersPage() {
       },
     });
   }
+  function onSetAdmin(row: MRT_Row<User>) {
+    if (!row) return;
+    const isGroupAdmin = row.original.groupAdmin;
+    dispatch({
+      type: 'open',
+      onCreateOrSave: () => {
+        setAdminMutation.mutate({ userId: row.id, data: { value: !isGroupAdmin } });
+      },
+      payload: {
+        title: 'Set Admin',
+        content: () => (
+          <Typography variant="body1">
+            {isGroupAdmin
+              ? `Are you sure you want to unset ${row.original.name}?`
+              : `Are you sure you want to set ${row.original.name} as Admin?`}
+          </Typography>
+        ),
+        saveTitle: isGroupAdmin ? 'Unset' : 'Apply',
+      },
+    });
+  }
   return (
     <Box>
       {/* <ListPageHeader entity="curriculum" onCreateEntity={onCreateEntity} /> */}
@@ -161,6 +195,7 @@ function GroupUsersPage() {
         data={data}
         // onAddUserToEntity={onAddUserToEntity}
         onDeleteEntity={onDeleteEntity}
+        onSetAdmin={onSetAdmin}
         state={{
           isLoading,
           showAlertBanner: isError,

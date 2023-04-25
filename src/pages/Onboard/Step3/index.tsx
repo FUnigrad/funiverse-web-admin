@@ -9,7 +9,7 @@ import { MRT_Row } from 'material-react-table';
 import { useContext, useEffect, useMemo } from 'react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 // import Select from 'react-select';
-import { Subject, GroupType, CreateSeasonPayload, UpdateWorkspacePayload } from 'src/@types';
+import { Subject, GroupType, CreateSeasonPayload } from 'src/@types';
 import { QueryKey, subjectApis, groupApis, seasonApis, termApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
@@ -25,24 +25,24 @@ import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { useNavigate } from 'react-router-dom';
 import { getSelectValue } from 'src/utils';
 import dayjs from 'dayjs';
-
+import InputAdornment from '@mui/material/InputAdornment';
 const timeRegex = /.*\d{2}.*\d{2}.*/;
-const OnboardStep2Schema = z.object({
-  season: z
-    .number()
-    .positive()
-    .or(z.object({ value: z.number().positive(), label: z.string() })),
-  startDate: z.string().regex(/^\d{4}\-\d{2}\-\d{2}$/),
-  // foundedYear: z.coerce.number().positive(),
-  // slotDurationInMin: z.coerce.number().positive(),
-  // restTimeInMin: z.coerce.number().positive(),
-  // morningStartTime: z.string().regex(timeRegex),
-  // morningEndTime: z.string().regex(timeRegex),
-  // afternoonStartTime: z.string().regex(timeRegex),
-  // afternoonEndTime: z.string().regex(timeRegex),
-  emailSuffix: z.string().min(1),
+const OnboardStep3Schema = z.object({
+  // season: z
+  //   .number()
+  //   .positive()
+  //   .or(z.object({ value: z.number().positive(), label: z.string() })),
+  // startDate: z.string(),
+  foundedYear: z.coerce.number().positive(),
+  slotDurationInMin: z.coerce.number().positive(),
+  restTimeInMin: z.coerce.number().positive(),
+  morningStartTime: z.string().regex(timeRegex),
+  morningEndTime: z.string().regex(timeRegex),
+  afternoonStartTime: z.string().regex(timeRegex),
+  afternoonEndTime: z.string().regex(timeRegex),
+  // emailSuffix: z.string().min(1),
 });
-export type OnboardStep2FormInputs = z.infer<typeof OnboardStep2Schema>;
+export type OnboardStep3FormInputs = z.infer<typeof OnboardStep3Schema>;
 const defaultSlotProps: any = {
   textField: {
     sx: {
@@ -55,15 +55,15 @@ const defaultSlotProps: any = {
     size: 'small',
   },
 };
-function OnboardStep2() {
-  const { activeStep, dispatchStepper, data: stepData } = useStepperContext();
+function OnboardStep3() {
+  const { activeStep, dispatchStepper, data: step2Data } = useStepperContext();
   const navigate = useNavigate();
   const seasonsQuery = useQuery({
     queryKey: [QueryKey.Seasons],
     queryFn: seasonApis.getSeasons,
     select: (res) => res.map((r) => ({ label: r.name, value: r.id })),
-    enabled: false,
   });
+
   const {
     register,
     handleSubmit,
@@ -71,54 +71,54 @@ function OnboardStep2() {
     watch,
     unregister,
     clearErrors,
-    getValues,
-    setValue,
     formState: { errors },
-  } = useForm<OnboardStep2FormInputs>({
+  } = useForm<OnboardStep3FormInputs>({
     mode: 'all',
-    resolver: zodResolver(OnboardStep2Schema),
-    defaultValues: {
-      season: stepData ? stepData.currentTerm.season.id : undefined,
-      startDate: stepData ? stepData.currentTerm.startDate : dayjs().format('YYYY-MM-DD'),
-      emailSuffix: stepData?.emailSuffix ?? '',
-    },
+    resolver: zodResolver(OnboardStep3Schema),
   });
-  console.log('🚀 ~ errors:', errors, getValues());
+  console.log('🚀 ~ errors:', errors);
 
-  const workspaceDetailQuery = useQuery({
-    queryFn: termApis.getWorkspaceDetail,
-    queryKey: ['workspace-detail'],
-  });
+  // const createSessonsMutation = useMutation({
+  //   mutationFn: (data: { season: CreateSeasonPayload[] }) => seasonApis.createWorkspaceSeason(data),
+  //   onSuccess: () => {
+  //     dispatchStepper({ type: 'change_status', payload: 'fulfilled' });
+  //     dispatchStepper({ type: 'next' });
+  //   },
+  // });
+
+  // const workspaceDetailQuery = useQuery({
+  //   queryFn: termApis.getWorkspaceDetail,
+  //   queryKey: ['workspace-detail'],
+  // });
 
   const updateWorkspaceMutation = useMutation({
-    mutationFn: (data: UpdateWorkspacePayload) => termApis.updateWorkspace(data),
+    mutationFn: (data: any) => termApis.updateWorkspace(data),
     onSuccess: () => {
       navigate('/');
     },
   });
 
-  function onSubmit(data: OnboardStep2FormInputs) {
-    const { startDate, season, ...rest } = data;
-    // const morningStartTime = rest.morningStartTime.replace(/[^\x20-\x7E]/g, '');
-    // const morningEndTime = rest.morningEndTime.replace(/[^\x20-\x7E]/g, '');
-    // const afternoonStartTime = rest.afternoonStartTime.replace(/[^\x20-\x7E]/g, '');
-    // const afternoonEndTime = rest.afternoonEndTime.replace(/[^\x20-\x7E]/g, '');
+  function onSubmit(data: OnboardStep3FormInputs) {
+    const { ...rest } = data;
+    const morningStartTime = rest.morningStartTime.replace(/[^\x20-\x7E]/g, '');
+    const morningEndTime = rest.morningEndTime.replace(/[^\x20-\x7E]/g, '');
+    const afternoonStartTime = rest.afternoonStartTime.replace(/[^\x20-\x7E]/g, '');
+    const afternoonEndTime = rest.afternoonEndTime.replace(/[^\x20-\x7E]/g, '');
 
     const submittedData = {
-      ...workspaceDetailQuery.data,
+      // ...workspaceDetailQuery.data,
+      ...step2Data,
       ...rest,
-      // morningStartTime,
-      // morningEndTime,
-      // afternoonStartTime,
-      // afternoonEndTime,
-      currentTerm: {
-        season: { id: getSelectValue(season) },
-        startDate,
-      },
+      morningStartTime,
+      morningEndTime,
+      afternoonStartTime,
+      afternoonEndTime,
+      // currentTerm: {
+      //   season: { id: getSelectValue(season) },
+      //   startDate: startDate,
+      // },
     };
-    dispatchStepper({ type: 'save_step_data', payload: submittedData });
-    dispatchStepper({ type: 'next' });
-    // updateWorkspaceMutation.mutate(submittedData);
+    updateWorkspaceMutation.mutate(submittedData);
   }
   return (
     <Box
@@ -132,41 +132,7 @@ function OnboardStep2() {
         // height: 550,
       }}
     >
-      <Select
-        control={control}
-        fieldName="season"
-        options={seasonsQuery.data || []}
-        size="small"
-        required
-        error={Boolean(errors.season) && errors.season.message === 'Required'}
-      />
-      <Controller
-        name={'startDate'}
-        control={control}
-        render={({ field: { onChange, value, name, ref, ...field } }) => (
-          <DatePicker
-            label="Start date"
-            disablePast
-            slotProps={{
-              ...defaultSlotProps,
-              textField: {
-                ...defaultSlotProps.textField,
-                error: Boolean(errors.startDate),
-                helperText: errors.startDate?.message,
-              },
-            }}
-            format="YYYY-MM-DD"
-            onChange={(value) => {
-              onChange(dayjs(value as any).format('YYYY-MM-DD'));
-            }}
-            value={dayjs(value)}
-            inputRef={ref}
-            {...field}
-          />
-        )}
-        // defaultValue
-      />
-      {/* <TextField
+      <TextField
         id="foundedYear"
         label="founded Year"
         size="small"
@@ -177,7 +143,10 @@ function OnboardStep2() {
       />
       <TextField
         id="slotDurationInMin"
-        label="slot Duration In Min"
+        label="slot Duration"
+        InputProps={{
+          endAdornment: <InputAdornment position="end">min</InputAdornment>,
+        }}
         size="small"
         sx={{ '&.MuiFormControl-root': { minHeight: 38, mb: '16px !important' } }}
         error={Boolean(errors.slotDurationInMin)}
@@ -186,7 +155,10 @@ function OnboardStep2() {
       />
       <TextField
         id="restTimeInMin"
-        label="rest Time In Min"
+        label="rest Time"
+        InputProps={{
+          endAdornment: <InputAdornment position="end">min</InputAdornment>,
+        }}
         size="small"
         sx={{ '&.MuiFormControl-root': { minHeight: 38, mb: '16px !important' } }}
         error={Boolean(errors.restTimeInMin)}
@@ -228,19 +200,10 @@ function OnboardStep2() {
         error={Boolean(errors.afternoonEndTime)}
         helperText={errors.afternoonEndTime?.message}
         {...register('afternoonEndTime')}
-      /> */}
-      <TextField
-        id="emailSuffix"
-        label="email Suffix"
-        size="small"
-        sx={{ '&.MuiFormControl-root': { minHeight: 38, mb: '16px !important' } }}
-        error={Boolean(errors.emailSuffix)}
-        helperText={errors.emailSuffix?.message}
-        {...register('emailSuffix')}
       />
       <Box />
     </Box>
   );
 }
 
-export default OnboardStep2;
+export default OnboardStep3;

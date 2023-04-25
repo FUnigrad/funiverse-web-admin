@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import OnboardStep1 from './Step1';
 import OnboardStep2 from './Step2';
+import OnboardStep3 from './Step3';
 // import Step2 from './Step2';
 
 export const stepConfigs = [
@@ -19,12 +20,12 @@ export const stepConfigs = [
     component: <OnboardStep2 />,
     // header: <StepHeader heading={'Step 2'} />,
   },
-  // {
-  //   label: 'Time Configuration',
-  //   condition: (activeStep: StepEnum) => activeStep === StepEnum.Step3,
-  //   component: <Box>Step 3</Box>,
-  //   // header: <StepHeader heading={'Step 3'} />,
-  // },
+  {
+    label: 'Time Configuration',
+    condition: (activeStep: StepEnum) => activeStep === StepEnum.Step3,
+    component: <OnboardStep3 />,
+    // header: <StepHeader heading={'Step 3'} />,
+  },
 ];
 
 function StepHeader({ heading, description }: { heading: string; description?: string }) {

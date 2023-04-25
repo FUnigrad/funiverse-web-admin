@@ -1,4 +1,4 @@
-import { Group, PrepareGroup, Term, WorkspaceDetail } from 'src/@types';
+import { Group, PrepareGroup, Term, WorkspaceDetail, UpdateWorkspacePayload } from 'src/@types';
 import axiosClient from './axiosClient';
 export const termApis = {
   getTerms: () => axiosClient.get<Term[]>(`/workspace/term`),
@@ -12,5 +12,6 @@ export const termApis = {
   getGroups: () => axiosClient.get<PrepareGroup[]>('/term/prepare-group'),
 
   getWorkspaceDetail: () => axiosClient.get<WorkspaceDetail>('/workspace'),
-  updateWorkspace: (data) => axiosClient.put<WorkspaceDetail>('/workspace', data),
+  updateWorkspace: (data: UpdateWorkspacePayload) =>
+    axiosClient.put<WorkspaceDetail>('/workspace', data),
 };

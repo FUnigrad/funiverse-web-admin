@@ -7,7 +7,7 @@ import SearchInput from '../InputSearch';
 import { useQuery } from '@tanstack/react-query';
 import { QueryKey, userApis } from 'src/apis';
 import SuspenseLoader from '../SuspenseLoader';
-import { User } from 'src/@types';
+import { User, UserRole } from 'src/@types';
 import { removeAccents } from 'src/utils';
 function Popper({
   children,
@@ -21,6 +21,7 @@ function Popper({
     queryFn: userApis.getUsers,
     refetchOnWindowFocus: false,
     onSuccess: (response) => setList(response),
+    select: (response) => response.filter((u) => u.role === UserRole.Teacher),
   });
   const originalListRef = useRef(data);
   originalListRef.current = data;

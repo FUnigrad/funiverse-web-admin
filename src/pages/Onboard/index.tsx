@@ -11,16 +11,19 @@ import Stepper from '@mui/material/Stepper';
 import { styled, alpha, lighten, darken, useTheme } from '@mui/material/styles';
 // import Step1 from './Step1';
 // import Step2 from './Step2';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { termApis } from 'src/apis/termApis';
-import { QueryKey } from 'src/apis';
+import { QueryKey, seasonApis } from 'src/apis';
 import { stepConfigs } from './config';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 function OnboardPage() {
   const { activeStep } = useStepperContext();
   const theme = useTheme();
-
+  const seasonsQuery = useQuery({
+    queryKey: [QueryKey.Seasons],
+    queryFn: seasonApis.getSeasons,
+  });
   return (
     <Box>
       <Sidebar />
@@ -34,7 +37,7 @@ function OnboardPage() {
         }}
       >
         <Paper
-          sx={{ pt: '48px', px: 5, display: 'flex', flexFlow: 'column', minHeight: '100vh', pb: 2 }}
+          sx={{ pt: '32px', px: 5, display: 'flex', flexFlow: 'column', minHeight: '100vh', pb: 2 }}
         >
           <Box>
             <Stepper
@@ -121,7 +124,7 @@ function TermActions() {
         // loadingPosition="start"
         onClick={handleNextClick}
       >
-        Next
+        {activeStep === StepEnum.Step3 ? 'Submit' : 'Next'}
       </LoadingButton>
     </Box>
   );

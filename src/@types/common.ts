@@ -57,29 +57,47 @@ export const Semester = {
   Spring: 'Spring',
   Summer: 'Summer',
   Fall: 'Fall',
-}
+};
 
 export interface WorkspaceDetail {
-  id:                 number;
-  name:               string;
-  code:               string;
-  currentTerm:        CurrentTerm;
-  foundedYear:        number;
-  slotDurationInMin:  number;
-  restTimeInMin:      number;
-  domain:             string;
-  morningStartTime:   string;
-  morningEndTime:     string;
+  id: number;
+  name: string;
+  code: string;
+  currentTerm: CurrentTerm;
+  foundedYear: number;
+  slotDurationInMin: number;
+  restTimeInMin: number;
+  domain: string;
+  morningStartTime: string;
+  morningEndTime: string;
   afternoonStartTime: string;
-  afternoonEndTime:   string;
-  emailSuffix:        string;
+  afternoonEndTime: string;
+  emailSuffix: string;
+}
+export interface UpdateWorkspacePayload {
+  id: number;
+  name: string;
+  code: string;
+  currentTerm: {
+    season: { id: string };
+    startDate: string;
+  };
+  foundedYear: number;
+  slotDurationInMin: number;
+  restTimeInMin: number;
+  domain: string;
+  morningStartTime: string;
+  morningEndTime: string;
+  afternoonStartTime: string;
+  afternoonEndTime: string;
+  emailSuffix: string;
 }
 
 export interface CurrentTerm {
-  id:        number;
-  season:    Season;
-  year:      string;
+  id: number;
+  season: Season;
+  year: string;
   startDate: Date;
-  endDate:   null;
-  state:     string;
+  endDate: null;
+  state: string;
 }

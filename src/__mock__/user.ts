@@ -32,6 +32,7 @@ const generateUser = (): User => {
     curriculum: generateCurriculum(),
     active: Math.random() < 0.5,
     identifyNumber: '123',
+    groupAdmin: false,
   };
 };
 

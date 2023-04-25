@@ -63,6 +63,11 @@ function CurriculumUsersPage() {
       {
         header: 'Name',
         accessorKey: 'name',
+        Cell: ({ cell, row }) => (
+          <MuiLink component={Link} to={`/users/${row.id}`}>
+            {cell.getValue<string>()}
+          </MuiLink>
+        ),
         enableHiding: false,
       },
       {
@@ -73,10 +78,6 @@ function CurriculumUsersPage() {
       //   header: 'Role',
       //   accessorKey: 'role',
       // },
-      {
-        header: 'Phone Number',
-        accessorKey: 'phoneNumber',
-      },
       // {
       //   header: 'Active',
       //   accessorKey: 'active',

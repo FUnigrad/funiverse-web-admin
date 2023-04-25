@@ -37,6 +37,9 @@ export const groupApis = {
   removeGroupUser: (groupId, userId) => axiosClient.delete(`/group/${groupId}/user/${userId}`),
   getFakedSearch: fakeSearchPromise,
 
+  setAdmin: (groupId, userId, data) =>
+    axiosClient.put(`/group/${groupId}/users/${userId}/set-admin`, null, { params: data }),
+
   //slotm
   getGroupSlots: (groupId: string) => axiosClient.get<GroupSlot[]>(`/group/${groupId}/slot`),
   createGroupSlot: (groupId: string, body: CreateSlotPayload[]) =>

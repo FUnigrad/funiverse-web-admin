@@ -4,12 +4,14 @@ type StepperContextValue = {
   activeStep: StepEnum;
   dispatchStepper: Dispatch<StepperAction>;
   status: 'idle' | 'pending' | 'fulfilled' | 'rejected';
+  data: any;
 };
 type StepperContextReducer = Omit<StepperContextValue, 'dispatchStepper'>;
 type StepperAction =
   | { type: 'next' }
   | { type: 'back' }
-  | { type: 'change_status'; payload: StepperContextValue['status'] };
+  | { type: 'change_status'; payload: StepperContextValue['status'] }
+  | { type: 'save_step_data'; payload: any };
 export enum StepEnum {
   Step1,
   Step2,
@@ -25,6 +27,8 @@ function stepperReducer(state: StepperContextReducer, action: StepperAction) {
       return { ...state, activeStep: --state.activeStep };
     case 'change_status':
       return { ...state, status: action.payload };
+    case 'save_step_data':
+      return { ...state, data: action.payload };
     default:
       return state;
   }
@@ -32,12 +36,12 @@ function stepperReducer(state: StepperContextReducer, action: StepperAction) {
 export const StepperProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer<Reducer<StepperContextReducer, StepperAction>>(
     stepperReducer,
-    { activeStep: StepEnum.Step1, status: 'idle' },
+    { activeStep: StepEnum.Step1, status: 'idle', data: null },
   );
   const value = useMemo(
     () => ({ ...state, dispatchStepper: dispatch }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [state.activeStep, state.status],
+    [state.activeStep, state.status, state.data],
   );
   return <StepperContext.Provider value={value}>{children}</StepperContext.Provider>;
 };

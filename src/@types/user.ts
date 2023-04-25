@@ -13,6 +13,7 @@ export interface User {
   curriculum:   Curriculum;
   active:       boolean;
   identifyNumber: string;
+  groupAdmin: boolean;
 }
 //TODO: update ROLE here
 export interface UserPayload {

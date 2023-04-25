@@ -22,6 +22,7 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+import { appCookies } from 'src/utils';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -127,7 +128,14 @@ function HeaderUserbox() {
         </List> */}
         <Divider />
         <Box sx={{ m: 1 }}>
-          <Button color="primary" fullWidth>
+          <Button
+            color="primary"
+            fullWidth
+            onClick={() => {
+              window.location.href = process.env.REACT_APP_REDIRECT_URL;
+              appCookies.clearAll();
+            }}
+          >
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
             Sign out
           </Button>

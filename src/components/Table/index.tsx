@@ -1,6 +1,7 @@
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 import EditOutlined from '@mui/icons-material/EditOutlined';
 import GroupAddOutlined from '@mui/icons-material/GroupAddOutlined';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { Box, IconButton } from '@mui/material';
 import type { MRT_ColumnDef } from 'material-react-table';
 import MaterialReactTable, { MRT_Row, MaterialReactTableProps } from 'material-react-table';
@@ -9,6 +10,7 @@ interface TableProps {
   onEditEntity?: (row: MRT_Row<any>) => void;
   onDeleteEntity?: (row: MRT_Row<any>) => void;
   onAddUserToEntity?: (row: MRT_Row<any>) => void;
+  onSetAdmin?: (row: MRT_Row<any>) => void;
   data: any[];
   state: MaterialReactTableProps['state'];
   getRowId: MaterialReactTableProps['getRowId'];
@@ -19,6 +21,7 @@ function Table({
   onEditEntity,
   onDeleteEntity,
   onAddUserToEntity,
+  onSetAdmin,
   data,
   state,
   getRowId,
@@ -37,6 +40,11 @@ function Table({
         {Boolean(onEditEntity) && (
           <IconButton size="small" onClick={() => onEditEntity(row)}>
             <EditOutlined color="warning" />
+          </IconButton>
+        )}
+        {Boolean(onSetAdmin) && (
+          <IconButton color="success" size="small" onClick={() => onSetAdmin(row)}>
+            <AdminPanelSettingsIcon />
           </IconButton>
         )}
         {Boolean(onDeleteEntity) && (
