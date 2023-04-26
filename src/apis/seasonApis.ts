@@ -3,7 +3,7 @@ import { Season, CreateSeasonPayload } from 'src/@types';
 
 export const seasonApis = {
   getSeasons: () => axiosClient.get<Season[]>('/season'),
-  // getSeason: (seasonId) => axiosClient.get<Season>(`/season/${seasonId}`),
+  getSeason: (seasonId) => axiosClient.get<Season>(`/season/${seasonId}`),
   // updateSeason: (newSeason) => axiosClient.put('/season', newSeason),
   createSeason: (newSeason: CreateSeasonPayload) => axiosClient.post('/season', newSeason),
   deleteSeason: (seasonId) => axiosClient.delete(`/season/${seasonId}`),

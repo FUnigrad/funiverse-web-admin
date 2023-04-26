@@ -79,7 +79,7 @@ function SpecializationForm({ defaultValues, majorId }: SpecializationFormProps)
   }, [clearErrors]);
 
   function onSubmit(data) {
-    console.log('data: ', defaultValues?.id, data);
+    // console.log('data: ', defaultValues?.id, data);
     const body = { ...data, major: { id: majorId } };
     if (defaultValues?.id) body.id = defaultValues.id;
     mutation.mutate(body);

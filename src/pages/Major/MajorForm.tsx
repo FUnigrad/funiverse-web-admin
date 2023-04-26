@@ -73,7 +73,7 @@ function MajorForm({ defaultValues }: MajorFormProps) {
   }, [clearErrors]);
 
   function onSubmit(data) {
-    console.log('data: ', defaultValues?.id, data);
+    // console.log('data: ', defaultValues?.id, data);
     const body = { ...data };
     if (defaultValues?.id) body.id = defaultValues.id;
     mutation.mutate(body);

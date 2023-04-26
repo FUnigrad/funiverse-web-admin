@@ -8,11 +8,11 @@ import MuiLink from '@mui/material/Link';
 import { Link } from 'react-router-dom';
 import type { MRT_ColumnDef } from 'material-react-table';
 import { MRT_Row } from 'material-react-table';
-import { useContext, useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 // import Select from 'react-select';
 import { Group, GroupType, Season } from 'src/@types';
-import { QueryKey, groupApis, syllabusApis, seasonApis } from 'src/apis';
+import { QueryKey, groupApis, syllabusApis, seasonApis, dataApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
 import Select from 'src/components/Select';
@@ -26,8 +26,29 @@ import { Helmet } from 'react-helmet-async';
 import Button from '@mui/material/Button';
 import UploadOutlinedIcon from '@mui/icons-material/UploadOutlined';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-
-function SeasonPage() {
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import Popover from '@mui/material/Popover';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListSubheader from '@mui/material/ListSubheader';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+const DATA_TEMPLATES = [
+  { id: 'all', display: 'All' },
+  { id: 'major', display: 'Major' },
+  { id: 'specification', display: 'Specification' },
+  { id: 'subject', display: 'Subject' },
+  { id: 'syllabus', display: 'Syllabus' },
+  { id: 'curriculum', display: 'Curriculum' },
+  { id: 'curriculumPlan', display: 'Curriculum Plan' },
+  { id: 'user', display: 'User' },
+  { id: 'group', display: 'Group' },
+];
+function ImportDataPage() {
+  const [templateAnchorEl, setTemplateAnchorEl] = useState<HTMLElement | null>(null);
   const { dispatch } = useContext(ModalContext);
 
   const queryClient = useQueryClient();
@@ -74,7 +95,39 @@ function SeasonPage() {
   //   [],
   // );
   function onCreateEntity() {}
+  // const getTemplateQuery = useQuery({
+  //   queryKey: [QueryKey.Data, { entity: 'all' }],
+  //   queryFn: ({ queryKey: [, params] }) => dataApis.getTemplate(params as { entity: string }),
+  //   enabled: false,
+  //   onSuccess: (blob) => {
+  //     const urlObj = URL.createObjectURL(new Blob([blob]));
 
+  //     const link = document.createElement('a');
+  //     link.href = urlObj;
+  //     link.download = 'template.xlsx';
+  //     link.click();
+
+  //     URL.revokeObjectURL(urlObj);
+  //   },
+  // });
+  async function handleDownloadTemplateClick(e) {
+    // getTemplateQuery.refetch();
+    setTemplateAnchorEl(e.currentTarget);
+  }
+  async function handleTemplateItemClick(templateName: string) {
+    const params = { entity: templateName };
+    setTemplateAnchorEl(null);
+    try {
+      const blob = await dataApis.getTemplate(params);
+      const urlObj = URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement('a');
+      link.href = urlObj;
+      link.download = `${templateName}.xlsx`;
+      link.click();
+
+      URL.revokeObjectURL(urlObj);
+    } catch (err) {}
+  }
   return (
     <Box>
       <Helmet>
@@ -88,7 +141,7 @@ function SeasonPage() {
           <Button
             variant="contained"
             color="primary"
-            startIcon={<UploadOutlinedIcon fontSize="small" />}
+            startIcon={<FileUploadIcon />}
             component="label"
           >
             Import
@@ -97,16 +150,32 @@ function SeasonPage() {
           <Button
             variant="contained"
             color="primary"
-            startIcon={<UploadOutlinedIcon fontSize="small" />}
-            component="label"
+            startIcon={<FileDownloadIcon />}
+            onClick={handleDownloadTemplateClick}
           >
-            Load template
-            <input hidden accept="*" multiple type="file" />
+            Download template
           </Button>
+          <Popover
+            open={Boolean(templateAnchorEl)}
+            anchorEl={templateAnchorEl}
+            onClose={() => setTemplateAnchorEl(null)}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+          >
+            <List sx={{ p: 1, width: '192px' }}>
+              {DATA_TEMPLATES.map(({ id, display }) => (
+                <ListItemButton key={id} onClick={() => handleTemplateItemClick(id)}>
+                  <ListItemText primary={`${display}`} />
+                </ListItemButton>
+              ))}
+            </List>
+          </Popover>
         </Box>
       </Paper>
     </Box>
   );
 }
 
-export default SeasonPage;
+export default ImportDataPage;

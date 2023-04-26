@@ -140,9 +140,9 @@ function EntityForm({ schema, formConfig }: EntityFormProps) {
     },
   });
 
-  console.log('🚀 ~ errors', errors);
+  // console.log('🚀 ~ errors', errors);
   function onSubmit(data) {
-    console.log(data);
+    // console.log(data);
   }
   return (
     <>

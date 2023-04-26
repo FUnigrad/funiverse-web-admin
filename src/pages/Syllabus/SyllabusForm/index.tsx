@@ -107,7 +107,7 @@ function SyllabusFormPage({
   });
   function onSubmit(data: SyllabusFormInputs) {
     const { subject, ...rest } = data;
-    console.log('🚀 ~ data:', data);
+    // console.log('🚀 ~ data:', data);
     const body: SyllabusBody = {
       ...rest,
       //TODO: Enhance type subject here

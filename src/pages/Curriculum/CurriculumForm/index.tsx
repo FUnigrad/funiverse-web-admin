@@ -67,7 +67,7 @@ function CurriculumFormPage({
 }: {
   defaultValues?: CurriculumFormInputs & { id: number };
 }) {
-  console.log('🚀 ~ defaultValues:', defaultValues);
+  // console.log('🚀 ~ defaultValues:', defaultValues);
   const navigate = useNavigate();
   const { dispatch } = useContext(ModalContext);
   const queryClient = useQueryClient();
@@ -145,10 +145,10 @@ function CurriculumFormPage({
     } as CurriculumBody;
 
     if (defaultValues?.id) body.id = defaultValues.id;
-    console.log('🚀 ~ data:', body);
+    // console.log('🚀 ~ data:', body);
     mutation.mutate(body);
   }
-  console.log(errors);
+  // console.log(errors);
 
   if (isLoading && defaultValues?.id)
     return (
@@ -300,7 +300,7 @@ function CurriculumSyllabusForm({
       ...defaultValues,
     },
   });
-  console.log('🚀 ~ errors:', errors);
+  // console.log('🚀 ~ errors:', errors);
   function onSubmit(data) {
     const body = {
       ...data,
@@ -308,7 +308,7 @@ function CurriculumSyllabusForm({
         id: getSelectValue(data.syllabus),
       },
     };
-    console.log('🚀 ~ body:', body);
+    // console.log('🚀 ~ body:', body);
     if (defaultValues?.id) body.id = defaultValues.id;
     mutation.mutate(body);
   }

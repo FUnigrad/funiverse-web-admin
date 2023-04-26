@@ -14,7 +14,7 @@ export const searchApis = {
     const field = Array.isArray(params.field)
       ? params.field[params.field.length - 1]
       : params.field;
-    console.log('🚀 ~ field:', field);
+    // console.log('🚀 ~ field:', field);
 
     const defaultOperator = Array.isArray(params.field)
       ? Array(params.field.length).fill('like')

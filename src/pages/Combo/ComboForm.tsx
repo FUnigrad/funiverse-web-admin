@@ -69,7 +69,7 @@ function ComboForm({ defaultValues }: ComboFormProps) {
   }, [clearErrors]);
 
   function onSubmit(data) {
-    console.log('data: ', defaultValues?.id, data);
+    // console.log('data: ', defaultValues?.id, data);
     const body: ComboFormBody = {
       ...data,
       // syllabi: data.syllabi.map((x) => ({ id: x })),
@@ -79,7 +79,7 @@ function ComboForm({ defaultValues }: ComboFormProps) {
   }
 
   // console.log('🚀 ~ defaultValues', defaultValues);
-  console.log('🚀 ~ errors', errors);
+  // console.log('🚀 ~ errors', errors);
 
   return (
     <>

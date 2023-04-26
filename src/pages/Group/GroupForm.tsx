@@ -167,7 +167,7 @@ function GroupForm({ defaultValues }: GroupFormProps) {
       });
   }
   // console.log('🚀 ~ defaultValues', defaultValues);
-  console.log('🚀 ~ errors', errors);
+  // console.log('🚀 ~ errors', errors);
 
   return (
     <>

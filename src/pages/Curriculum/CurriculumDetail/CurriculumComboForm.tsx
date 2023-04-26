@@ -114,14 +114,14 @@ function CurriculumComboForm({ curriculumId, defaultValues }: CurriculumComboFor
       })),
       // syllabi: data.syllabi.map((x) => ({ id: x })),
     };
-    console.log('🚀 ~ body:', body);
+    // console.log('🚀 ~ body:', body);
 
     // if (curriculumId) body.id = curriculumId;
     createComboMutation.mutate(body);
   }
 
   // console.log('🚀 ~ defaultValues', defaultValues);
-  console.log('🚀 ~ errors', errors);
+  // console.log('🚀 ~ errors', errors);
   function onRawSelect(selectedCombo: SelectedCombo) {
     // console.log(option)
     setSelectedCombo(selectedCombo);

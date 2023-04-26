@@ -26,8 +26,8 @@ const OnboardStep1Schema = z.object({
     z.object({
       name: z.string().min(1),
       ordinalNumber: z.coerce.number().positive(),
-      startMonth: z.coerce.number().positive(),
-      endMonth: z.coerce.number().positive(),
+      startMonth: z.coerce.number().min(1).max(12),
+      endMonth: z.coerce.number().min(1).max(12),
     }),
   ),
   // combo: z.boolean().optional(),
@@ -58,6 +58,7 @@ function OnboardStep1() {
     mode: 'all',
     resolver: zodResolver(OnboardStep1Schema),
   });
+  // console.log('🚀 ~ errors:', errors);
 
   const { fields, insert, append, remove } = useFieldArray({
     control,
@@ -83,10 +84,10 @@ function OnboardStep1() {
           append({ name: '', ordinalNumber: index + 1, startMonth: null, endMonth: null });
         });
     }
-  }, [numberOfSeasons]);
+  }, [append, numberOfSeasons, remove]);
 
   function onSubmit(data) {
-    console.log('🚀 ~ data:', data);
+    // console.log('🚀 ~ data:', data);
     createSessonsMutation.mutate({ season: data.seasons });
   }
   return (
@@ -117,31 +118,39 @@ function OnboardStep1() {
           sx={{ display: 'flex', alignItems: 'center', gap: '0 24px', mb: 1 }}
         >
           <TextField
-            id="room"
             label="Name"
             size="small"
             sx={{ '&.MuiFormControl-root': { minHeight: 38 } }}
+            error={Boolean(errors.seasons?.[index]?.name)}
+            // helperText={errors.seasons?.[index]?.name?.message}
             {...register(`seasons.${index}.name` as const)}
           />
           <TextField
-            id="room"
             label="Ordinal Number"
             size="small"
+            type="number"
             sx={{ '&.MuiFormControl-root': { minHeight: 38 } }}
+            error={Boolean(errors.seasons?.[index]?.ordinalNumber)}
+            InputProps={{ readOnly: true }}
+            // helperText={errors.seasons?.[index]?.ordinalNumber?.message}
             {...register(`seasons.${index}.ordinalNumber` as const)}
           />
           <TextField
-            id="room"
             label="Start Month"
             size="small"
+            type="number"
             sx={{ '&.MuiFormControl-root': { minHeight: 38 } }}
+            error={Boolean(errors.seasons?.[index]?.startMonth)}
+            // helperText={errors.seasons?.[index]?.startMonth?.message}
             {...register(`seasons.${index}.startMonth` as const)}
           />
           <TextField
-            id="room"
             label="End Month"
             size="small"
+            type="number"
             sx={{ '&.MuiFormControl-root': { minHeight: 38 } }}
+            error={Boolean(errors.seasons?.[index]?.endMonth)}
+            // helperText={errors.seasons?.[index]?.endMonth?.message}
             {...register(`seasons.${index}.endMonth` as const)}
           />
         </Box>

@@ -91,7 +91,7 @@ function UserForm({ defaultValues }: UserFormProps) {
   const watchRole = watch('role');
 
   function onSubmit(data) {
-    console.log('data: ', defaultValues?.id, data);
+    // console.log('data: ', defaultValues?.id, data);
     const body: UserFormBody = {
       ...data,
       role: getSelectValue(data.role),
@@ -107,7 +107,7 @@ function UserForm({ defaultValues }: UserFormProps) {
   }
 
   // console.log('🚀 ~ defaultValues', defaultValues);
-  console.log('🚀 ~ errors', errors);
+  // console.log('🚀 ~ errors', errors);
   function promiseOptions(input) {
     return searchApis.search({
       entity: 'curriculum',

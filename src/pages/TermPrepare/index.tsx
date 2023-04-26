@@ -13,7 +13,7 @@ import { QueryKey } from 'src/apis';
 import { stepConfigs } from './config';
 function TermPreparePage() {
   const { activeStep } = useStepperContext();
-  console.log('🚀 ~ activeStep:', activeStep);
+  // console.log('🚀 ~ activeStep:', activeStep);
   const theme = useTheme();
 
   return (

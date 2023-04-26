@@ -23,25 +23,61 @@ import { useStepperContext } from 'src/contexts/StepperContext';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { useNavigate } from 'react-router-dom';
-import { getSelectValue } from 'src/utils';
+import { appCookies, getSelectValue } from 'src/utils';
 import dayjs from 'dayjs';
 import InputAdornment from '@mui/material/InputAdornment';
 const timeRegex = /.*\d{2}.*\d{2}.*/;
-const OnboardStep3Schema = z.object({
-  // season: z
-  //   .number()
-  //   .positive()
-  //   .or(z.object({ value: z.number().positive(), label: z.string() })),
-  // startDate: z.string(),
-  foundedYear: z.coerce.number().positive(),
-  slotDurationInMin: z.coerce.number().positive(),
-  restTimeInMin: z.coerce.number().positive(),
-  morningStartTime: z.string().regex(timeRegex),
-  morningEndTime: z.string().regex(timeRegex),
-  afternoonStartTime: z.string().regex(timeRegex),
-  afternoonEndTime: z.string().regex(timeRegex),
-  // emailSuffix: z.string().min(1),
-});
+const OnboardStep3Schema = z
+  .object({
+    // season: z
+    //   .number()
+    //   .positive()
+    //   .or(z.object({ value: z.number().positive(), label: z.string() })),
+    // startDate: z.string(),
+    foundedYear: z.coerce.number().int().positive(),
+    slotDurationInMin: z.coerce.number().int().positive(),
+    restTimeInMin: z.coerce.number().int().positive(),
+    morningStartTime: z.string().regex(timeRegex),
+    morningEndTime: z.string().regex(timeRegex),
+    afternoonStartTime: z.string().regex(timeRegex),
+    afternoonEndTime: z.string().regex(timeRegex),
+    // emailSuffix: z.string().min(1),
+  })
+  // .transform((val) => {
+  //   const morningStartTime = val.morningStartTime.replace(/[^\x20-\x7E]/g, '');
+  //   const morningEndTime = val.morningEndTime.replace(/[^\x20-\x7E]/g, '');
+  //   const afternoonStartTime = val.afternoonStartTime.replace(/[^\x20-\x7E]/g, '');
+  //   const afternoonEndTime = val.afternoonEndTime.replace(/[^\x20-\x7E]/g, '');
+  //   return {
+  //     ...val,
+  //     morningStartTime,
+  //     morningEndTime,
+  //     afternoonStartTime,
+  //     afternoonEndTime,
+  //   };
+  // })
+  .refine(
+    (val) => {
+      const morningStartTime = val.morningStartTime.replace(/[^\x20-\x7E]/g, '');
+      const morningEndTime = val.morningEndTime.replace(/[^\x20-\x7E]/g, '');
+      return dayjs(`2000-01-01 ${morningStartTime}`) < dayjs(`2000-01-01 ${morningEndTime}`);
+    },
+    {
+      message: 'End date cannot be earlier than start date.',
+      path: ['morningEndTime'], // path of error
+    },
+  )
+  .refine(
+    (val) => {
+      const afternoonStartTime = val.afternoonStartTime.replace(/[^\x20-\x7E]/g, '');
+      const afternoonEndTime = val.afternoonEndTime.replace(/[^\x20-\x7E]/g, '');
+      return dayjs(`2000-01-01 ${afternoonStartTime}`) < dayjs(`2000-01-01 ${afternoonEndTime}`);
+    },
+    {
+      message: 'End date cannot be earlier than start date.',
+      path: ['afternoonEndTime'], // path of error
+    },
+  );
 export type OnboardStep3FormInputs = z.infer<typeof OnboardStep3Schema>;
 const defaultSlotProps: any = {
   textField: {
@@ -58,11 +94,6 @@ const defaultSlotProps: any = {
 function OnboardStep3() {
   const { activeStep, dispatchStepper, data: step2Data } = useStepperContext();
   const navigate = useNavigate();
-  const seasonsQuery = useQuery({
-    queryKey: [QueryKey.Seasons],
-    queryFn: seasonApis.getSeasons,
-    select: (res) => res.map((r) => ({ label: r.name, value: r.id })),
-  });
 
   const {
     register,
@@ -76,7 +107,7 @@ function OnboardStep3() {
     mode: 'all',
     resolver: zodResolver(OnboardStep3Schema),
   });
-  console.log('🚀 ~ errors:', errors);
+  // console.log('🚀 ~ errors:', errors);
 
   // const createSessonsMutation = useMutation({
   //   mutationFn: (data: { season: CreateSeasonPayload[] }) => seasonApis.createWorkspaceSeason(data),
@@ -94,7 +125,8 @@ function OnboardStep3() {
   const updateWorkspaceMutation = useMutation({
     mutationFn: (data: any) => termApis.updateWorkspace(data),
     onSuccess: () => {
-      navigate('/');
+      appCookies.setWorkspaceActive();
+      window.location.href = '/';
     },
   });
 

@@ -13,6 +13,7 @@ import { AuthGuard } from './guards';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StepperProvider } from './contexts/StepperContext';
+import OnBoardGuard from './guards/OnBoardGuard';
 // const queryClient = new QueryClient();
 function App() {
   const content = useRoutes(router);
@@ -23,7 +24,9 @@ function App() {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <StepperProvider>
             <CssBaseline />
-            <AuthGuard>{content}</AuthGuard>
+            <AuthGuard>
+              <OnBoardGuard>{content}</OnBoardGuard>
+            </AuthGuard>
             <Modal />
             <ToastContainer autoClose={2000} newestOnTop />
           </StepperProvider>

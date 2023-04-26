@@ -22,7 +22,7 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
-import { appCookies } from 'src/utils';
+import { __DEV__, appCookies } from 'src/utils';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -132,8 +132,10 @@ function HeaderUserbox() {
             color="primary"
             fullWidth
             onClick={() => {
-              window.location.href = process.env.REACT_APP_REDIRECT_URL;
               appCookies.clearAll();
+              window.location.href = __DEV__
+                ? 'http://localhost:8000/verify'
+                : process.env.REACT_APP_REDIRECT_URL;
             }}
           >
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />

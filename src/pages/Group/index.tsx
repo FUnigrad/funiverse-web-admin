@@ -101,7 +101,7 @@ function GroupPage() {
   function onEditEntity(row: MRT_Row<Group>) {
     if (!row) return;
     const { original } = row;
-    console.log(row.original);
+    // console.log(row.original);
     let defaultValues: Partial<GroupFormInputs & { id: number; name: string }> = {
       id: +row.id,
       type: original.type as any,

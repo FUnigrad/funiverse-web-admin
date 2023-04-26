@@ -19,6 +19,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs, { Dayjs } from 'dayjs';
 import { useRefState } from 'src/hooks';
+import { appCookies } from 'src/utils';
 
 const ListWrapper = styled(Box)(
   ({ theme }) => `
@@ -94,7 +95,10 @@ function HeaderMenu() {
     queryFn: () => termApis.getTerm('next'),
     cacheTime: 0,
     retry: 0,
+    enabled: appCookies.getWorkspaceActive() === 'true',
   });
+  // console.log('🚀 ~ appCookies.getWorkspaceActive():', appCookies.getWorkspaceActive());
+  // console.log('🚀 ~ nextData:', nextData);
   const mutation = useMutation({
     mutationFn: termApis.startNewSemester,
     onSuccess: () => {
@@ -115,7 +119,7 @@ function HeaderMenu() {
     () =>
       dayjs()
         .month(nextData?.season.startMonth - 1)
-        .year(+nextData?.year)
+        .year(+nextData?.year || dayjs().get('year'))
         .startOf('month'),
     [nextData?.season.startMonth, nextData?.year],
   );

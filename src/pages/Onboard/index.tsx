@@ -16,14 +16,27 @@ import { termApis } from 'src/apis/termApis';
 import { QueryKey, seasonApis } from 'src/apis';
 import { stepConfigs } from './config';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { useAppCookies } from 'src/hooks';
+import { appCookies } from 'src/utils';
 
 function OnboardPage() {
-  const { activeStep } = useStepperContext();
+  const { activeStep, dispatchStepper } = useStepperContext();
   const theme = useTheme();
+  const [cookies] = useAppCookies();
+
   const seasonsQuery = useQuery({
     queryKey: [QueryKey.Seasons],
     queryFn: seasonApis.getSeasons,
+    onSuccess: (response) => {
+      if (response.length > 0 && activeStep === StepEnum.Step1) dispatchStepper({ type: 'next' });
+    },
+    enabled: activeStep === StepEnum.Step1,
   });
+
+  if (cookies.isWorkspaceActive === 'true' || appCookies.getDecodedAccessToken().wstatus === true) {
+    window.location.href = '/';
+    return null;
+  }
   return (
     <Box>
       <Sidebar />

@@ -6,7 +6,7 @@ type Res = typeof CookieNames[keyof typeof CookieNames];
 const cookieNamesValue = Object.values(CookieNames);
 
 type TCookies = {
-  [Key in Res]?: string;
+  [Key in Res]?: any;
 };
 
 export function useAppCookies() {

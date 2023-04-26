@@ -73,7 +73,7 @@ function SeasonForm({ defaultValues }: SeasonFormProps) {
   }, [clearErrors]);
 
   function onSubmit(data) {
-    console.log('data: ', defaultValues?.id, data);
+    // console.log('data: ', defaultValues?.id, data);
     const body: SeasonFormBody = {
       ...data,
     };
@@ -82,7 +82,7 @@ function SeasonForm({ defaultValues }: SeasonFormProps) {
   }
 
   // console.log('🚀 ~ defaultValues', defaultValues);
-  console.log('🚀 ~ errors', errors);
+  // console.log('🚀 ~ errors', errors);
 
   return (
     <>

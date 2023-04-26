@@ -2,6 +2,7 @@ import { Cookies } from 'react-cookie';
 export const CookieNames = {
   AccessToken: 'accessToken',
   RefreshToken: 'refreshToken',
+  IsWorkspaceActive: 'isWorkspaceActive',
 } as const;
 export interface DecodedToken {
   role: string;
@@ -10,6 +11,7 @@ export interface DecodedToken {
   sub: string;
   iat: number;
   exp: number;
+  wstatus: boolean;
 }
 export const appCookies = (function () {
   const cookies = new Cookies();
@@ -28,6 +30,11 @@ export const appCookies = (function () {
     clearAll: () => {
       cookies.remove(CookieNames.AccessToken);
       cookies.remove(CookieNames.RefreshToken);
+      cookies.remove(CookieNames.IsWorkspaceActive);
     },
+    setWorkspaceActive: () => {
+      cookies.set(CookieNames.IsWorkspaceActive, true);
+    },
+    getWorkspaceActive: () => cookies.get(CookieNames.IsWorkspaceActive),
   };
 })();

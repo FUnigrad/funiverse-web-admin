@@ -32,7 +32,7 @@ const OnboardStep2Schema = z.object({
     .number()
     .positive()
     .or(z.object({ value: z.number().positive(), label: z.string() })),
-  startDate: z.string().regex(/^\d{4}\-\d{2}\-\d{2}$/),
+  year: z.string().regex(/^\d{4}$/),
   // foundedYear: z.coerce.number().positive(),
   // slotDurationInMin: z.coerce.number().positive(),
   // restTimeInMin: z.coerce.number().positive(),
@@ -62,7 +62,6 @@ function OnboardStep2() {
     queryKey: [QueryKey.Seasons],
     queryFn: seasonApis.getSeasons,
     select: (res) => res.map((r) => ({ label: r.name, value: r.id })),
-    enabled: false,
   });
   const {
     register,
@@ -79,11 +78,10 @@ function OnboardStep2() {
     resolver: zodResolver(OnboardStep2Schema),
     defaultValues: {
       season: stepData ? stepData.currentTerm.season.id : undefined,
-      startDate: stepData ? stepData.currentTerm.startDate : dayjs().format('YYYY-MM-DD'),
+      year: stepData ? stepData.currentTerm.year : dayjs().format('YYYY'),
       emailSuffix: stepData?.emailSuffix ?? '',
     },
   });
-  console.log('🚀 ~ errors:', errors, getValues());
 
   const workspaceDetailQuery = useQuery({
     queryFn: termApis.getWorkspaceDetail,
@@ -98,7 +96,7 @@ function OnboardStep2() {
   });
 
   function onSubmit(data: OnboardStep2FormInputs) {
-    const { startDate, season, ...rest } = data;
+    const { year, season, ...rest } = data;
     // const morningStartTime = rest.morningStartTime.replace(/[^\x20-\x7E]/g, '');
     // const morningEndTime = rest.morningEndTime.replace(/[^\x20-\x7E]/g, '');
     // const afternoonStartTime = rest.afternoonStartTime.replace(/[^\x20-\x7E]/g, '');
@@ -113,7 +111,7 @@ function OnboardStep2() {
       // afternoonEndTime,
       currentTerm: {
         season: { id: getSelectValue(season) },
-        startDate,
+        year,
       },
     };
     dispatchStepper({ type: 'save_step_data', payload: submittedData });
@@ -141,23 +139,24 @@ function OnboardStep2() {
         error={Boolean(errors.season) && errors.season.message === 'Required'}
       />
       <Controller
-        name={'startDate'}
+        name={'year'}
         control={control}
         render={({ field: { onChange, value, name, ref, ...field } }) => (
           <DatePicker
-            label="Start date"
+            label="Year"
             disablePast
             slotProps={{
               ...defaultSlotProps,
               textField: {
                 ...defaultSlotProps.textField,
-                error: Boolean(errors.startDate),
-                helperText: errors.startDate?.message,
+                error: Boolean(errors.year),
+                helperText: errors.year?.message,
               },
             }}
-            format="YYYY-MM-DD"
+            format="YYYY"
+            views={['year']}
             onChange={(value) => {
-              onChange(dayjs(value as any).format('YYYY-MM-DD'));
+              onChange(dayjs(value as any).format('YYYY'));
             }}
             value={dayjs(value)}
             inputRef={ref}

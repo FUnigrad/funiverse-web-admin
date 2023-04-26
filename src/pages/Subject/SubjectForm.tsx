@@ -99,7 +99,7 @@ function SubjectForm({ defaultValues }: SubjectFormProps) {
   }, [clearErrors]);
 
   function onSubmit(data) {
-    console.log('data: ', defaultValues?.id, data);
+    // console.log('data: ', defaultValues?.id, data);
     const body: SubjectFormBody = {
       ...data,
     };
@@ -108,7 +108,7 @@ function SubjectForm({ defaultValues }: SubjectFormProps) {
   }
 
   // console.log('🚀 ~ defaultValues', defaultValues);
-  console.log('🚀 ~ errors', errors);
+  // console.log('🚀 ~ errors', errors);
 
   return (
     <>
