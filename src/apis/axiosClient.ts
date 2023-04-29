@@ -83,10 +83,10 @@ async function handle401Error(error: AxiosError) {
     appCookies.setAccessToken(accessToken);
     originalRequest.headers.Authorization = `Bearer ${accessToken}`;
   } catch (error) {
-    appCookies.clearAll();
-    window.location.href = __DEV__
-      ? 'http://localhost:8000/verify'
-      : process.env.REACT_APP_REDIRECT_URL;
+    // appCookies.clearAll();
+    // window.location.href = __DEV__
+    //   ? 'http://localhost:8000/verify'
+    //   : process.env.REACT_APP_REDIRECT_URL;
   }
 
   processQueue(null, null);

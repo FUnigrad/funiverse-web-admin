@@ -36,6 +36,10 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListSubheader from '@mui/material/ListSubheader';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import SuspenseLoader from 'src/components/SuspenseLoader';
+import Modal from '@mui/material/Modal';
+import { AxiosError } from 'axios';
+
 const DATA_TEMPLATES = [
   { id: 'all', display: 'All' },
   { id: 'major', display: 'Major' },
@@ -49,24 +53,24 @@ const DATA_TEMPLATES = [
 ];
 function ImportDataPage() {
   const [templateAnchorEl, setTemplateAnchorEl] = useState<HTMLElement | null>(null);
+  const [selectedFile, setSelectedFile] = useState<string>('');
   const { dispatch } = useContext(ModalContext);
 
   const queryClient = useQueryClient();
 
-  // const { data, isLoading, isError, isFetching } = useQuery({
-  //   queryKey: [QueryKey.Seasons],
-  //   queryFn: seasonApis.getSeasons,
-  //   refetchOnWindowFocus: false,
-  // });
-
-  // const mutation = useMutation({
-  //   mutationFn: (id) => seasonApis.deleteSeason(id),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: [QueryKey.Seasons] });
-  //     toast.success(`Delete Season successfully!`);
-  //     dispatch({ type: 'close' });
-  //   },
-  // });
+  const importDataMutation = useMutation({
+    mutationFn: (data: FormData) => dataApis.importData(data),
+    onMutate: () => {
+      dispatch({ type: 'close' });
+    },
+    onSuccess: () => {
+      // queryClient.invalidateQueries({ queryKey: [QueryKey.Seasons] });
+      toast.success(`Import Data successfully!`);
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(error.response.data.message);
+    },
+  });
   // const columns = useMemo<MRT_ColumnDef<Season>[]>(
   //   () => [
   //     {
@@ -128,6 +132,30 @@ function ImportDataPage() {
       URL.revokeObjectURL(urlObj);
     } catch (err) {}
   }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target?.files[0];
+    setSelectedFile(event.target.value);
+    if (!file) return;
+    dispatch({
+      type: 'open_confirm',
+      payload: {
+        title: 'Import Data',
+        content: () => (
+          <Typography variant="subtitle1" color="initial">
+            Do you want to import <strong>{file.name}</strong>?
+          </Typography>
+        ),
+        confirmTitle: 'Apply',
+      },
+      onConfirm: () => {
+        const formData = new FormData();
+        formData.append('file', file);
+        importDataMutation.mutate(formData);
+      },
+    });
+  }
+
   return (
     <Box>
       <Helmet>
@@ -143,9 +171,17 @@ function ImportDataPage() {
             color="primary"
             startIcon={<FileUploadIcon />}
             component="label"
+            onClick={() => setSelectedFile('')}
           >
             Import
-            <input hidden accept="*" multiple type="file" />
+            <input
+              hidden
+              accept="*"
+              multiple
+              type="file"
+              onChange={handleFileChange}
+              value={selectedFile}
+            />
           </Button>
           <Button
             variant="contained"
@@ -153,7 +189,7 @@ function ImportDataPage() {
             startIcon={<FileDownloadIcon />}
             onClick={handleDownloadTemplateClick}
           >
-            Download template
+            Download Template
           </Button>
           <Popover
             open={Boolean(templateAnchorEl)}
@@ -173,6 +209,11 @@ function ImportDataPage() {
             </List>
           </Popover>
         </Box>
+        <Modal open={importDataMutation.isLoading}>
+          <Box>
+            <SuspenseLoader />
+          </Box>
+        </Modal>
       </Paper>
     </Box>
   );

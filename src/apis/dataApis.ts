@@ -6,4 +6,6 @@ import { Combo, ComboDetail } from 'src/@types';
 export const dataApis = {
   getTemplate: (params: { entity: string }) =>
     axiosClient.get<Blob>(`/import`, { params, responseType: 'blob' }),
+  importData: (data) =>
+    axiosClient.post(`/import`, data, { headers: { 'Content-Type': 'multipart/form-data' } }),
 };

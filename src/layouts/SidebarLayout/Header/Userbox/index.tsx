@@ -62,7 +62,7 @@ const UserBoxDescription = styled(Typography)(
 function HeaderUserbox() {
   const user = {
     name: 'Workspace Admin',
-    avatar: '/static/images/avatars/1.jpg',
+    avatar: '/static/images/avatars/admin.jfif',
     jobtitle: 'Administration',
   };
 

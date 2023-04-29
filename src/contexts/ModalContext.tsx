@@ -110,7 +110,7 @@ function Modal() {
           <LoadingButton
             onClick={onConfirm}
             variant="contained"
-            color="error"
+            color={['Delete', 'Deactivate'].includes(confirmTitle) ? 'error' : 'primary'}
             loading={submitLoading}
             // loadingPosition="start"
           >
