@@ -33,6 +33,7 @@ export const appCookies = (function () {
       cookies.remove(CookieNames.IsWorkspaceActive);
     },
     setWorkspaceActive: () => {
+      cookies.remove(CookieNames.IsWorkspaceActive);
       cookies.set(CookieNames.IsWorkspaceActive, true);
     },
     getWorkspaceActive: () => cookies.get(CookieNames.IsWorkspaceActive),

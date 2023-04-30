@@ -15,7 +15,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   }
   if (accessToken) {
     const user = appCookies.getDecodedAccessToken();
-    if (user.role !== UserRole.WorkspaceAdmin) {
+    if (user?.role !== UserRole.WorkspaceAdmin) {
       appCookies.clearAll();
       window.location.href = __DEV__
         ? 'http://localhost:8000/verify'

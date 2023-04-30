@@ -81,7 +81,7 @@ function GroupDetailPage() {
   const groupSlotsQuery = useQuery({
     queryKey: [QueryKey.Groups, 'slug', QueryKey.Slot],
     queryFn: () => groupApis.getGroupSlots(slug),
-    enabled: Boolean(slug),
+    enabled: Boolean(slug) && groupDetailData?.type === GroupType.Course,
   });
 
   function onEditGroup() {
