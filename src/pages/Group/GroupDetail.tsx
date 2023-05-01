@@ -52,10 +52,10 @@ function GroupDetailPage() {
         header: 'Order',
         accessorKey: 'order',
       },
-      {
-        header: 'Day of week',
-        accessorKey: 'dayOfWeek',
-      },
+      // {
+      //   header: 'Day of week',
+      //   accessorKey: 'dayOfWeek',
+      // },
       {
         header: 'Room',
         accessorKey: 'room',
@@ -63,7 +63,9 @@ function GroupDetailPage() {
       {
         header: 'Start Date',
         accessorKey: 'date',
-        Cell: ({ cell }) => <span>{cell ? cell : 'TBD'}</span>,
+        Cell: ({ cell }) => (
+          <span>{cell.getValue<string>() ? cell.getValue<string>() : 'TBD'}</span>
+        ),
       },
     ],
     [],
@@ -184,14 +186,14 @@ function GroupDetailPage() {
               Slots
             </Typography>
             <Box>
-              <Button
+              {/* <Button
                 sx={{ mr: 1 }}
                 startIcon={<Add />}
                 variant="contained"
                 onClick={onAddGroupSlot}
               >
                 Add slot
-              </Button>
+              </Button> */}
               <Button startIcon={<Add />} variant="contained" onClick={onCreateGroupSlot}>
                 Create slot
               </Button>

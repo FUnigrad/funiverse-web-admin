@@ -9,7 +9,7 @@ import { MRT_Row } from 'material-react-table';
 import { useContext, useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 // import Select from 'react-select';
-import { GroupSlot, GroupType } from 'src/@types';
+import { GroupSlot, GroupType, WeekDay } from 'src/@types';
 import { QueryKey, groupApis, searchApis } from 'src/apis';
 import AsyncSelect from 'src/components/AsyncSelect';
 import ListPageHeader from 'src/components/ListEntityPage/ListPageHeader';
@@ -22,26 +22,43 @@ import { useNavigate, useLocation, useParams } from 'react-router';
 import { getSelectValue } from 'src/utils';
 import { toast } from 'react-toastify';
 
-const nameSchema = z.string().min(1);
-const asyncSelectSchema = z
-  .number()
-  .positive()
-  .or(z.object({ value: z.number().positive(), label: z.string() }));
-const classSchema = z.object({
-  // name: nameSchema,
-  curriculum: asyncSelectSchema,
-});
+// const nameSchema = z.string().min(1);
+// const asyncSelectSchema = z
+//   .number()
+//   .positive()
+//   .or(z.object({ value: z.number().positive(), label: z.string() }));
+// const classSchema = z.object({
+//   // name: nameSchema,
+//   curriculum: asyncSelectSchema,
+// });
 
-const courseSchema = z.object({
-  syllabus: asyncSelectSchema,
-  class: asyncSelectSchema,
-  teacher: asyncSelectSchema,
-});
+// const courseSchema = z.object({
+//   syllabus: asyncSelectSchema,
+//   class: asyncSelectSchema,
+//   teacher: asyncSelectSchema,
+// });
 
-const departmentSchema = z.object({
-  name: nameSchema,
-});
+// const departmentSchema = z.object({
+//   name: nameSchema,
+// });
 
+const orderOptions = [
+  { label: '1', value: 1 },
+  { label: '2', value: 2 },
+  { label: '3', value: 3 },
+  { label: '4', value: 4 },
+  { label: '5', value: 5 },
+  { label: '6', value: 6 },
+];
+const dayOptions = [
+  { label: 'Monday', value: WeekDay.Monday },
+  { label: 'Tuesday', value: WeekDay.Tuesday },
+  { label: 'Wednesday', value: WeekDay.Wednesday },
+  { label: 'Thursday', value: WeekDay.Thursday },
+  { label: 'Friday', value: WeekDay.Friday },
+  { label: 'Saturday', value: WeekDay.Saturday },
+  { label: 'Sunday', value: WeekDay.Sunday },
+];
 // https://github.com/react-hook-form/react-hook-form/issues/9287
 // type GroupSlotFormInputs2 = z.infer<typeof GroupSlotSchema>; //will not work
 const GroupSlotSchema = z.object({
@@ -84,7 +101,7 @@ function GroupSlotForm({ defaultValues, groupId }: GroupSlotFormProps) {
     formState: { errors },
   } = useForm({
     mode: 'all',
-    resolver: zodResolver(GroupSlotSchema),
+    // resolver: zodResolver(GroupSlotSchema),
     defaultValues: {
       // active: true,
       ...defaultValues,
@@ -149,15 +166,33 @@ function GroupSlotForm({ defaultValues, groupId }: GroupSlotFormProps) {
         noValidate
         sx={{
           '& .MuiTextField-root': { m: 1, width: '100%' },
-          height: 400,
+          height: 300,
         }}
       >
-        <TextField
-          label="Name"
+        <Select
+          control={control}
+          options={orderOptions}
+          fieldName={`order`}
           required
-          error={Boolean(errors.name)}
-          helperText={errors.name?.message}
-          {...register('name')}
+          error={false}
+          // size="small"
+          label="Order"
+        />
+        <Select
+          control={control}
+          options={dayOptions}
+          fieldName={`dayOfWeek`}
+          required
+          error={false}
+          // size="small"
+          label="Day of week"
+        />
+        <TextField
+          id="room"
+          label="Room"
+          // size="small"
+          sx={{ '&.MuiFormControl-root': { minHeight: 38 } }}
+          {...register(`room`)}
         />
       </Box>
     </>
