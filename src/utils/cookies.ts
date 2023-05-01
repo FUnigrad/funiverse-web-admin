@@ -1,4 +1,5 @@
 import { Cookies } from 'react-cookie';
+import { __DEV__ } from '.';
 export const CookieNames = {
   AccessToken: 'accessToken',
   RefreshToken: 'refreshToken',
@@ -33,8 +34,13 @@ export const appCookies = (function () {
       cookies.remove(CookieNames.IsWorkspaceActive);
     },
     setWorkspaceActive: () => {
+      const now = new Date();
+      const expires = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
       cookies.remove(CookieNames.IsWorkspaceActive);
-      cookies.set(CookieNames.IsWorkspaceActive, true);
+      cookies.set(CookieNames.IsWorkspaceActive, true, {
+        domain: __DEV__ ? 'localhost' : process.env.REACT_APP_PUBLIC_DOMAIN,
+        expires,
+      });
     },
     getWorkspaceActive: () => cookies.get(CookieNames.IsWorkspaceActive),
   };
