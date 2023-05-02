@@ -81,7 +81,10 @@ function OnboardStep1() {
       Array(numberOfSeasons)
         .fill(null)
         .forEach((n, index) => {
-          append({ name: '', ordinalNumber: index + 1, startMonth: null, endMonth: null });
+          append(
+            { name: '', ordinalNumber: index + 1, startMonth: null, endMonth: null },
+            { focusIndex: 0 },
+          );
         });
     }
   }, [append, numberOfSeasons, remove]);
