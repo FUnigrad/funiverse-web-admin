@@ -75,6 +75,7 @@ const SeasonDetailPage = Loader(lazy(() => import('src/pages/Season/SeasonDetail
 const MajorPage = Loader(lazy(() => import('src/pages/Major')));
 const MajorDetailPage = Loader(lazy(() => import('src/pages/Major/MajorDetail')));
 const ImportDataPage = Loader(lazy(() => import('src/pages/ImportData')));
+const WorkspacePage = Loader(lazy(() => import('src/pages/Workspace')));
 // const SpecializationPage = Loader(lazy(() => import('src/pages/Specialization')));
 const routes: RouteObject[] = [
   {
@@ -117,6 +118,16 @@ const routes: RouteObject[] = [
       {
         path: '*',
         element: <Status404 />,
+      },
+    ],
+  },
+  {
+    path: 'workspace',
+    element: <SidebarLayout />,
+    children: [
+      {
+        path: '',
+        element: <WorkspacePage />,
       },
     ],
   },

@@ -2,6 +2,7 @@ function pluralize(noun: string): string {
   const exceptions = {
     syllabus: 'syllabi',
     curriculum: 'curricula',
+    workspace: 'workspace',
   };
 
   if (exceptions[noun.toLowerCase()]) {

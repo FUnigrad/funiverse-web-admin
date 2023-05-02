@@ -9,7 +9,7 @@ import { pluralize } from 'src/utils';
 interface ListPageHeaderProps {
   entity: string;
   createHref?: string;
-  onCreateEntity: () => void;
+  onCreateEntity?: () => void;
 }
 function ListPageHeader({ entity, createHref, onCreateEntity }: ListPageHeaderProps) {
   const createBtnProps = createHref
@@ -34,17 +34,19 @@ function ListPageHeader({ entity, createHref, onCreateEntity }: ListPageHeaderPr
             necessitatibus et nobis itaque quos! Voluptate.
           </Typography> */}
         </Grid>
-        <Grid item xs={6} sx={{ textAlign: 'right' }}>
-          <Button
-            {...createBtnProps}
-            sx={{ mt: { xs: 2, md: 0 } }}
-            variant="contained"
-            startIcon={<AddTwoToneIcon fontSize="small" />}
-            onClick={onCreateEntity}
-          >
-            Create {entity}
-          </Button>
-        </Grid>
+        {onCreateEntity && (
+          <Grid item xs={6} sx={{ textAlign: 'right' }}>
+            <Button
+              {...createBtnProps}
+              sx={{ mt: { xs: 2, md: 0 } }}
+              variant="contained"
+              startIcon={<AddTwoToneIcon fontSize="small" />}
+              onClick={onCreateEntity}
+            >
+              Create {entity}
+            </Button>
+          </Grid>
+        )}
       </Grid>
     </Paper>
   );
