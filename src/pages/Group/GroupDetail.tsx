@@ -26,6 +26,13 @@ function transfromGroupDetail(data: Group) {
       value: `${data.curriculum.code} - ${data.curriculum.name}`,
     };
   }
+  const courseDetail = {} as any;
+  if (data.type === GroupType.Course) {
+    courseDetail.publish = {
+      label: 'Publish',
+      value: data.publish,
+    };
+  }
   return {
     name: { label: 'Name', value: data.name },
     type: { label: 'Type', value: data.type },
@@ -35,6 +42,7 @@ function transfromGroupDetail(data: Group) {
     //   label: 'Pre-Requisite',
     //   value: data.preRequisite ? data.preRequisite.map((s) => s.name).join(', ') : '',
     // },
+    ...courseDetail,
     active: { label: 'Active', value: `${data.active}` },
   };
 }
