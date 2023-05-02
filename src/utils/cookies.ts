@@ -36,6 +36,9 @@ export const appCookies = (function () {
       cookies.remove(CookieNames.AccessToken, defaultOption);
       cookies.remove(CookieNames.RefreshToken, defaultOption);
       cookies.remove(CookieNames.IsWorkspaceActive, defaultOption);
+      document.cookie = `${CookieNames.AccessToken}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=funiverse.world; path=/;`;
+      document.cookie = `${CookieNames.RefreshToken}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=funiverse.world; path=/;`;
+      document.cookie = `${CookieNames.IsWorkspaceActive}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=funiverse.world; path=/;`;
     },
     setWorkspaceActive: () => {
       const now = new Date();
