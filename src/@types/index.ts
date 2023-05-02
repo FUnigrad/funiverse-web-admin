@@ -7,3 +7,4 @@ export * from './subject';
 export * from './syllabus';
 export * from './term';
 export * from './user';
+export * from './workspace';

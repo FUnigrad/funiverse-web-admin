@@ -31,8 +31,8 @@ import ChromeReaderModeTwoToneIcon from '@mui/icons-material/ChromeReaderModeTwo
 import WorkspacePremiumTwoToneIcon from '@mui/icons-material/WorkspacePremiumTwoTone';
 import CameraFrontTwoToneIcon from '@mui/icons-material/CameraFrontTwoTone';
 import DisplaySettingsTwoToneIcon from '@mui/icons-material/DisplaySettingsTwoTone';
+import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import DatabaseIcon from '@mui/icons-material/BackupOutlined';
-
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
   .MuiList-root {
@@ -199,6 +199,30 @@ function SidebarMenu() {
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
+              Information
+            </ListSubheader>
+          }
+        >
+          <SubMenuWrapper>
+            <List component="div">
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/workspace"
+                  startIcon={<WorkspacesIcon />}
+                >
+                  Workspace
+                </Button>
+              </ListItem>
+            </List>
+          </SubMenuWrapper>
+        </List>
+        <List
+          component="div"
+          subheader={
+            <ListSubheader component="div" disableSticky>
               Dashboards
             </ListSubheader>
           }
@@ -221,21 +245,10 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/groups"
-                  startIcon={<GroupsOutlined />}
+                  to="/majors"
+                  startIcon={<MuseumOutlined />}
                 >
-                  Groups
-                </Button>
-              </ListItem>
-              <ListItem component="div">
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/users"
-                  startIcon={<ManageAccountsOutlined />}
-                >
-                  Users
+                  Majors
                 </Button>
               </ListItem>
               <ListItem component="div">
@@ -247,6 +260,17 @@ function SidebarMenu() {
                   startIcon={<FolderOutlined />}
                 >
                   Subjects
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/combos"
+                  startIcon={<AutoStoriesOutlined />}
+                >
+                  Combos
                 </Button>
               </ListItem>
               <ListItem component="div">
@@ -276,10 +300,10 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/majors"
-                  startIcon={<MuseumOutlined />}
+                  to="/users"
+                  startIcon={<ManageAccountsOutlined />}
                 >
-                  Majors
+                  Users
                 </Button>
               </ListItem>
               <ListItem component="div">
@@ -287,13 +311,12 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/combos"
-                  startIcon={<AutoStoriesOutlined />}
+                  to="/groups"
+                  startIcon={<GroupsOutlined />}
                 >
-                  Combos
+                  Groups
                 </Button>
               </ListItem>
-
               {/* <ListItem component="div">
                 <Button
                   disableRipple

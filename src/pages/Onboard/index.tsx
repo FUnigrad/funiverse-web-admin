@@ -112,7 +112,7 @@ function TermActions() {
         mt: 'auto',
         // ml: 'auto',
         width: '100%',
-        // pb: 5,
+        pb: 5,
         // pr: 20,
         display: 'flex',
         justifyContent: 'center',

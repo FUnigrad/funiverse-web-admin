@@ -17,6 +17,8 @@ import {
 
 import SidebarMenu from './SidebarMenu';
 import Logo from 'src/components/LogoSign';
+import { useQuery } from '@tanstack/react-query';
+import { QueryKey, workspaceApis } from 'src/apis';
 
 const SidebarWrapper = styled(Box)(
   ({ theme }) => `
@@ -26,7 +28,7 @@ const SidebarWrapper = styled(Box)(
         position: relative;
         z-index: 7;
         height: 100%;
-        padding-bottom: 68px;
+        padding-bottom: 40px;
 `,
 );
 
@@ -34,7 +36,10 @@ function Sidebar() {
   const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
   const closeSidebar = () => toggleSidebar();
   const theme = useTheme();
-
+  const workspaceQuery = useQuery({
+    queryKey: [QueryKey.Workspace],
+    queryFn: workspaceApis.getWorkspace,
+  });
   return (
     <>
       <SidebarWrapper
@@ -54,30 +59,31 @@ function Sidebar() {
         }}
       >
         <Scrollbar>
-          <Box mt={3}>
+          <Box mt={2}>
             <Box
               mx={2}
-              sx={{
-                width: 52,
-              }}
+              // sx={{
+              //   width: 52,
+              // }}
             >
               {/* <Logo /> */}
+              {workspaceQuery.data?.name}
             </Box>
           </Box>
           <Divider
             sx={{
-              mt: '80px',
+              mt: 2,
               mx: theme.spacing(2),
               background: theme.colors.alpha.trueWhite[10],
             }}
           />
           <SidebarMenu />
         </Scrollbar>
-        <Divider
+        {/* <Divider
           sx={{
             background: theme.colors.alpha.trueWhite[10],
           }}
-        />
+        /> */}
         {/* <Box p={2}>
           <Button
             href="https://bloomui.com"
@@ -111,19 +117,20 @@ function Sidebar() {
           }}
         >
           <Scrollbar>
-            <Box mt={3}>
+            <Box mt={2}>
               <Box
                 mx={2}
-                sx={{
-                  width: 52,
-                }}
+                // sx={{
+                //   width: 52,
+                // }}
               >
                 {/* <Logo /> */}
+                {workspaceQuery.data?.name}
               </Box>
             </Box>
             <Divider
               sx={{
-                mt: '80px',
+                mt: 2,
                 mx: theme.spacing(2),
                 background: theme.colors.alpha.trueWhite[10],
               }}

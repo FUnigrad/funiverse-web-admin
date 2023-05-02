@@ -10,6 +10,8 @@ export * from './subjectApis';
 export * from './syllabusApis';
 export * from './termApis';
 export * from './userApis';
+export * from './workspaceApis';
+
 export const QueryKey = {
   Groups: 'groups',
   Syllabi: 'syllabi',
@@ -25,4 +27,5 @@ export const QueryKey = {
   Slot: 'slot',
   Prepare: 'prepare',
   Data: 'data',
+  Workspace: 'workspace',
 };
