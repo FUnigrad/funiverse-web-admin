@@ -20,6 +20,9 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs, { Dayjs } from 'dayjs';
 import { useRefState } from 'src/hooks';
 import { appCookies } from 'src/utils';
+import { TermState } from 'src/@types';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 
 const ListWrapper = styled(Box)(
   ({ theme }) => `
@@ -99,7 +102,7 @@ function HeaderMenu() {
   });
   // console.log('🚀 ~ appCookies.getWorkspaceActive():', appCookies.getWorkspaceActive());
   // console.log('🚀 ~ nextData:', nextData);
-  const mutation = useMutation({
+  const startNewSemesterMutation = useMutation({
     mutationFn: termApis.startNewSemester,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Terms, 'current'] });
@@ -113,6 +116,11 @@ function HeaderMenu() {
       queryClient.invalidateQueries({ queryKey: [QueryKey.Terms, 'next'] });
       navigate('/term/prepare');
       dispatch({ type: 'close' });
+    },
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(error.response.data.message);
+      dispatch({ type: 'close' });
+      navigate('/');
     },
   });
   const startNextDate = useMemo(
@@ -130,10 +138,7 @@ function HeaderMenu() {
     if (nextData?.startDate) setSelectedDate(dayjs(nextData?.startDate));
     else setSelectedDate(startNextDate);
   }, [nextData?.startDate, setSelectedDate, startNextDate]);
-
-  //TODO: Urgent
-  function handleStartNewSemester() {
-    if (!nextData) return;
+  function handlePending() {
     const {
       season: { startMonth, endMonth },
       year,
@@ -210,6 +215,70 @@ function HeaderMenu() {
         // }, 0);
       },
     });
+  }
+  function handleReady() {
+    const {
+      season: { startMonth, endMonth },
+      year,
+      startDate,
+    } = nextData;
+    const endNextDate = dayjs()
+      .month(endMonth - 1)
+      .year(+year)
+      .endOf('month');
+    dispatch({
+      type: 'open',
+      payload: {
+        content: () => (
+          <Box>
+            <Typography variant="h6" color="initial">
+              Current semester is:{' '}
+              <b>
+                {currentData?.season?.name} {currentData?.year}
+              </b>
+              . Do you want to start{' '}
+              <b>
+                {nextData?.season?.name} {nextData?.year}
+              </b>
+              ?
+            </Typography>
+            <DemoContainer components={['DatePicker']}>
+              <DatePicker
+                minDate={startNextDate}
+                maxDate={endNextDate}
+                label="Start date"
+                // disablePast
+                slotProps={{
+                  textField: {
+                    // helperText: 'MM / DD / YYYY',
+                    sx: { width: '100%' },
+                  },
+                }}
+                readOnly
+                defaultValue={selectedDateRef.current}
+                // value={selectedDateRef.current}
+              />
+            </DemoContainer>
+          </Box>
+        ),
+        title: 'Start new semester',
+        saveTitle: 'Start',
+      },
+      onCreateOrSave: () => {
+        startNewSemesterMutation.mutate();
+        // const date = dayjs(selectedDateRef.current).format('YYYY-MM-DD');
+        // createStartDateMutation.mutate({ startDate: date });
+      },
+    });
+  }
+  //TODO: Urgent
+  function handleStartNewSemester() {
+    if (!nextData) return;
+    if (nextData.state === TermState.PENDING) {
+      handlePending();
+    } else if (nextData.state === TermState.READY) {
+      handleReady();
+    }
   }
   return (
     <>

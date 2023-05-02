@@ -30,7 +30,7 @@ function transfromGroupDetail(data: Group) {
   if (data.type === GroupType.Course) {
     courseDetail.publish = {
       label: 'Publish',
-      value: data.publish,
+      value: `${data.publish}`,
     };
   }
   return {
