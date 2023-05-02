@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
@@ -28,6 +28,8 @@ import Popper from 'src/components/Popper';
 import { useStepperContext } from 'src/contexts/StepperContext';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
+import { AxiosError } from 'axios';
+import { ModalContext } from 'src/contexts/ModalContext';
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} {...props} />
 ))(({ theme }) => ({
@@ -84,9 +86,16 @@ function Step1() {
   // const [selectedDateRef, setSelectedDate] = useRefState();
   // const [groupInputs, setGroupInputs] = useState<Record<string, { id: string }[]>>();
   const theme = useTheme();
+  const { dispatch } = useContext(ModalContext);
+
   const { data: prepareGroups, isLoading } = useQuery({
     queryKey: [QueryKey.Terms, QueryKey.Prepare, QueryKey.Groups],
     queryFn: termApis.getGroups,
+    onError: (error: AxiosError<{ message: string }>) => {
+      toast.error(error.response.data.message);
+      dispatch({ type: 'close' });
+      navigate('/');
+    },
   });
   const {
     register,
