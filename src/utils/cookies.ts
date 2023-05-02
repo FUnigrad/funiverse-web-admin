@@ -17,7 +17,10 @@ export interface DecodedToken {
 export const appCookies = (function () {
   const cookies = new Cookies();
   return {
-    setAccessToken: (token: string) => cookies.set(CookieNames.AccessToken, token),
+    setAccessToken: (token: string) =>
+      cookies.set(CookieNames.AccessToken, token, {
+        domain: __DEV__ ? 'localhost' : process.env.REACT_APP_PUBLIC_DOMAIN,
+      }),
     getAccessToken: () => cookies.get(CookieNames.AccessToken),
     getRefreshToken: () => cookies.get(CookieNames.RefreshToken),
     getDecodedAccessToken: (): DecodedToken | null => {
@@ -29,14 +32,17 @@ export const appCookies = (function () {
       }
     },
     clearAll: () => {
-      cookies.remove(CookieNames.AccessToken);
-      cookies.remove(CookieNames.RefreshToken);
-      cookies.remove(CookieNames.IsWorkspaceActive);
+      const defaultOption = { domain: __DEV__ ? 'localhost' : process.env.REACT_APP_PUBLIC_DOMAIN };
+      cookies.remove(CookieNames.AccessToken, defaultOption);
+      cookies.remove(CookieNames.RefreshToken, defaultOption);
+      cookies.remove(CookieNames.IsWorkspaceActive, defaultOption);
     },
     setWorkspaceActive: () => {
       const now = new Date();
       const expires = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
-      cookies.remove(CookieNames.IsWorkspaceActive);
+      const defaultOption = { domain: __DEV__ ? 'localhost' : process.env.REACT_APP_PUBLIC_DOMAIN };
+
+      cookies.remove(CookieNames.IsWorkspaceActive, defaultOption);
       cookies.set(CookieNames.IsWorkspaceActive, true, {
         domain: __DEV__ ? 'localhost' : process.env.REACT_APP_PUBLIC_DOMAIN,
         expires,
