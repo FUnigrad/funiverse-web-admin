@@ -150,7 +150,7 @@ function ImportDataPage() {
       },
       onConfirm: () => {
         const formData = new FormData();
-        formData.append('file', file, selectedFile);
+        formData.append('file', file, event.target.value);
         importDataMutation.mutate(formData);
       },
     });
