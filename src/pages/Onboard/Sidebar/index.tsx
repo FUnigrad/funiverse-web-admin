@@ -55,26 +55,29 @@ function Sidebar() {
           </Typography>
           {activeStep === StepEnum.Step1 && (
             <Typography variant="body1" color="initial" align="center">
-              Define season to help us ... Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              Laudantium officiis accusantium minus, dolor distinctio aspernatur unde, facilis
-              pariatur adipisci, asperiores vitae! Dolorem, vitae totam? Sit quaerat perferendis rem
-              culpa et?
+              In the context of universities and academic schedules, a "season" refers to a period
+              of time in which classes are held and students attend courses. For example, the
+              academic year is typically divided into three semesters - Spring, Summer and Fall -
+              with each semester lasting around 16 weeks. Defining season help us to create a
+              structured and organized schedule for students and faculty.
             </Typography>
           )}
           {activeStep === StepEnum.Step2 && (
             <Typography variant="body1" color="initial" align="center">
-              Founded Year is a important information ... Lorem ipsum dolor sit, amet consectetur
-              adipisicing elit. Laudantium officiis accusantium minus, dolor distinctio aspernatur
-              unde, facilis pariatur adipisci, asperiores vitae! Dolorem, vitae totam? Sit quaerat
-              perferendis rem culpa et?
+              To successfully utilize the features of this platform, it is important to first
+              configure your current term, which will enable you to properly manage your academic
+              calendar and schedules. Additionally, it is highly recommended to configure your email
+              domain to ensure seamless communication and to avoid any potential issues related to
+              email delivery.
             </Typography>
           )}
           {activeStep === StepEnum.Step3 && (
             <Typography variant="body1" color="initial" align="center">
-              Time settings help us define timetable correctly... Lorem ipsum dolor sit, amet
-              consectetur adipisicing elit. Laudantium officiis accusantium minus, dolor distinctio
-              aspernatur unde, facilis pariatur adipisci, asperiores vitae! Dolorem, vitae totam?
-              Sit quaerat perferendis rem culpa et?
+              In the final step of the setup process, we kindly request that you provide the time
+              configuration for your workspace. This is an important step in ensuring that all
+              features and functionalities are optimized for your needs. This will help to ensure
+              that all time-sensitive tasks, such as scheduling, notification delivery, and
+              reporting, are executed accurately and efficiently.
             </Typography>
           )}
           {/* <Divider
